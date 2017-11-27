@@ -13,6 +13,10 @@ API服务：[X-WebDesktop-Api-Koa](https://github.com/OXOYO/X-WebDesktop-Api-Koa
   npm i
   npm run dev
 ```
+用户登录，需要 [X-WebDesktop-Api-Koa](https://github.com/OXOYO/X-WebDesktop-Api-Koa) 支持
+
+账号：admin
+密码：123456
 
 ## Build
 
