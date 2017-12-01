@@ -7,7 +7,7 @@
 API服务：[X-WebDesktop-Api-Koa](https://github.com/OXOYO/X-WebDesktop-Api-Koa)
 
 ## Preview
-<video id="video" controls="" preload="none"><source id="mp4" src="./docs/preview_001.mp4" type="video/mp4"><p>Your user agent does not support the HTML5 Video element.</p></video>
+![](./docs/preview_001.gif)
 
 ## Start
 
