@@ -7,7 +7,7 @@
 API服务：[X-WebDesktop-Api-Koa](https://github.com/OXOYO/X-WebDesktop-Api-Koa)
 
 ## Preview
-![](./docs/preview_001_middle.gif)
+![](./docs/preview_001.gif)
 
 ## Start
 
