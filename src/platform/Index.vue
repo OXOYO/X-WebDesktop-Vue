@@ -23,8 +23,8 @@
           <TaskBarIcon></TaskBarIcon>
           <TaskBarWidget></TaskBarWidget>
         </TaskBar>
+        <Window></Window>
       </Desktop>
-      <Window></Window>
     </Admin>
     <ContextMenu></ContextMenu>
   </div>
