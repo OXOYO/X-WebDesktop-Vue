@@ -8,11 +8,14 @@
 </style>
 
 <template>
-
+  <div>
+    <h1>TODO Desktop</h1>
+    <slot></slot>
+  </div>
 </template>
 
 <script>
   export default {
-    name: "Index"
+    name: 'Desktop'
   }
 </script>
