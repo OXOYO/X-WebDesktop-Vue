@@ -4,31 +4,111 @@
  */
 
 export default {
+  // 默认配置 FIXME 可以考虑存入数据库，从而实现界面可视化动态配置
   // 组件对照表
   components: {
     // 后台容器
-    Admin: './apps/Admin',
+    Admin: {
+      name: 'Admin',
+      parent: './apps',
+      path: './apps/Admin/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 右键菜单
-    ContextMenu: './apps/ContextMenu',
+    ContextMenu: {
+      name: 'ContextMenu',
+      parent: './apps',
+      path: './apps/ContextMenu/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 桌面
-    Desktop: './apps/Desktop',
+    Desktop: {
+      name: 'Desktop',
+      parent: './apps',
+      path: './apps/Desktop/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 桌面图标
-    DesktopIcon: './apps/DesktopIcon',
+    DesktopIcon: {
+      name: 'DesktopIcon',
+      parent: './apps',
+      path: './apps/DesktopIcon/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 桌面控件
-    DesktopWidget: './apps/DesktopWidget',
+    DesktopWidget: {
+      name: 'DesktopWidget',
+      parent: './apps',
+      path: './apps/DesktopWidget/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 前台容器
-    Home: './apps/Home',
+    Home: {
+      name: 'Home',
+      parent: './apps',
+      path: './apps/Home/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 前台登录
-    Login: './apps/Login',
+    Login: {
+      name: 'Login',
+      parent: './apps',
+      path: './apps/Login/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 开始菜单
-    StartMenu: './apps/StartMenu',
+    StartMenu: {
+      name: 'StartMenu',
+      parent: './apps',
+      path: './apps/StartMenu/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 任务栏
-    TaskBar: './apps/TaskBar',
+    TaskBar: {
+      name: 'TaskBar',
+      parent: './apps',
+      path: './apps/TaskBar/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 任务栏图标
-    TaskBarIcon: './apps/TaskBarIcon',
+    TaskBarIcon: {
+      name: 'TaskBarIcon',
+      parent: './apps',
+      path: './apps/TaskBarIcon/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 任务栏控件
-    TaskBarWidget: './apps/TaskBarWidget',
+    TaskBarWidget: {
+      name: 'TaskBarWidget',
+      parent: './apps',
+      path: './apps/TaskBarWidget/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 窗口
-    Window: './apps/Window'
+    Window: {
+      name: 'Window',
+      parent: './apps',
+      path: './apps/Window/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
+    // 壁纸
+    Wallpaper: {
+      name: 'Wallpaper',
+      path: './apps/Wallpaper/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    }
   }
 }

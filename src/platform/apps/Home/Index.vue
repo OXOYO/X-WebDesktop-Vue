@@ -5,18 +5,26 @@
 */
 
 <style scoped lang="less" rel="stylesheet/less">
-
+  .layout-home {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
 </style>
 
 <template>
-  <div>
-    <h1>TODO Admin</h1>
+  <div class="layout-home">
+    <h1>TODO Home</h1>
     <slot></slot>
   </div>
+
 </template>
 
 <script>
   export default {
-    name: 'Admin'
+    name: 'Home'
   }
 </script>
