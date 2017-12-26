@@ -5,7 +5,7 @@
 */
 
 <style scoped lang="less" rel="stylesheet/less">
-  .layout-home {
+  .app-home {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -16,8 +16,7 @@
 </style>
 
 <template>
-  <div class="layout-home">
-    <h1>TODO Home</h1>
+  <div class="app-home">
     <slot></slot>
   </div>
 

@@ -13,7 +13,8 @@ export default {
       parent: './apps',
       path: './apps/Admin/',
       component: 'Index.vue',
-      store: 'store/index.js'
+      store: 'store/index.js',
+      routers: 'routers.js'
     },
     // 右键菜单
     ContextMenu: {
@@ -31,11 +32,11 @@ export default {
       component: 'Index.vue',
       store: 'store/index.js'
     },
-    // 桌面图标
-    DesktopIcon: {
-      name: 'DesktopIcon',
+    // 桌面图标容器
+    DesktopIconBox: {
+      name: 'DesktopIconBox',
       parent: './apps',
-      path: './apps/DesktopIcon/',
+      path: './apps/DesktopIconBox/',
       component: 'Index.vue',
       store: 'store/index.js'
     },
@@ -79,11 +80,11 @@ export default {
       component: 'Index.vue',
       store: 'store/index.js'
     },
-    // 任务栏图标
-    TaskBarIcon: {
-      name: 'TaskBarIcon',
+    // 任务栏图标容器
+    TaskBarIconBox: {
+      name: 'TaskBarIconBox',
       parent: './apps',
-      path: './apps/TaskBarIcon/',
+      path: './apps/TaskBarIconBox/',
       component: 'Index.vue',
       store: 'store/index.js'
     },
