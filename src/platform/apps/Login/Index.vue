@@ -5,15 +5,160 @@
 */
 
 <style scoped lang="less" rel="stylesheet/less">
+  .app-login {
+    position: relative;
+    vertical-align: middle;
+    max-width: 300px;
+    margin: 0 auto;
+    background: transparent;
+    padding: 15px;
+    margin-top: 100px;
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .1);
 
+    &:after {
+      content: ' ';
+      position: absolute;
+      z-index: -1;
+      background: rgba(245, 247, 249, .3);
+      /*filter: blur(5px);*/
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .login-modal-header {
+      height: auto;
+      text-align: center;
+      .login-logo {
+        display: block;
+        width: auto;
+        margin: 0 auto;
+      }
+      .login-title {
+        display: inline-block;
+        cursor: default;
+        width: 100%;
+        padding-top: 10px;
+        font-size: 26px;
+        font-weight: bolder;
+        color: rgb(52, 117, 207);
+      }
+    }
+    .login-modal-body {
+      .login-form {
+      }
+    }
+  }
 </style>
 
 <template>
-  <h1>TODO Login</h1>
+  <Row>
+    <Col
+      :xs="{ span: 20, offset: 2 }"
+      :sm="{ span: 10, offset: 7 }"
+      :md="{ span: 8, offset: 8 }"
+      :lg="{ span: 6, offset: 9 }"
+    >
+      <div class="app-login">
+        <div class="login-modal-header">
+          <img class="login-logo" :src="$Config.System.logo" :alt="$Config.System.title">
+          <!--<div class="login-title">{{ $Config.System.subtitle }}</div>-->
+        </div>
+        <div class="login-modal-body">
+          <Form class="login-form" ref="signInForm" :model="formData" :rules="signInFormRules">
+            <Form-item prop="account">
+              <Input type="text" v-model="formData.account" placeholder="请输入用户名">
+              <Icon type="ios-person-outline" slot="prepend" style="font-size: 16px;"></Icon>
+              </Input>
+            </Form-item>
+            <Form-item prop="password">
+              <Input :type="passwordInputType" v-model="formData.password" placeholder="请输入密码" @on-enter="handleSignIn">
+              <Icon type="ios-locked-outline" slot="prepend" style="font-size: 16px;"></Icon>
+              <Button slot="append" :icon="passwordInputType === 'password' ? 'eye' : 'eye-disabled'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
+              </Input>
+            </Form-item>
+          </Form>
+        </div>
+        <!--
+        <div>
+          <Button type="primary" :loading="loading" @click="handleSignIn">登录</Button>
+        </div>
+        -->
+      </div>
+    </Col>
+  </Row>
 </template>
 
 <script>
   export default {
-    name: 'Login'
+    name: 'Login',
+    data () {
+      return {
+        // 是否显示video
+//        showVideo: false,
+        // 是否显示登录弹窗
+        showSignInModal: true,
+        loading: false,
+        // 表单数据
+        formData: {
+          account: '',
+          password: ''
+        },
+        signInFormRules: {
+          account: [
+            { required: true, message: '请填写用户名', trigger: 'change' }
+          ],
+          password: [
+            { required: true, message: '请填写密码', trigger: 'change' },
+            { type: 'string', min: 6, max: 16, message: '密码长度必须在6到16位之间', trigger: 'change' }
+          ]
+        },
+        // 密码输入框类型
+        passwordInputType: 'password'
+      }
+    },
+    methods: {
+      triggerMenu: function (routerName) {
+        let _t = this
+        if (routerName === 'SignIn') {
+          _t.showSignInModal = true
+          _t.passwordInputType = 'password'
+          _t.loading = false
+        }
+      },
+      handleSignIn: async function () {
+        let _t = this
+        // 调用接口执行登录
+        let res = await _t.$store.dispatch('Platform/user/signIn', {
+          account: _t.formData.account.trim(),
+          password: _t.formData.password.trim()
+        })
+        res = _t.$utils.Serv.handleRes(_t, res, true)
+        if (!res) {
+          _t.$Message.error('登录失败！')
+        } else if (res.status !== 200) {
+          return true
+        }
+        let userInfo = res.data.userInfo || null
+        let tokenKey = _t.$Config.getItem('token')
+        let token = res.data[tokenKey] || null
+        if (userInfo && token) {
+          _t.$Message.success('登录成功！')
+          // TODO 用户信息存入state；token存入sessionStorage；路由跳转
+          _t.$store.commit('Platform/user/update', userInfo)
+          _t.$Cookies.set(tokenKey, token)
+          _t.$nextTick(function () {
+            // 跳转后台
+          })
+        } else {
+          _t.$Message.error('登录失败，接口返回数据异常！')
+        }
+      },
+      showPassword: function () {
+        let _t = this
+        _t.passwordInputType = _t.passwordInputType === 'password' ? 'text' : 'password'
+      }
+    }
   }
 </script>
