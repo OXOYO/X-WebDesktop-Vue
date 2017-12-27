@@ -139,6 +139,54 @@
       return {
         isMouseDown: false
       }
+    },
+    computed: {
+      appIconBg: function () {
+        let _t = this
+        let icon = _t.info.app.hasOwnProperty('icon') && _t.info.app.icon ? _t.info.app.icon : null
+        if (!icon) {
+          return {}
+        }
+//        console.log('icon', icon)
+//        let img = require(icon)
+        let img = icon
+        return {
+          backgroundImage: 'url(' + img + ')'
+        }
+      }
+    },
+    methods: {
+      // 鼠标按下
+      mouseDownHandle: function () {
+        let _t = this
+        _t.isMouseDown = true
+      },
+      // 鼠标抬起
+      mouseUpHandle: function () {
+        let _t = this
+        _t.isMouseDown = false
+      },
+      // 右键菜单
+      taskBarIconRightClick: function (event) {
+        let _t = this
+        let xVal = parseInt(event.clientX)
+        let yVal = parseInt(event.clientY)
+        let appName = event.target.dataset['name'] || _t.info.app.name || null
+        // 菜单信息
+        let contextMenuInfo = {
+          isShow: true,
+          x: xVal,
+          y: yVal,
+          target: 'taskBarIcon-' + _t.type,
+          appName: appName,
+          data: {
+            ..._t.info
+          }
+        }
+        console.log('contextMenuInfo', contextMenuInfo)
+        // 分发mutation
+        // _t.$store.commit('Platform/webDesktop/components/contextMenu/update', contextMenuInfo)
+      }
     }
   }
 </script>
