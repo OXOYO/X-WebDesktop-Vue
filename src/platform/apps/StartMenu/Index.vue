@@ -13,6 +13,69 @@
     position: relative;
     user-select:none;
 
+    .start-menu-icon-main {
+      width: 60px;
+      height: 39px;
+      line-height: 39px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all .2s ease-out;
+
+      &:hover {
+        &:after {
+          content: ' ';
+          position: absolute;
+          z-index: -1;
+          /*background: red;*/
+          /*background: rgba(250, 253, 255, .5);*/
+          background: rgba(255, 255, 255, 0.3);
+          /*opacity: .5;*/
+          filter: blur(10px);
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+        }
+        .app-icon-bg {
+          display: block !important;
+          filter: blur(6px);
+        }
+      }
+
+      .app-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -15px;
+        margin-top: -15px;
+        width: 30px;
+        height: 30px;
+        /*filter: drop-shadow(0 0 10px #ccc);*/
+        /*background: hsla(0,0%,100%,.25) border-box;*/
+        /*box-shadow: 0 0 0 1px hsla(0,0%,100%,.3) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);*/
+      }
+      .app-icon-down {
+        margin-left: -14px;
+        margin-top: -14px;
+      }
+      .app-icon-bg {
+        position: absolute;
+        display: block;
+        overflow: hidden;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        filter: blur(50px);
+        background-position: center top;
+        transition: all .2s ease-out;
+        /*background-size: cover;*/
+        /*background-attachment: fixed;*/
+      }
+    }
+
     .start-menu-icon {
       position: absolute;
       top: 50%;
@@ -21,10 +84,6 @@
       margin-top: -15px;
       width: 30px;
       height: 30px;
-    }
-    .app-icon-down {
-      margin-left: -14px;
-      margin-top: -14px;
     }
     .start-menu-box {
       position: absolute;
@@ -173,7 +232,15 @@
 
 <template>
   <div class="app-start-menu">
-    <img class="start-menu-icon" src="./images/StartMenu.png">
+    <div
+      class="start-menu-icon-main"
+      @mousedown.left.stop.prevent="mouseDownHandle"
+      @mouseup.left.stop.prevent="mouseUpHandle"
+    >
+      <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" src="./images/StartMenu.png">
+      <div class="app-icon-bg"></div>
+    </div>
+    <!--<img class="start-menu-icon" src="./images/StartMenu.png">-->
     <div
       class="start-menu-box"
       v-show="isShow"
@@ -230,11 +297,12 @@
     name: 'StartMenu',
     data () {
       return {
-        isShow: true,
+        isShow: false,
         userInfo: {
           name: 'admin',
           text: 'admin'
-        }
+        },
+        isMouseDown: false
       }
     },
     props: {
@@ -247,6 +315,27 @@
           }
         },
         required: true
+      }
+    },
+    methods: {
+      // 鼠标按下
+      mouseDownHandle: function () {
+        let _t = this
+        _t.isMouseDown = true
+      },
+      // 鼠标抬起
+      mouseUpHandle: function () {
+        let _t = this
+        _t.isMouseDown = false
+        _t.isShow = !_t.isShow
+      },
+      doLogout: function () {
+        let _t = this
+        // TODO 执行退出
+        sessionStorage.clear()
+        Object.keys(_t.$Cookies.get()).forEach(function (cookie) {
+          _t.$Cookies.remove(cookie)
+        })
       }
     }
   }
