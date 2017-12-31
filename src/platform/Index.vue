@@ -420,6 +420,35 @@
     created: function () {
       let _t = this
       _t.handlerComponents()
+      // 监听事件
+      _t.$utils.bus.$on('platform/refresh', function () {
+        _t.$router.go(0)
+      })
+      _t.$utils.bus.$on('platform/fullScreen/open', function () {
+        // 全屏
+        let docElm = document.documentElement
+        if (docElm.requestFullscreen) {
+          docElm.requestFullscreen()
+        } else if (docElm.mozRequestFullScreen) {
+          docElm.mozRequestFullScreen()
+        } else if (docElm.webkitRequestFullScreen) {
+          docElm.webkitRequestFullScreen()
+        } else if (docElm.msRequestFullscreen) {
+          docElm.msRequestFullscreen()
+        }
+      })
+      _t.$utils.bus.$on('platform/fullScreen/close', function () {
+        // 退出全屏
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen()
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen()
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen()
+        }
+      })
     }
   }
 </script>
