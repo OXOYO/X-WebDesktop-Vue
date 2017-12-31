@@ -234,8 +234,9 @@
   <div class="app-start-menu">
     <div
       class="start-menu-icon-main"
-      @mousedown.left.stop.prevent="mouseDownHandle"
-      @mouseup.left.stop.prevent="mouseUpHandle"
+      @click.stop.prevent
+      @mousedown.left.stop="handlerMouseDown"
+      @mouseup.left.stop="handlerMouseUp"
     >
       <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" src="./images/StartMenu.png">
       <div class="app-icon-bg"></div>
@@ -319,12 +320,12 @@
     },
     methods: {
       // 鼠标按下
-      mouseDownHandle: function () {
+      handlerMouseDown: function () {
         let _t = this
         _t.isMouseDown = true
       },
       // 鼠标抬起
-      mouseUpHandle: function () {
+      handlerMouseUp: function () {
         let _t = this
         _t.isMouseDown = false
         _t.isShow = !_t.isShow
@@ -337,6 +338,19 @@
           _t.$Cookies.remove(cookie)
         })
       }
+    },
+    created: function () {
+      let _t = this
+      // 监听事件
+      _t.$utils.bus.$on('platform/startMenu/hide', function () {
+        _t.isShow = false
+      })
     }
+    // ,
+    // destroyed: function () {
+    //   let _t = this
+    //   // 注销事件监听
+    //   _t.$utils.bus.$off('platform/startMenu/hide')
+    // }
   }
 </script>

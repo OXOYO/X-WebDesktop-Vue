@@ -16,7 +16,11 @@
 </style>
 
 <template>
-  <div class="app-home">
+  <div
+    class="app-home"
+    @click.stop="handlerLeftClick($event)"
+    @contextmenu.stop.prevent="handlerRightClick($event)"
+  >
     <slot></slot>
   </div>
 
@@ -24,6 +28,85 @@
 
 <script>
   export default {
-    name: 'Home'
+    name: 'Home',
+    methods: {
+      // 桌面左键点击
+      handlerLeftClick: function () {
+        let _t = this
+        console.log('jjjjjjjjjjjjj')
+        // 广播事件
+        _t.$utils.bus.$emit('platform/startMenu/hide')
+        _t.$utils.bus.$emit('platform/contextMenu/hide')
+      },
+      // 桌面右键点击
+      handlerRightClick: function (event) {
+        let _t = this
+        let xVal = parseInt(event.clientX)
+        let yVal = parseInt(event.clientY)
+        // 菜单信息
+        let contextMenuInfo = {
+          isShow: true,
+          x: xVal,
+          y: yVal,
+          target: 'home',
+          list: [
+            {
+              name: 'refresh',
+              icon: {
+                type: 'refresh',
+                style: ''
+              },
+              text: '刷新',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/refresh'
+              }
+            },
+            {
+              name: 'fullScreen',
+              icon: {
+                type: 'arrow-expand',
+                style: ''
+              },
+              text: '全屏',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/fullScreen/open'
+              }
+            },
+            {
+              name: 'cancelFullScreen',
+              icon: {
+                type: 'arrow-shrink',
+                style: ''
+              },
+              text: '取消全屏',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/fullScreen/close'
+              }
+            },
+            {
+              name: 'wallpaper',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '切换壁纸',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/wallpaper/switch'
+              }
+            }
+          ]
+        }
+        // 广播事件
+        _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
+      }
+    }
   }
 </script>

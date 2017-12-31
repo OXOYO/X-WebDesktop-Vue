@@ -105,9 +105,9 @@
   <div
     class="task-bar-icon"
     :class="{ 'task-bar-icon-pinned': info.taskBar.isPinned }"
-    @mousedown.left.stop.prevent="mouseDownHandle"
-    @mouseup.left.stop.prevent="mouseUpHandle"
-    @contextmenu.stop.prevent="taskBarIconRightClick($event)"
+    @mousedown.left.stop.prevent="handlerMouseDown"
+    @mouseup.left.stop.prevent="handlerMouseUp"
+    @contextmenu.stop.prevent="handlerRightClick($event)"
     :title="info.app.title"
     :data-name="info.app.name"
   >
@@ -157,17 +157,17 @@
     },
     methods: {
       // 鼠标按下
-      mouseDownHandle: function () {
+      handlerMouseDown: function () {
         let _t = this
         _t.isMouseDown = true
       },
       // 鼠标抬起
-      mouseUpHandle: function () {
+      handlerMouseUp: function () {
         let _t = this
         _t.isMouseDown = false
       },
       // 右键菜单
-      taskBarIconRightClick: function (event) {
+      handlerRightClick: function (event) {
         let _t = this
         let xVal = parseInt(event.clientX)
         let yVal = parseInt(event.clientY)
@@ -181,11 +181,145 @@
           appName: appName,
           data: {
             ..._t.info
-          }
+          },
+          list: [
+            {
+              name: 'refresh',
+              icon: {
+                type: 'refresh',
+                style: ''
+              },
+              text: '刷新',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/refresh'
+              }
+            },
+            {
+              name: 'fullScreen',
+              icon: {
+                type: 'arrow-expand',
+                style: ''
+              },
+              text: '全屏',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/fullScreen/open'
+              }
+            },
+            {
+              name: 'cancelFullScreen',
+              icon: {
+                type: 'arrow-shrink',
+                style: ''
+              },
+              text: '取消全屏',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/fullScreen/close'
+              }
+            },
+            {
+              name: 'wallpaper',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '切换壁纸',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/wallpaper/switch'
+              }
+            },
+            {
+              name: 'openApp',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '打开',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/app/open'
+              }
+            },
+            {
+              name: 'openAppInNewBrowserTab',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '在新标签页中打开',
+              enable: _t.info.modal.type === 'iframe' && _t.info.app.url,
+              action: {
+                type: 'bus',
+                handler: 'platform/app/openInNewBrowserTab'
+              }
+            },
+            {
+              name: 'uninstallApp',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '卸载',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/app/uninstall'
+              }
+            },
+            {
+              name: 'pinToTaskBar',
+              icon: {
+                type: '',
+                style: {
+                  transform: 'rotate(90deg)'
+                }
+              },
+              text: '将此程序锁定到任务栏',
+              enable: !_t.info.taskBar.isPinned,
+              action: {
+                type: 'bus',
+                handler: 'platform/taskBar/pin'
+              }
+            },
+            {
+              name: 'unpinToTaskBar',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '将此程序从任务栏解锁',
+              enable: _t.info.taskBar.isPinned,
+              action: {
+                type: 'bus',
+                handler: 'platform/taskBar/unpin'
+              }
+            },
+            {
+              name: 'closeApp',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '关闭',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/app/close'
+              }
+            }
+          ]
         }
         console.log('contextMenuInfo', contextMenuInfo)
-        // 分发mutation
-        // _t.$store.commit('Platform/webDesktop/components/contextMenu/update', contextMenuInfo)
+        // 广播事件
+        _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
       }
     }
   }

@@ -4,11 +4,24 @@
 */
 
 <style scoped lang="less" rel="stylesheet/less">
-
+  .layout-platform {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
 </style>
 
 <template>
-  <div>
+  <div
+    class="layout-platform"
+    @drop.stop.prevent="handlerDrop"
+    @dragover.stop.prevent
+    @click="handlerLeftClick($event)"
+    @contextmenu.stop.prevent="handlerRightClick($event)"
+  >
     <!-- 前台 -->
     <component :is="components.Home" v-if="!isLogin">
       <component :is="components.Login"></component>
@@ -227,6 +240,10 @@
             }
           ],
           showTitle: true
+        },
+        busTypes: {
+          'desktop/left/click': 'desktop/left/click',
+          'desktop/right/click': 'desktop/right/click'
         }
       }
     },
@@ -279,6 +296,125 @@
         }
         _t.components = components
         console.log('_t.components', _t.components)
+      },
+      // 节点drop
+      handlerDrop: function (event) {
+        let _t = this
+        // 获取拖拽对象数据
+        let targetInfo = JSON.parse(event.dataTransfer.getData('Text'))
+        // 判断类型
+        if (targetInfo && targetInfo.type) {
+          switch (targetInfo.type) {
+            case 'Window':
+              _t.handlerWindowDrag(targetInfo, event, 'drop')
+              break
+          }
+        }
+      },
+      // 各种处理方法
+      handlerWindowDrag: function (targetInfo, event, type) {
+        let _t = this
+        let data = targetInfo.data || {}
+        // 健壮，防止空数据
+        if (!Object.keys(data).length) {
+          return
+        }
+        let tmpInfo = {}
+        if (type === 'drop') {
+          let xVal = event.clientX - data.offsetX
+          let yVal = event.clientY - data.offsetY
+          let style = {
+            'margin-left': 0,
+            'margin-top': 0,
+            'left': xVal + 'px',
+            'top': yVal + 'px'
+          }
+          tmpInfo = {
+            modal: {
+              style: style
+            }
+          }
+        }
+        // TODO 处理应用拖拽后相关操作
+        console.log('tmpInfo', tmpInfo)
+        _t.$utils.bus.$emit('platform/desktop/right/click', tmpInfo)
+      },
+      // 桌面左键点击
+      handlerLeftClick: function () {
+        let _t = this
+        console.log('xxxxxxxxxxxxxx')
+        // 广播事件
+        _t.$utils.bus.$emit('platform/startMenu/hide')
+        _t.$utils.bus.$emit('platform/contextMenu/hide')
+      },
+      // 桌面右键点击
+      handlerRightClick: function (event) {
+        let _t = this
+        let xVal = parseInt(event.clientX)
+        let yVal = parseInt(event.clientY)
+        // 菜单信息
+        let contextMenuInfo = {
+          isShow: true,
+          x: xVal,
+          y: yVal,
+          target: 'platformIndex',
+          list: [
+            {
+              name: 'refresh',
+              icon: {
+                type: 'refresh',
+                style: ''
+              },
+              text: '刷新',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/refresh'
+              }
+            },
+            {
+              name: 'fullScreen',
+              icon: {
+                type: 'arrow-expand',
+                style: ''
+              },
+              text: '全屏',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/fullScreen/open'
+              }
+            },
+            {
+              name: 'cancelFullScreen',
+              icon: {
+                type: 'arrow-shrink',
+                style: ''
+              },
+              text: '取消全屏',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/fullScreen/close'
+              }
+            },
+            {
+              name: 'wallpaper',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '切换壁纸',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/wallpaper/switch'
+              }
+            }
+          ]
+        }
+        // 广播事件
+        _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
       }
     },
     created: function () {
