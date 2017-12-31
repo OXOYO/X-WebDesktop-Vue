@@ -139,6 +139,8 @@
       let _t = this
       // TODO 监听菜单打开
       _t.$utils.bus.$on('platform/contextMenu/show', function (val) {
+        // 广播事件
+        _t.$utils.bus.$emit('platform/startMenu/hide')
         console.log('contextMenu data', val)
         if (val) {
           _t.contextMenuInfo = val
