@@ -21,6 +21,17 @@
       position: relative;
       overflow: hidden;
       transition: all .2s ease-out;
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 10;
+        background: transparent;
+      }
       &.app-open {
         /*border: 1px solid rgba(0, 0, 0, .3);*/
         /*background: rgba(250, 253, 255, .3);*/
@@ -169,8 +180,9 @@
       // 右键菜单
       handlerRightClick: function (event) {
         let _t = this
-        let xVal = parseInt(event.clientX)
-        let yVal = parseInt(event.clientY)
+        console.log('event', event)
+        let xVal = parseInt(event.clientX) - parseInt(event.offsetX)
+        let yVal = parseInt(event.clientY) - parseInt(event.offsetY)
         let appName = event.target.dataset['name'] || _t.info.app.name || null
         // 菜单信息
         let contextMenuInfo = {
