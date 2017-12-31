@@ -26,6 +26,9 @@ API服务：[X-WebDesktop-Api-Koa](https://github.com/OXOYO/X-WebDesktop-Api-Koa
   npm run build
 ```
 
+## Preview
+![X-WebDesktop-Vue v2.0.0](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_home.png "X-WebDesktop-Vue")
+
 ## 目录结构
 ```bash
   \_ src
