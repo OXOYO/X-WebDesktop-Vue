@@ -130,27 +130,27 @@
       handleSignIn: async function () {
         let _t = this
         // 调用接口执行登录
-        let res = await _t.$store.dispatch('Platform/user/signIn', {
+        let types = _t.$utils.store.getType('Login/doSignIn', 'Platform')
+        console.log('types', types)
+        let res = await _t.$store.dispatch(types, {
           account: _t.formData.account.trim(),
           password: _t.formData.password.trim()
         })
-        res = _t.$utils.Serv.handleRes(_t, res, true)
-        if (!res) {
-          _t.$Message.error('登录失败！')
-        } else if (res.status !== 200) {
-          return true
+        if (!res || res.status !== 200) {
+          return
         }
+        console.log('res', res)
         let userInfo = res.data.userInfo || null
-        let tokenKey = _t.$Config.getItem('token')
+        let tokenKey = _t.$Config.Cookie.getItem('token')
         let token = res.data[tokenKey] || null
         if (userInfo && token) {
           _t.$Message.success('登录成功！')
           // TODO 用户信息存入state；token存入sessionStorage；路由跳转
-          _t.$store.commit('Platform/user/update', userInfo)
-          _t.$Cookies.set(tokenKey, token)
-          _t.$nextTick(function () {
-            // 跳转后台
+          _t.$store.commit(_t.$utils.store.getType('userInfo/update', 'Platform'), {
+            ...userInfo,
+            isLogin: true
           })
+          _t.$Cookies.set(tokenKey, token)
         } else {
           _t.$Message.error('登录失败，接口返回数据异常！')
         }

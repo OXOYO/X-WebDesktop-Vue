@@ -11,7 +11,7 @@ export const Serv = {
 
 // cookie相关配置
 export const Cookie = {
-  prefix: 'X-WebDesktop-Vue-',
+  prefix: 'x-',
   keys: {
     account: 'account',
     token: 'key',

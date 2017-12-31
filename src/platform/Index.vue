@@ -23,11 +23,11 @@
     @contextmenu.stop.prevent="handlerRightClick($event)"
   >
     <!-- 前台 -->
-    <component :is="components.Home" v-if="!isLogin">
+    <component :is="components.Home" v-if="!userInfo.isLogin">
       <component :is="components.Login"></component>
     </component>
     <!-- 后台 -->
-    <component :is="components.Admin" v-if="isLogin">
+    <component :is="components.Admin" v-if="userInfo.isLogin">
       <component :is="components.Desktop">
         <component :is="components.DesktopIconBox" :appData="appData"></component>
         <component :is="components.DesktopWidget"></component>
@@ -41,7 +41,6 @@
     </component>
     <component :is="components.ContextMenu"></component>
     <component :is="components.Wallpaper"></component>
-    <Button type="info" style="position: absolute; z-index: 1500; top: 200px;" @click="toggleIsLogin">TOGGLE isLogin</Button>
     <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <router-view></router-view>
     </transition>
@@ -49,7 +48,10 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import config from './config'
+  import utils from '@/global/utils'
+  const moduleName = utils.store.getModuleName('Platform')
 
   export default {
     name: 'Platform',
@@ -57,7 +59,6 @@
     data () {
       return {
         components: {},
-        isLogin: false,
         appData: {
           iconList: [
             {
@@ -247,11 +248,12 @@
         }
       }
     },
+    computed: {
+      ...mapState(moduleName, {
+        userInfo: state => state.userInfo
+      })
+    },
     methods: {
-      toggleIsLogin: function () {
-        let _t = this
-        _t.isLogin = !_t.isLogin
-      },
       handlerComponents: async function () {
         let _t = this
         // 动态导入组件
@@ -274,7 +276,7 @@
               // 将store注册到 Platform 下
               _t.$store.registerModule(
                 [
-                  _t.$utils.store.getModuleName('Platform'),
+                  moduleName,
                   storeObj.default.moduleName
                 ],
                 storeObj.default.store
