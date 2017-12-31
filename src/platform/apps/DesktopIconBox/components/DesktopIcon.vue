@@ -67,7 +67,7 @@
     class="desktop-icon"
     @mousedown.left="mouseDownHandle"
     @dblclick="openApp"
-    @contextmenu.stop.prevent="desktopIconRightClick($event)"
+    @contextmenu.stop.prevent="handlerRightClick($event)"
     :title="info.app.title"
     :data-name="info.app.name"
   >
@@ -145,7 +145,7 @@
         })
       },
       // 右键菜单
-      desktopIconRightClick: function (event) {
+      handlerRightClick: function (event) {
         let _t = this
         let xVal = parseInt(event.clientX)
         let yVal = parseInt(event.clientY)
@@ -159,12 +159,103 @@
           appName: appName,
           data: {
             ..._t.info
-          }
+          },
+          list: [
+            {
+              name: 'refresh',
+              icon: {
+                type: 'refresh',
+                style: ''
+              },
+              text: '刷新',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/refresh'
+              }
+            },
+            {
+              name: 'fullScreen',
+              icon: {
+                type: 'arrow-expand',
+                style: ''
+              },
+              text: '全屏',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/fullScreen/open'
+              }
+            },
+            {
+              name: 'cancelFullScreen',
+              icon: {
+                type: 'arrow-shrink',
+                style: ''
+              },
+              text: '取消全屏',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/fullScreen/close'
+              }
+            },
+            {
+              name: 'wallpaper',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '切换壁纸',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/wallpaper/switch'
+              }
+            },
+            {
+              name: 'openApp',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '打开',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/app/open'
+              }
+            },
+            {
+              name: 'openAppInNewBrowserTab',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '在新标签页中打开',
+              enable: _t.info.modal.type === 'iframe' && _t.info.app.url,
+              action: {
+                type: 'bus',
+                handler: 'platform/app/openInNewBrowserTab'
+              }
+            },
+            {
+              name: 'uninstallApp',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '卸载',
+              enable: true,
+              action: {
+                type: 'bus',
+                handler: 'platform/app/uninstall'
+              }
+            }
+          ]
         }
-        // 分发mutation
-        _t.$store.commit('Platform/webDesktop/components/contextMenu/update', contextMenuInfo)
-        // 广播菜单事件
-//        _t.$bus.$emit('Platform/webDesktop/components/contextMenu/update', contextMenuInfo)
+        // 广播事件
+        _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
       }
     }
   }

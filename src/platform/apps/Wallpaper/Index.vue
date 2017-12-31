@@ -202,6 +202,11 @@
       let _t = this
       // 初始化
       _t.init()
+      // 监听事件
+      _t.$utils.bus.$on('platform/wallpaper/switch', function () {
+        console.log('lllllllllllll')
+        _t.doSwitch()
+      })
     }
   }
 </script>
