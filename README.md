@@ -27,7 +27,9 @@ API服务：[X-WebDesktop-Api-Koa](https://github.com/OXOYO/X-WebDesktop-Api-Koa
 ```
 
 ## Preview
-![X-WebDesktop-Vue v2.0.0](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_home.png "X-WebDesktop-Vue")
+![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_home.png "preview_home")
+
+![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_admin.png "preview_admin")
 
 ## 目录结构
 ```bash
