@@ -329,6 +329,8 @@
         let _t = this
         _t.isMouseDown = false
         _t.isShow = !_t.isShow
+        // 广播事件
+        _t.$utils.bus.$emit('platform/contextMenu/hide')
       },
       doLogout: function () {
         let _t = this
