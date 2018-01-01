@@ -18,6 +18,7 @@
     transition: all .2s ease-out;
     user-select:none;
     writing-mode: lr-tb;
+
     &:after {
       content: ' ';
       position: absolute;
@@ -68,6 +69,8 @@
     @mousedown.left="mouseDownHandle"
     @dblclick="openApp"
     @contextmenu.stop.prevent="handlerRightClick($event)"
+    draggable="true"
+    @dragstart="handlerDragStart"
     :title="info.app.title"
     :data-name="info.app.name"
   >
@@ -256,6 +259,26 @@
         }
         // 广播事件
         _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
+      },
+      // 拖拽处理
+      handlerDragStart: function (event) {
+        let _t = this
+        let appInfo = _t.info
+        // 鼠标点击位置相对拖拽对象位置
+        let offsetX = event.offsetX
+        let offsetY = event.offsetY
+        // 拖拽对象数据
+        let targetInfo = {
+          target: 'DesktopIcon',
+          data: {
+            id: appInfo.app.id,
+            title: appInfo.app.title,
+            name: appInfo.app.name,
+            offsetX: offsetX,
+            offsetY: offsetY
+          }
+        }
+        event.dataTransfer.setData('Text', JSON.stringify(targetInfo))
       }
     }
   }
