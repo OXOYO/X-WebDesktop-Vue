@@ -11,7 +11,7 @@
     padding: 5px;
     text-align: center;
     display: inline-block;
-    position: relative;
+    position: absolute;
     box-sizing: border-box;
     border: 1px solid transparent;
     border-radius: 2px;

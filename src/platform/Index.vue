@@ -71,6 +71,10 @@
                 y: 0,
                 index: ''
               },
+              desktopIcon: {
+                left: '',
+                top: ''
+              },
               modal: {
                 size: 'middle',
                 isShow: false,
@@ -99,6 +103,10 @@
                 y: 80,
                 index: ''
               },
+              desktopIcon: {
+                left: '',
+                top: ''
+              },
               modal: {
                 size: 'middle',
                 isShow: false,
@@ -123,6 +131,10 @@
                 x: 0,
                 y: 160,
                 index: ''
+              },
+              desktopIcon: {
+                left: '',
+                top: ''
               },
               modal: {
                 size: 'middle',
@@ -149,6 +161,10 @@
                 y: 240,
                 index: ''
               },
+              desktopIcon: {
+                left: '',
+                top: ''
+              },
               modal: {
                 size: 'middle',
                 isShow: false,
@@ -173,6 +189,10 @@
                 x: 0,
                 y: 320,
                 index: ''
+              },
+              desktopIcon: {
+                left: '',
+                top: ''
               },
               modal: {
                 size: 'middle',
@@ -199,6 +219,10 @@
                 y: 400,
                 index: ''
               },
+              desktopIcon: {
+                left: '',
+                top: ''
+              },
               modal: {
                 size: 'max',
                 isShow: false,
@@ -223,6 +247,10 @@
                 x: 0,
                 y: 480,
                 index: ''
+              },
+              desktopIcon: {
+                left: '',
+                top: ''
               },
               modal: {
                 size: 'middle',
