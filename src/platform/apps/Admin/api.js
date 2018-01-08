@@ -4,6 +4,15 @@
  * 接口
  */
 
-export default {
+import Vue from 'vue'
 
+export default {
+  user: {
+    // 获取用户基本信息
+    getBaseInfo: async (data) => {
+      let res = await Vue.prototype.$http.get('/Platform/user/BaseInfo')
+
+      return res
+    }
+  }
 }

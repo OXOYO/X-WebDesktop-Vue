@@ -26,8 +26,19 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+  import utils from '@/global/utils'
+  const moduleName = utils.store.getModuleName('Platform')
+
   export default {
     name: 'Admin',
+    computed: {
+      ...mapState(moduleName, {
+        userInfo: state => {
+          return state.userInfo
+        }
+      })
+    },
     methods: {
       // 桌面左键点击
       handlerLeftClick: function () {
@@ -104,6 +115,37 @@
         }
         // 广播事件
         _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
+      },
+      // 获取用户基本信息
+      getBaseInfo: async function () {
+        let _t = this
+        // 分发action，获取当前登录用户基本信息
+        let res = await _t.$store.dispatch(_t.$utils.store.getType('Admin/user/BaseInfo', 'Platform'))
+        if (!res) {
+          _t.$Message.error('获取用户基本信息失败！')
+          return
+        } else if (res.status !== 200) {
+          return
+        }
+        // 处理返回数据
+        if (res.data) {
+          _t.$Message.success(res.msg || '获取用户基本信息成功！')
+          let userInfo = res.data
+          // 分发mutations，更新用户基本信息
+          _t.$store.commit(_t.$utils.store.getType('userInfo/update', 'Platform'), {
+            ..._t.userInfo,
+            ...userInfo
+          })
+        } else {
+          _t.$Message.info('暂无数据！')
+        }
+      }
+    },
+    created: function () {
+      let _t = this
+      if (_t.userInfo.isLogin) {
+        // 获取用户基本信息
+        _t.getBaseInfo()
       }
     }
   }

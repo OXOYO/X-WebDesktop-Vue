@@ -339,6 +339,9 @@
         Object.keys(_t.$Cookies.get()).forEach(function (cookie) {
           _t.$Cookies.remove(cookie)
         })
+        // 清空用户登录信息
+        _t.$store.commit(_t.$utils.store.getType('userInfo/reset', 'Platform'))
+        _t.$router.push({name: 'platform.index'})
       }
     },
     created: function () {

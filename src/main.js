@@ -6,6 +6,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { sync } from 'vuex-router-sync'
+import createPersistedState from 'vuex-persistedstate'
 import VueRouter from 'vue-router'
 import axios from 'axios'
 // 导入UI库
@@ -161,9 +162,9 @@ const storeInstance = new Vuex.Store({
     [appsStore.moduleName]: appsStore.store
   },
   plugins: [
-    // createPersistedState({
-    //   storage: window.sessionStorage
-    // })
+    createPersistedState({
+      storage: window.sessionStorage
+    })
   ]
 })
 
