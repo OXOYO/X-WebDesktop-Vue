@@ -139,6 +139,239 @@
         } else {
           _t.$Message.info('暂无数据！')
         }
+      },
+      // 获取用户应用数据
+      getUserAppData: function () {
+        let _t = this
+        // TODO 1.分发action，获取用户应用数据
+        let appData = {
+          iconList: [
+            {
+              app: {
+                id: '',
+                name: 'AccountManagement',
+                icon: '/static/app.png',
+                title: '账号管理',
+                x: 0,
+                y: 0,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ],
+                style: {
+                  'width': '1000px'
+                }
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'ApplicationMarket',
+                icon: '/static/app.png',
+                title: '应用管家',
+                x: 0,
+                y: 80,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'MyApplication',
+                icon: '/static/app.png',
+                title: 'My Apps',
+                x: 0,
+                y: 160,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'PermissionApply',
+                icon: '/static/app.png',
+                title: '权限申请',
+                x: 0,
+                y: 240,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'PermissionAudit',
+                icon: '/static/app.png',
+                title: '权限审核',
+                x: 0,
+                y: 320,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'PersonalCenter',
+                icon: '/static/app.png',
+                title: '个人中心',
+                x: 0,
+                y: 400,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'max',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'SystemSetting',
+                icon: '/static/app.png',
+                title: '系统设置',
+                x: 0,
+                y: 480,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
+            }
+          ],
+          showTitle: true
+        }
+        _t.$Message.success('获取用户应用数据成功！')
+        // 分发mutations，更新用户应用数据
+        _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), appData)
       }
     },
     created: function () {
@@ -146,6 +379,8 @@
       if (_t.userInfo.isLogin) {
         // 获取用户基本信息
         _t.getBaseInfo()
+        // FIXME 获取用户应用数据
+        _t.getUserAppData()
       }
     }
   }
