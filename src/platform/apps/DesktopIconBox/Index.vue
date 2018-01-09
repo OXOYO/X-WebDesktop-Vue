@@ -97,6 +97,7 @@
       ...mapState('Platform/Admin', {
         appData: state => state.appData
       }),
+      /*
       iconList: function () {
         let _t = this
         let tmpArr = []
@@ -139,8 +140,52 @@
         console.log('tmpArr', tmpArr)
         return tmpArr
       }
+      */
+      iconList: function () {
+        let _t = this
+        // 处理iconList
+        let iconList = _t.handlerIconList(_t.appData.iconList)
+        return iconList
+      }
     },
     methods: {
+      // 处理iconList
+      handlerIconList: function (iconList) {
+        let _t = this
+        for (let item of iconList) {
+          let xVal = 0
+          let yVal = 0
+          if (item.desktopIcon && item.desktopIcon.style) {
+            xVal = isNaN(parseFloat(item.desktopIcon.style.left)) ? 0 : parseFloat(item.desktopIcon.style.left)
+            yVal = isNaN(parseFloat(item.desktopIcon.style.top)) ? 0 : parseFloat(item.desktopIcon.style.top)
+          }
+          let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
+          // 目标Grid
+          let targetGrid = _t.findGrid(distanceArr, distanceArr, item.app.name)
+          // 更新style
+          let style = {
+            'left': targetGrid.leftTop.x + 'px',
+            'top': targetGrid.leftTop.y + 'px'
+          }
+          for (let i = 0, len = iconList.length; i < len; i++) {
+            if (iconList[i].app.name === item.app.name) {
+              console.log('handlerDesktopIconDrop style', i, item.app.name, style)
+              iconList[i]['desktopIcon']['dragFlag'] = true
+              iconList[i]['desktopIcon']['style'] = style
+            } else {
+              iconList[i]['desktopIcon']['dragFlag'] = !!iconList[i]['desktopIcon']['dragFlag']
+            }
+          }
+        }
+
+        // TODO 分发action，更新用户应用数据
+        // 分发mutations，更新用户应用数据
+        _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
+          ..._t.appData,
+          iconList: iconList
+        })
+        return iconList
+      },
       // 节点drop
       handlerDrop: function (event) {
         let _t = this
@@ -167,52 +212,9 @@
         let yVal = event.clientY - targetData.offsetY
         // 2.查找 icon drop 时所处的grid
         // 2.1.遍历gridArr，计算与每个grid的leftTop、rightBottom点的距离
-        let distanceArr = []
-        for (let item of _t.gridArr) {
-          let distanceLeftTop = Math.sqrt(Math.pow(yVal - item.leftTop.y, 2) + Math.pow(xVal - item.leftTop.x, 2))
-          let distanceRightBottom = Math.sqrt(Math.pow(yVal - item.rightBottom.y, 2) + Math.pow(xVal - item.rightBottom.x, 2))
-          distanceArr.push(distanceLeftTop + distanceRightBottom)
-        }
-        let count = 0
-        // 2.2.递归查找距离最小且未占用的grid
-        let findGrid = function (tmpDistanceArr) {
-          count++
-          // 2.2.1.求距离最小值
-          let minDistance = Math.min(...tmpDistanceArr)
-          // 2.2.2.获取距离最小的grid index值，注意需要从 distanceArr 完整数据中获取
-          let minDistanceIndex = distanceArr.indexOf(minDistance)
-          console.log('minDistance', minDistance, minDistanceIndex, distanceArr.length, tmpDistanceArr.length)
-          // 2.2.3.目标Grid
-          let targetGrid = _t.gridArr[minDistanceIndex]
-          // 2.2.4.查找当前grid中是否已有icon，如果有则查找距离次之的grid
-          let iconList = [
-            ..._t.iconList
-          ]
-          // 2.2.5.是否已占据标识
-          let isOccupied = false
-          for (let item of iconList) {
-            if (item.desktopIcon && item.desktopIcon.style) {
-              let leftVal = parseFloat(item.desktopIcon.style.left)
-              let topVal = parseFloat(item.desktopIcon.style.top)
-              if (leftVal === targetGrid.leftTop.x && topVal === targetGrid.leftTop.y && item.app.name !== targetData.name) {
-                isOccupied = true
-                break
-              }
-            }
-          }
-          // 2.2.6.查找距离次之的grid
-          if (isOccupied) {
-            // 移除距离最小项
-            tmpDistanceArr = tmpDistanceArr.filter(item => {
-              return item !== minDistance
-            })
-            targetGrid = findGrid(tmpDistanceArr)
-          }
-          return targetGrid
-        }
+        let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
         // 目标Grid
-        let targetGrid = findGrid(distanceArr)
-        console.log('count', count)
+        let targetGrid = _t.findGrid(distanceArr, distanceArr, targetData.name)
         // 更新style
         let style = {
           'left': targetGrid.leftTop.x + 'px',
@@ -270,6 +272,53 @@
         }
         // console.log('gridArr', gridArr)
         _t.gridArr = gridArr
+      },
+      // 2.2.递归查找距离最小且未占用的grid
+      findGrid: function (tmpDistanceArr, distanceArr, appName) {
+        let _t = this
+        // 2.2.1.求距离最小值
+        let minDistance = Math.min(...tmpDistanceArr)
+        // 2.2.2.获取距离最小的grid index值，注意需要从 distanceArr 完整数据中获取
+        let minDistanceIndex = distanceArr.indexOf(minDistance)
+        console.log('minDistance', minDistance, minDistanceIndex, distanceArr.length, tmpDistanceArr.length)
+        // 2.2.3.目标Grid
+        let targetGrid = _t.gridArr[minDistanceIndex]
+        // 2.2.4.查找当前grid中是否已有icon，如果有则查找距离次之的grid
+        let iconList = [
+          ..._t.iconList
+        ]
+        // 2.2.5.是否已占据标识
+        let isOccupied = false
+        for (let item of iconList) {
+          if (item.desktopIcon && item.desktopIcon.style) {
+            let leftVal = isNaN(parseFloat(item.desktopIcon.style.left)) ? 0 : parseFloat(item.desktopIcon.style.left)
+            let topVal = isNaN(parseFloat(item.desktopIcon.style.top)) ? 0 : parseFloat(item.desktopIcon.style.top)
+            if (leftVal === targetGrid.leftTop.x && topVal === targetGrid.leftTop.y && item.app.name !== appName) {
+              isOccupied = true
+              break
+            }
+          }
+        }
+        // 2.2.6.查找距离次之的grid
+        if (isOccupied) {
+          // 移除距离最小项
+          tmpDistanceArr = tmpDistanceArr.filter(item => {
+            return item !== minDistance
+          })
+          targetGrid = _t.findGrid(tmpDistanceArr, distanceArr, appName)
+        }
+        return targetGrid
+      },
+      // 计算与各个grid的距离
+      handlerDistanceToGrid: function (xVal, yVal) {
+        let _t = this
+        let distanceArr = []
+        for (let item of _t.gridArr) {
+          let distanceLeftTop = Math.sqrt(Math.pow(yVal - item.leftTop.y, 2) + Math.pow(xVal - item.leftTop.x, 2))
+          let distanceRightBottom = Math.sqrt(Math.pow(yVal - item.rightBottom.y, 2) + Math.pow(xVal - item.rightBottom.x, 2))
+          distanceArr.push(distanceLeftTop + distanceRightBottom)
+        }
+        return distanceArr
       }
     },
     created: function () {
@@ -283,6 +332,7 @@
           // 计算格子数据
           _t.handlerGrids()
           // FIXME 还需要从新计算图标位置
+          _t.handlerIconList(_t.iconList)
         })()
       }
     }
