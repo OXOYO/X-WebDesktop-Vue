@@ -260,7 +260,7 @@
         // 广播事件
         _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
       },
-      // 拖拽处理
+      // FIXME 拖拽处理，可以考虑实现选区拖拽
       handlerDragStart: function (event) {
         let _t = this
         let appInfo = _t.info

@@ -59,6 +59,7 @@
     data () {
       return {
         components: {},
+        // FIXME 应该从接口获取，然后将 appData 存入 Store，便于 DesktopIconBox/StartMenu/TaskBarIconBox 操作
         appData: {
           iconList: [
             {
@@ -241,7 +242,7 @@
             {
               app: {
                 id: '',
-                name: 'AccountManagement',
+                name: 'SystemSetting',
                 icon: '/static/app.png',
                 title: '系统设置',
                 x: 0,
