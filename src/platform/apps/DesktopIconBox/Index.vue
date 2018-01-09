@@ -23,6 +23,9 @@
     writing-mode: horizontal-tb;
     text-align: center;
 
+    &:hover {
+      background: rgba(0, 0, 0, .5);
+    }
     .grid-item-label {
       width: 100%;
       padding: 5px;
@@ -90,7 +93,7 @@
     data () {
       return {
         gridArr: [],
-        isShowGrid: false
+        isShowGrid: true
       }
     },
     computed: {
@@ -144,6 +147,7 @@
       iconList: function () {
         let _t = this
         // 处理iconList
+        console.log(';;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;')
         let iconList = _t.handlerIconList(_t.appData.iconList)
         return iconList
       }
@@ -159,9 +163,11 @@
             xVal = isNaN(parseFloat(item.desktopIcon.style.left)) ? 0 : parseFloat(item.desktopIcon.style.left)
             yVal = isNaN(parseFloat(item.desktopIcon.style.top)) ? 0 : parseFloat(item.desktopIcon.style.top)
           }
+          console.log('xVal', xVal, 'yVal', yVal)
           let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
-          // 目标Grid
-          let targetGrid = _t.findGrid(distanceArr, distanceArr, item.app.name)
+          // 目标Grid，FIXME 【BUG】此处需要考虑从上到下，从左到有的排布规则
+          let targetGrid = _t.findGrid(distanceArr, distanceArr, item.app.name, iconList)
+          console.log('targetGrid', targetGrid.leftTop.x, targetGrid.leftTop.y)
           // 更新style
           let style = {
             'left': targetGrid.leftTop.x + 'px',
@@ -180,10 +186,10 @@
 
         // TODO 分发action，更新用户应用数据
         // 分发mutations，更新用户应用数据
-        _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
-          ..._t.appData,
-          iconList: iconList
-        })
+        // _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
+        //   ..._t.appData,
+        //   iconList: iconList
+        // })
         return iconList
       },
       // 节点drop
@@ -214,7 +220,7 @@
         // 2.1.遍历gridArr，计算与每个grid的leftTop、rightBottom点的距离
         let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
         // 目标Grid
-        let targetGrid = _t.findGrid(distanceArr, distanceArr, targetData.name)
+        let targetGrid = _t.findGrid(distanceArr, distanceArr, targetData.name, _t.iconList)
         // 更新style
         let style = {
           'left': targetGrid.leftTop.x + 'px',
@@ -273,8 +279,8 @@
         // console.log('gridArr', gridArr)
         _t.gridArr = gridArr
       },
-      // 2.2.递归查找距离最小且未占用的grid
-      findGrid: function (tmpDistanceArr, distanceArr, appName) {
+      // 2.2.递归查找距离最小且未占用的grid FIXME 【BUG】此处需要考虑从上到下，从左到有的排布规则
+      findGrid: function (tmpDistanceArr, distanceArr, appName, iconList) {
         let _t = this
         // 2.2.1.求距离最小值
         let minDistance = Math.min(...tmpDistanceArr)
@@ -284,9 +290,6 @@
         // 2.2.3.目标Grid
         let targetGrid = _t.gridArr[minDistanceIndex]
         // 2.2.4.查找当前grid中是否已有icon，如果有则查找距离次之的grid
-        let iconList = [
-          ..._t.iconList
-        ]
         // 2.2.5.是否已占据标识
         let isOccupied = false
         for (let item of iconList) {
@@ -299,13 +302,14 @@
             }
           }
         }
+        console.log('isOccupied', isOccupied)
         // 2.2.6.查找距离次之的grid
         if (isOccupied) {
           // 移除距离最小项
           tmpDistanceArr = tmpDistanceArr.filter(item => {
             return item !== minDistance
           })
-          targetGrid = _t.findGrid(tmpDistanceArr, distanceArr, appName)
+          targetGrid = _t.findGrid(tmpDistanceArr, distanceArr, appName, iconList)
         }
         return targetGrid
       },
@@ -332,7 +336,7 @@
           // 计算格子数据
           _t.handlerGrids()
           // FIXME 还需要从新计算图标位置
-          _t.handlerIconList(_t.iconList)
+          // _t.handlerIconList(_t.iconList)
         })()
       }
     }
