@@ -365,6 +365,161 @@
               taskBar: {
                 isPinned: false
               }
+            },
+            {
+              app: {
+                id: '',
+                name: 'SystemSetting01',
+                icon: '/static/app.png',
+                title: '系统设置01',
+                x: 0,
+                y: 480,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'SystemSetting02',
+                icon: '/static/app.png',
+                title: '系统设置02',
+                x: 0,
+                y: 480,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'SystemSetting03',
+                icon: '/static/app.png',
+                title: '系统设置03',
+                x: 0,
+                y: 480,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'SystemSetting04',
+                icon: '/static/app.png',
+                title: '系统设置04',
+                x: 0,
+                y: 480,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'SystemSetting05',
+                icon: '/static/app.png',
+                title: '系统设置05',
+                x: 0,
+                y: 480,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              modal: {
+                size: 'middle',
+                isShow: false,
+                zIndex: 600,
+                enableResize: [
+                  'min',
+                  'max',
+                  'reset',
+                  'close'
+                ]
+              },
+              taskBar: {
+                isPinned: false
+              }
             }
           ],
           showTitle: true
