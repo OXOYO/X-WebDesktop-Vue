@@ -75,7 +75,7 @@
             <Form-item prop="password">
               <Input :type="passwordInputType" v-model="formData.password" placeholder="请输入密码" @on-enter="handleSignIn">
               <Icon type="ios-locked-outline" slot="prepend" style="font-size: 16px;"></Icon>
-              <Button slot="append" :icon="passwordInputType === 'password' ? 'eye' : 'eye-disabled'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
+              <Button slot="append" :icon="passwordInputType === 'password' ? 'eye-disabled' : 'eye'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
               </Input>
             </Form-item>
           </Form>
