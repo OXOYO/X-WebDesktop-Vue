@@ -122,50 +122,6 @@
       ...mapState('Platform/Admin', {
         appData: state => state.appData
       }),
-      /*
-      iconList: function () {
-        let _t = this
-        let tmpArr = []
-        // 处理宽高
-        let height = document.body.clientHeight
-        let width = document.body.clientWidth
-        // 每个图标宽高80px margin 10px
-        let itemWidthHeight = 100
-        let xNum = Math.floor(width / itemWidthHeight)
-        let yNum = Math.floor(height / itemWidthHeight)
-        // 列计数器
-        let col = 0
-        // 行计数器
-        let row = 0
-        // FIXME 需要减掉 taskBar 的高或宽，减高或减宽取决于taskBar的上右下左位置
-        for (let i in _t.appData.iconList) {
-          let item = _t.appData.iconList[i]
-          if (!item.desktopIcon.dragFlag) {
-            if (!item.desktopIcon.style) {
-              item.desktopIcon.style = {}
-            }
-            if (row <= yNum) {
-              item.desktopIcon.style = {
-                left: col * itemWidthHeight + 'px',
-                top: row * itemWidthHeight + 'px'
-              }
-              row++
-            } else {
-              row = 0
-              if (col < xNum) {
-                col++
-              } else {
-                console.log('Col needs less than xNum')
-              }
-            }
-          }
-          console.log('item.app.style', item.app.title, item.app.style)
-          tmpArr[i] = item
-        }
-        console.log('tmpArr', tmpArr)
-        return tmpArr
-      }
-      */
       iconList: function () {
         let _t = this
         // 处理iconList
@@ -185,16 +141,14 @@
         for (let item of iconList) {
           let xVal = 0
           let yVal = 0
-          if (item.desktopIcon && item.desktopIcon.style) {
-            let firstGrid = _t.gridArr[0][0]
-            let leftVal = parseFloat(item.desktopIcon.style.left)
-            let topVal = parseFloat(item.desktopIcon.style.top)
-            xVal = isNaN(leftVal) ? firstGrid.leftTop.x : leftVal
-            yVal = isNaN(topVal) ? firstGrid.leftTop.y : topVal
-//            xVal = isNaN(parseFloat(item.desktopIcon.style.left)) ? 0 : parseFloat(item.desktopIcon.style.left)
-//            yVal = isNaN(parseFloat(item.desktopIcon.style.top)) ? 0 : parseFloat(item.desktopIcon.style.top)
-            console.log('FFFFFFFFF', 'xVal', xVal, 'yVal', yVal)
-          }
+          let firstGrid = _t.gridArr[0][0]
+          console.log('firstGrid', firstGrid.leftTop.x, firstGrid.leftTop.y)
+          let leftVal = parseFloat(item.desktopIcon.style.left)
+          let topVal = parseFloat(item.desktopIcon.style.top)
+          console.log('leftVal', leftVal, 'topVal', topVal)
+          // FIXME 取中心点坐标
+          xVal = (firstGrid.rightBottom.x - firstGrid.leftTop.x) / 2 + firstGrid.leftTop.x
+          yVal = (firstGrid.rightBottom.y - firstGrid.leftTop.y) / 2 + firstGrid.leftTop.y
           console.log('xVal', xVal, 'yVal', yVal)
           let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
           _t.distanceArr = [
@@ -492,17 +446,11 @@
       findGrid: function (tmpDistanceArr, distanceArr, appName, iconList, occupiedGridIndexArr, occupiedGridDistanceArr) {
         let _t = this
         // 2.2.1.求距离最小值 FIXME 【注意】某些情况下会存在多个相等的最小距离
-        // 获取最小距离数组
-//        let minDistanceArr = []
-//        for (let childArr of tmpDistanceArr) {
-//          let tmpArr = childArr.filter(item => !occupiedGridDistanceArr.includes(item))
-//          minDistanceArr.push(Math.min(...tmpArr))
-//        }
         let targetGrid
         for (let childIndex in tmpDistanceArr) {
           let childArr = tmpDistanceArr[childIndex]
           console.log('childArr', childArr.length, childArr)
-          console.log('_t.distanceArr', _t.distanceArr)
+//          console.log('_t.distanceArr', _t.distanceArr)
           if (!childArr.length) {
             continue
           }
@@ -568,83 +516,6 @@
           }
         }
         return targetGrid
-
-        /*
-        console.log('minDistanceArr', minDistanceArr)
-        let minDistance = Math.min(...minDistanceArr)
-        // 2.2.2.获取距离最小的grid index值，注意需要从 distanceArr 完整数据中获取
-        // FIXME 【注意】某些情况下会存在多个相等的最小距离，会导致取index永远取的是第一个
-//        let minDistanceIndex = tmpDistanceArr.indexOf(minDistance) + distanceArr.length - tmpDistanceArr.length
-//        let minDistanceIndex = minDistanceArr.indexOf(minDistance)
-        let targetGrid = null
-        let targetGridIndexArr = []
-        let targetGridIndexStr = ''
-        for (let childIndex in tmpDistanceArr) {
-          let childArr = tmpDistanceArr[childIndex]
-          let childItemIndex
-          if (childArr.includes(minDistance)) {
-            childItemIndex = childArr.indexOf(minDistance)
-            targetGridIndexArr = [childIndex, childItemIndex]
-            targetGridIndexStr = targetGridIndexArr.join('-')
-            targetGrid = _t.gridArr[childIndex][childItemIndex]
-            break
-          }
-//          for (let childItemIndex in childArr) {
-//            if (childArr[childItemIndex] === minDistance) {
-//                targetGrid = _t.gridArr[childIndex][childItemIndex]
-//                break
-//            }
-//          }
-        }
-//        console.log('minDistance', minDistance, minDistanceIndex, distanceArr.length, tmpDistanceArr.length)
-        console.log('minDistance', minDistance, targetGrid, distanceArr.length, tmpDistanceArr.length)
-        // 2.2.3.目标Grid
-//        let targetGrid = _t.gridArr[minDistanceIndex]
-        // 2.2.4.查找当前grid中是否已有icon，如果有则查找距离次之的grid
-        // 2.2.5.是否已占据标识
-        let isOccupied = false
-        let firstGrid = _t.gridArr[0][0]
-        // 判断targetGrid是否已被其他应用占据
-        for (let item of iconList) {
-          if (item.desktopIcon && item.desktopIcon.style) {
-            let leftVal = parseFloat(item.desktopIcon.style.left)
-            let topVal = parseFloat(item.desktopIcon.style.top)
-            leftVal = isNaN(leftVal) ? firstGrid.leftTop.x : leftVal
-            leftVal = isNaN(topVal) ? firstGrid.leftTop.y : topVal
-//            let leftVal = isNaN(parseFloat(item.desktopIcon.style.left)) ? 0 : parseFloat(item.desktopIcon.style.left)
-//            let topVal = isNaN(parseFloat(item.desktopIcon.style.top)) ? 0 : parseFloat(item.desktopIcon.style.top)
-            if (leftVal === targetGrid.leftTop.x && topVal === targetGrid.leftTop.y && item.app.name !== appName) {
-              isOccupied = true
-              break
-            }
-          }
-        }
-        console.log('isOccupied', isOccupied)
-        occupiedGridIndexArr.push(targetGridIndexStr)
-        occupiedGridDistanceArr.push(minDistance)
-        // 2.2.6.查找距离次之的grid
-        if (isOccupied) {
-          // 移除距离最小项 FIXME 【注意】某些情况下会存在多个相等的最小距离，故此处需只移除一个最小项
-          /!*
-          let filterFlag = true
-          tmpDistanceArr = tmpDistanceArr.filter(item => {
-            if (item !== minDistance) {
-              return true
-            } else {
-              if (filterFlag) {
-                filterFlag = false
-                return false
-              } else {
-                return true
-              }
-            }
-//            return item !== minDistance
-          })
-          *!/
-          targetGrid = _t.findGrid(tmpDistanceArr, distanceArr, appName, iconList, occupiedGridIndexArr, occupiedGridDistanceArr)
-        }
-        return targetGrid
-        */
       },
       // 计算与各个grid的距离
       handlerDistanceToGrid: function (xVal, yVal) {
