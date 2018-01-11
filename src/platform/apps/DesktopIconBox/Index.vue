@@ -115,51 +115,49 @@
         isShowGrid: true,
         toggleIndex: 0,
         toggleType: 'top-bottom-left-right',
-        distanceArr: []
+        iconList: []
       }
     },
     computed: {
       ...mapState('Platform/Admin', {
         appData: state => state.appData
-      }),
-      iconList: function () {
-        let _t = this
-        // 处理iconList
-        console.log(';;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;')
-        let iconList = _t.handlerIconList(_t.appData.iconList)
-        return iconList
-      }
+      })
+//      ,
+//      iconList: function () {
+//        let _t = this
+//        // 处理iconList
+//        console.log(';;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;')
+//        let iconList = [..._t.appData.iconList]
+//        iconList = _t.handlerIconList(iconList)
+//        return iconList
+//      }
     },
     methods: {
       // 处理iconList
       handlerIconList: function (iconList) {
         let _t = this
         let flag = true
-        // 已占用grid index索引
-        let occupiedGridIndexArr = []
-        let occupiedGridDistanceArr = []
         for (let item of iconList) {
           let xVal = 0
           let yVal = 0
-          let firstGrid = _t.gridArr[0][0]
-          console.log('firstGrid', firstGrid.leftTop.x, firstGrid.leftTop.y)
           let leftVal = parseFloat(item.desktopIcon.style.left)
           let topVal = parseFloat(item.desktopIcon.style.top)
           console.log('leftVal', leftVal, 'topVal', topVal)
+          let firstGrid = _t.gridArr[0][0]
+          console.log('firstGrid', firstGrid.leftTop.x, firstGrid.leftTop.y)
           // FIXME 取中心点坐标
           xVal = (firstGrid.rightBottom.x - firstGrid.leftTop.x) / 2 + firstGrid.leftTop.x
           yVal = (firstGrid.rightBottom.y - firstGrid.leftTop.y) / 2 + firstGrid.leftTop.y
           console.log('xVal', xVal, 'yVal', yVal)
+
           let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
-          _t.distanceArr = [
-            ...distanceArr
-          ]
+          let distanceArrBack = [...distanceArr]
           if (flag) {
             console.log('distanceArr', distanceArr)
             flag = false
           }
           // 目标Grid，FIXME 【BUG】此处需要考虑从上到下，从左到有的排布规则
-          let targetGrid = _t.findGrid(distanceArr, distanceArr, item.app.name, iconList, occupiedGridIndexArr, occupiedGridDistanceArr)
+          let targetGrid = _t.findGridForAuto(distanceArr, distanceArrBack)
           console.log('targetGrid', targetGrid.leftTop.x, targetGrid.leftTop.y)
           // 更新style
           let style = {
@@ -169,10 +167,7 @@
           for (let i = 0, len = iconList.length; i < len; i++) {
             if (iconList[i].app.name === item.app.name) {
               console.log('handlerIconList style', i, item.app.name, item.app.title, style)
-              iconList[i]['desktopIcon']['dragFlag'] = true
               iconList[i]['desktopIcon']['style'] = style
-            } else {
-              iconList[i]['desktopIcon']['dragFlag'] = !!iconList[i]['desktopIcon']['dragFlag']
             }
           }
         }
@@ -212,34 +207,31 @@
         // 2.查找 icon drop 时所处的grid
         // 2.1.遍历gridArr，计算与每个grid的leftTop、rightBottom点的距离
         let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
-        _t.distanceArr = [
-          ...distanceArr
-        ]
+        let distanceArrBack = [...distanceArr]
         // 目标Grid
-        let targetGrid = _t.findGrid(distanceArr, distanceArr, targetData.name, _t.iconList)
+        let appInfo = targetData.appInfo
+        let targetGrid = _t.findGridForDrag(distanceArr, distanceArrBack, appInfo)
+        console.log('handlerDesktopIconDrop targetGrid', targetGrid.leftTop.x, targetGrid.leftTop.y)
         // 更新style
         let style = {
           'left': targetGrid.leftTop.x + 'px',
           'top': targetGrid.leftTop.y + 'px'
         }
-        let iconList = [
-          ..._t.iconList
-        ]
+        let iconList = [..._t.iconList]
+        console.log(iconList, style)
         for (let i = 0, len = iconList.length; i < len; i++) {
           if (iconList[i].app.name === targetData.name) {
             console.log('handlerDesktopIconDrop style', i, targetData.name, style)
-            iconList[i]['desktopIcon']['dragFlag'] = true
             iconList[i]['desktopIcon']['style'] = style
-          } else {
-            iconList[i]['desktopIcon']['dragFlag'] = !!iconList[i]['desktopIcon']['dragFlag']
           }
         }
+//        _t.iconList = [...iconList]
         // TODO 分发action，更新用户应用数据
         // 分发mutations，更新用户应用数据
-        _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
-          ..._t.appData,
-          iconList: iconList
-        })
+//        _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
+//          ..._t.appData,
+//          iconList: iconList
+//        })
       },
       // 计算格子数据
       handlerGrids: function (direction) {
@@ -443,56 +435,71 @@
         _t.gridArr = gridArr
       },
       // 2.2.递归查找距离最小且未占用的grid FIXME 【BUG】此处需要考虑从上到下，从左到有的排布规则
-      findGrid: function (tmpDistanceArr, distanceArr, appName, iconList, occupiedGridIndexArr, occupiedGridDistanceArr) {
+      findGridForAuto: function (distanceArr, distanceArrBack) {
         let _t = this
         // 2.2.1.求距离最小值 FIXME 【注意】某些情况下会存在多个相等的最小距离
         let targetGrid
-        for (let childIndex in tmpDistanceArr) {
-          let childArr = tmpDistanceArr[childIndex]
-          console.log('childArr', childArr.length, childArr)
-//          console.log('_t.distanceArr', _t.distanceArr)
+        for (let childIndex in distanceArr) {
+          let childArr = distanceArr[childIndex]
           if (!childArr.length) {
             continue
           }
           let minDistance = Math.min(...childArr)
-          let childItemIndex = _t.distanceArr[childIndex].indexOf(minDistance)
+          let childItemIndex = distanceArrBack[childIndex].indexOf(minDistance)
           targetGrid = _t.gridArr[childIndex][childItemIndex]
-          console.log('targetGrid xxxxxxxxxx', childIndex, childItemIndex, _t.distanceArr[childIndex].length, distanceArr[childIndex].length, tmpDistanceArr[childIndex].length, targetGrid, minDistance)
-          // 2.2.5.是否已占据标识
-          let isOccupied = false
           // 判断是否占用
-          if (targetGrid && targetGrid.isOccupied) {
-            isOccupied = true
-          }
-          /*
-          else {
-            let firstGrid = _t.gridArr[0][0]
-            // 判断targetGrid是否已被其他应用占据
-            for (let item of iconList) {
-              if (item.desktopIcon && item.desktopIcon.style) {
-                let leftVal = parseFloat(item.desktopIcon.style.left)
-                let topVal = parseFloat(item.desktopIcon.style.top)
-                leftVal = isNaN(leftVal) ? firstGrid.leftTop.x : leftVal
-                leftVal = isNaN(topVal) ? firstGrid.leftTop.y : topVal
-//            let leftVal = isNaN(parseFloat(item.desktopIcon.style.left)) ? 0 : parseFloat(item.desktopIcon.style.left)
-//            let topVal = isNaN(parseFloat(item.desktopIcon.style.top)) ? 0 : parseFloat(item.desktopIcon.style.top)
-                if (leftVal === targetGrid.leftTop.x && topVal === targetGrid.leftTop.y && item.app.name !== appName) {
-                  isOccupied = true
-                  break
+          if (targetGrid) {
+            if (targetGrid.isOccupied) {
+              // 过滤调已占用的距离
+              let filterFlag = true
+              let tmpArr = distanceArr[childIndex].filter(item => {
+                if (item !== minDistance) {
+                  return true
+                } else {
+                  if (filterFlag) {
+                    filterFlag = false
+                    return false
+                  } else {
+                    return true
+                  }
                 }
+              })
+              distanceArr[childIndex] = tmpArr
+              targetGrid = _t.findGridForAuto(distanceArr, distanceArrBack)
+              if (targetGrid) {
+                break
+              } else {
+                continue
               }
+            } else {
+              // 标记targetGrid占用
+              _t.gridArr[childIndex][childItemIndex]['isOccupied'] = true
+              break
             }
           }
-          */
-          console.log('isOccupied', isOccupied, _t.gridArr[childIndex][childItemIndex]['isOccupied'])
-          // 标记已占用的grid
-          _t.gridArr[childIndex][childItemIndex]['isOccupied'] = true
+        }
+        return targetGrid
+      },
+      findGridForDrag: function (distanceArr, distanceArrBack, appInfo) {
+        let _t = this
+        // 2.2.1.求距离最小值 FIXME 【注意】某些情况下会存在多个相等的最小距离
+        let targetGrid
+        // 获取最小距离数组
+        let minDistanceArr = []
+        for (let childArr of distanceArr) {
+          minDistanceArr.push(Math.min(...childArr))
+        }
+        let minDistance = Math.min(...minDistanceArr)
+        let childIndex = minDistanceArr.indexOf(minDistance)
+        let childItemIndex = distanceArr[childIndex].indexOf(minDistance)
+        targetGrid = _t.gridArr[childIndex][childItemIndex]
+        // 判断是否占用
+        if (targetGrid) {
           // 如果占用则递归
-          if (isOccupied) {
+          if (targetGrid.isOccupied) {
             // 过滤调已占用的距离
-//            tmpDistanceArr = tmpDistanceArr[childIndex].filter(item => item !== minDistance)
             let filterFlag = true
-            let tmpArr = tmpDistanceArr[childIndex].filter(item => {
+            let tmpArr = distanceArr[childIndex].filter(item => {
               if (item !== minDistance) {
                 return true
               } else {
@@ -504,15 +511,26 @@
                 }
               }
             })
-            tmpDistanceArr[childIndex] = tmpArr
-            targetGrid = _t.findGrid(tmpDistanceArr, distanceArr, appName, iconList, occupiedGridIndexArr, occupiedGridDistanceArr)
-            if (targetGrid) {
-              break
-            } else {
-              continue
-            }
+            distanceArr[childIndex] = tmpArr
+            targetGrid = _t.findGridForDrag(distanceArr, distanceArrBack, appInfo)
           } else {
-            break
+            // 标记targetGrid占用
+            _t.gridArr[childIndex][childItemIndex]['isOccupied'] = true
+            // 解除之前的grid占用
+            console.log('appInfo', appInfo)
+            let leftVal = parseFloat(appInfo.desktopIcon.style.left)
+            let topVal = parseFloat(appInfo.desktopIcon.style.top)
+            for (let childIndex in _t.gridArr) {
+              let childArr = _t.gridArr[childIndex]
+              for (let childItemIndex in childArr) {
+                let childItem = _t.gridArr[childIndex][childItemIndex]
+                if (childItem.leftTop.x === leftVal && childItem.leftTop.y === topVal) {
+                  // 解除之前的grid占用
+                  _t.gridArr[childIndex][childItemIndex]['isOccupied'] = false
+                  break
+                }
+              }
+            }
           }
         }
         return targetGrid
@@ -548,6 +566,10 @@
         console.log('_t.toggleType', _t.toggleType)
         _t.handlerGrids(arr[_t.toggleIndex])
         _t.toggleIndex = _t.toggleIndex + 1 < arr.length ? _t.toggleIndex + 1 : 0
+        _t.$nextTick(function () {
+          // 处理iconList
+          _t.iconList = _t.handlerIconList([..._t.appData.iconList])
+        })
       }
     },
     created: function () {
@@ -564,7 +586,8 @@
        * 7.从右往左，从上往下 right-left-top-bottom
        * 8.从右往左，从下往上 right-left-bottom-top
        * */
-      _t.handlerGrids('top-bottom-left-right')
+      _t.handlerGridLayout()
+
       // 监听窗口大小调整
       window.onresize = () => {
         return (() => {
