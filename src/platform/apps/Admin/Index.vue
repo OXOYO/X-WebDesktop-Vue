@@ -73,6 +73,148 @@
               }
             },
             {
+              name: 'iconSort',
+              icon: {
+                type: '',
+                style: ''
+              },
+              text: '排序',
+              enable: true,
+              children: [
+                {
+                  name: 'top-bottom-left-right',
+                  icon: {
+                    type: '',
+                    style: ''
+                  },
+                  text: '从上往下，从左往右',
+                  enable: true,
+                  style: {
+                    width: '200px'
+                  },
+                  action: {
+                    type: 'bus',
+                    handler: 'platform/desktopIcon/sort/tblr'
+                  }
+                },
+                {
+                  name: 'top-bottom-right-left',
+                  icon: {
+                    type: '',
+                    style: ''
+                  },
+                  text: '从上往下，从右往左',
+                  enable: true,
+                  style: {
+                    width: '200px'
+                  },
+                  action: {
+                    type: 'bus',
+                    handler: 'platform/desktopIcon/sort/tbrl'
+                  }
+                },
+                {
+                  name: 'bottom-top-left-right',
+                  icon: {
+                    type: '',
+                    style: ''
+                  },
+                  text: '从下往上，从左往右',
+                  enable: true,
+                  style: {
+                    width: '200px'
+                  },
+                  action: {
+                    type: 'bus',
+                    handler: 'platform/desktopIcon/sort/btlr'
+                  }
+                },
+                {
+                  name: 'bottom-top-right-left',
+                  icon: {
+                    type: '',
+                    style: ''
+                  },
+                  text: '从下往上，从右往左',
+                  enable: true,
+                  style: {
+                    width: '200px'
+                  },
+                  action: {
+                    type: 'bus',
+                    handler: 'platform/desktopIcon/sort/btrl'
+                  }
+                },
+                {
+                  name: 'left-right-top-bottom',
+                  icon: {
+                    type: '',
+                    style: ''
+                  },
+                  text: '从左往右，从上往下',
+                  enable: true,
+                  style: {
+                    width: '200px'
+                  },
+                  action: {
+                    type: 'bus',
+                    handler: 'platform/desktopIcon/sort/lrtb'
+                  }
+                },
+                {
+                  name: 'left-right-bottom-top',
+                  icon: {
+                    type: '',
+                    style: ''
+                  },
+                  text: '从左往右，从下往上',
+                  enable: true,
+                  style: {
+                    width: '200px'
+                  },
+                  action: {
+                    type: 'bus',
+                    handler: 'platform/desktopIcon/sort/lrbt'
+                  }
+                },
+                {
+                  name: 'right-left-top-bottom',
+                  icon: {
+                    type: '',
+                    style: ''
+                  },
+                  text: '从右往左，从上往下',
+                  enable: true,
+                  style: {
+                    width: '200px'
+                  },
+                  action: {
+                    type: 'bus',
+                    handler: 'platform/desktopIcon/sort/rltb'
+                  }
+                },
+                {
+                  name: 'right-left-bottom-top',
+                  icon: {
+                    type: '',
+                    style: ''
+                  },
+                  text: '从右往左，从下往上',
+                  enable: true,
+                  style: {
+                    width: '200px'
+                  },
+                  action: {
+                    type: 'bus',
+                    handler: 'platform/desktopIcon/sort/rlbt'
+                  }
+                }
+              ],
+              childrenStyle: {
+                width: '200px'
+              }
+            },
+            {
               name: 'fullScreen',
               icon: {
                 type: 'arrow-expand',
