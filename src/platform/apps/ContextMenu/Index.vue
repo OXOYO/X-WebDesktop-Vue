@@ -11,7 +11,7 @@
     z-index: 9999;
     /*background: #F0F0F0;*/
     box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, .1);
-    .context-menu-group {
+    .context-menu-group, {
       width: 100%;
       &:after {
         content: ' ';
@@ -40,10 +40,24 @@
         width: 1px;
         background-color: #f5f7f9;
       }
+      &:hover {
+        .context-menu-group-children {
+          display: inline-block;
+        }
+      }
       .context-menu-icon {
         position: absolute;
         top: 10px;
         left: 10px;
+      }
+      .context-menu-group-children {
+        position: absolute;
+        display: none;
+        background: #fff;
+
+        .context-menu-item {
+          width: auto;
+        }
       }
     }
   }
@@ -56,15 +70,19 @@
     theme="light"
     :style="contextMenuStyle"
     @on-select="triggerMenu"
+    @click.stop.prevent
+    :open-names="['iconSort']"
   >
     <!-- FIXME 可以考虑自定义菜单的实现 -->
-    <Menu-group class="context-menu-group hide-title" v-if="contextMenuInfo.list && contextMenuInfo.list.length">
+    <template
+      v-if="contextMenuInfo.list && contextMenuInfo.list.length"
+      v-for="item in contextMenuInfo.list"
+    >
+      <!-- 无子菜单 -->
       <Menu-item
         class="context-menu-item"
-        v-for="item in contextMenuInfo.list"
-        v-if="item.enable"
+        v-if="item.enable && !item.children"
         :name="item.name"
-        :key="item.name"
       >
         <Icon
           class="context-menu-icon"
@@ -75,7 +93,41 @@
         </Icon>
         {{ item.text }}
       </Menu-item>
-    </Menu-group>
+      <!-- 有子菜单 -->
+      <Submenu
+        v-if="item.enable && item.children"
+        :name="item.name"
+        @click.stop.prevent
+      >
+        <template slot="title">
+          <Icon
+            class="context-menu-icon"
+            v-if="item.icon"
+            :type="item.icon.type"
+            :style="item.icon.style"
+          >
+          </Icon>
+          {{ item.text }}
+        </template>
+        <Menu-item
+          class="context-menu-item"
+          v-for="childItem in item.children"
+          v-if="childItem.enable"
+          :name="childItem.name"
+          :key="childItem.name"
+          :style="childItem.style"
+        >
+          <Icon
+            class="context-menu-icon"
+            v-if="childItem.icon"
+            :type="childItem.icon.type"
+            :style="childItem.icon.style"
+          >
+          </Icon>
+          {{ childItem.text }}
+        </Menu-item>
+      </Submenu>
+    </template>
   </Menu>
 </template>
 
@@ -122,7 +174,7 @@
         // TODO 执行菜单相应操作
         _t.$Message.info('触发菜单: ' + menuName)
         let item = _t.contextMenuInfo.list.filter(item => item.name === menuName)[0]
-        console.log('item', item)
+        console.log('item', item, menuName)
         if (item && item.action && item.action.type) {
           switch (item.action.type) {
             case 'bus':
