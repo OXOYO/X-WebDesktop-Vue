@@ -275,7 +275,8 @@
             title: appInfo.app.title,
             name: appInfo.app.name,
             offsetX: offsetX,
-            offsetY: offsetY
+            offsetY: offsetY,
+            appInfo: appInfo
           }
         }
         event.dataTransfer.setData('Text', JSON.stringify(targetInfo))
