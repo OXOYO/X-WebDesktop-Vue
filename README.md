@@ -9,8 +9,12 @@ version 2.0.0 开发中...
 
 API服务：[X-WebDesktop-Api-Koa](https://github.com/OXOYO/X-WebDesktop-Api-Koa)
 
-## TODO
-1.架构调整，需重构，应用设计更合理。
+## Preview
+![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_admin.gif "preview_admin")
+
+![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_home.png "preview_home")
+
+![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_admin.png "preview_admin")
 
 ## Start
 
@@ -25,11 +29,6 @@ API服务：[X-WebDesktop-Api-Koa](https://github.com/OXOYO/X-WebDesktop-Api-Koa
 ```bash
   npm run build
 ```
-
-## Preview
-![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_home.png "preview_home")
-
-![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_admin.png "preview_admin")
 
 ## 目录结构
 ```bash
@@ -75,3 +74,6 @@ API服务：[X-WebDesktop-Api-Koa](https://github.com/OXOYO/X-WebDesktop-Api-Koa
     \_ config.js                // 根配置信息
     \_ main.js                  // 跟入口js
 ```
+
+## TODO
+1.架构调整，需重构，应用设计更合理。
