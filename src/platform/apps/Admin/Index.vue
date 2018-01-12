@@ -297,10 +297,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -331,10 +332,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -362,10 +364,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -393,10 +396,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -424,10 +428,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -455,10 +460,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'max',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -486,10 +492,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -517,10 +524,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -548,10 +556,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -579,10 +588,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -610,10 +620,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',
@@ -641,10 +652,11 @@
                   top: ''
                 }
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
+                type: 'modal',
                 enableResize: [
                   'min',
                   'max',

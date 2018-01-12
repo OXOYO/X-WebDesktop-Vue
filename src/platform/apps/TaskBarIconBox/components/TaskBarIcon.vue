@@ -112,7 +112,7 @@
 </style>
 
 <template>
-  <!-- v-if="info.modal.isShow || info.taskBar.isPinned" -->
+  <!-- v-if="info.window.isShow || info.taskBar.isPinned" -->
   <div
     class="task-bar-icon"
     :class="{ 'task-bar-icon-pinned': info.taskBar.isPinned }"
@@ -123,9 +123,9 @@
     :data-name="info.app.name"
   >
     <!-- 图标 -->
-    <div class="task-bar-icon-main" :class="{ 'app-open': info.modal.isShow }" :data-name="info.app.name">
+    <div class="task-bar-icon-main" :class="{ 'app-open': info.window.isShow }" :data-name="info.app.name">
       <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" v-if="info.app.icon" :src="info.app.icon" :data-name="info.app.name">
-      <div class="app-icon-bg" v-show="info.app.icon && info.modal.isShow" :style="appIconBg"></div>
+      <div class="app-icon-bg" v-show="info.app.icon && info.window.isShow" :style="appIconBg"></div>
     </div>
   </div>
 </template>
@@ -267,7 +267,7 @@
                 style: ''
               },
               text: '在新标签页中打开',
-              enable: _t.info.modal.type === 'iframe' && _t.info.app.url,
+              enable: _t.info.window.type === 'iframe' && _t.info.app.url,
               action: {
                 type: 'bus',
                 handler: 'platform/app/openInNewBrowserTab'

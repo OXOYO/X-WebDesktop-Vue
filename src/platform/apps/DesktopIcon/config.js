@@ -6,5 +6,5 @@
 
 export default {
   type: 'system',
-  name: 'DesktopIconBox'
+  name: 'DesktopIcon'
 }
