@@ -45,14 +45,6 @@
     @drop.stop.prevent="handlerDrop"
     @dragover.stop.prevent
   >
-    <Button
-      style="position: absolute; top: 120px; left: 350px; z-index: 999;"
-      type="primary"
-      v-show="isShowGrid"
-      @click="handlerGridLayout"
-    >
-      Toggle {{ toggleType }}
-    </Button>
     <!-- FIXME grid列表，调试用，后期可删除 -->
     <template
       v-for="(childArr, childIndex) in gridArr"
@@ -62,7 +54,7 @@
         :class="{ 'grid-item-first': childIndex === 0  || ( childIndex === 1 && index < 5) }"
         v-if="isShowGrid"
         v-for="(item, index) in childArr"
-        :key="toggleType + '_' + childIndex + '_' + index"
+        :key="currentDirection + '_' + childIndex + '_' + index"
         :style="{ left: item.leftTop.x + 'px', top: item.leftTop.y + 'px' }"
       >
         <div class="grid-item-label">{{ childIndex * childArr.length + index + 1 }}</div>
@@ -112,10 +104,21 @@
     data () {
       return {
         gridArr: [],
-        isShowGrid: true,
+        isShowGrid: false,
         toggleIndex: 0,
-        toggleType: 'top-bottom-left-right',
-        iconList: []
+        iconList: [],
+        directionArr: [
+          'top-bottom-left-right',
+          'top-bottom-right-left',
+          'bottom-top-left-right',
+          'bottom-top-right-left',
+          'left-right-top-bottom',
+          'left-right-bottom-top',
+          'right-left-top-bottom',
+          'right-left-bottom-top'
+        ],
+        // 当前激活的排序方向
+        currentDirection: 'top-bottom-left-right'
       }
     },
     computed: {
@@ -550,22 +553,26 @@
         }
         return distanceArr
       },
-      handlerGridLayout: function () {
+      handlerGridLayout: function (direction) {
         let _t = this
-        let arr = [
-          'top-bottom-left-right',
-          'top-bottom-right-left',
-          'bottom-top-left-right',
-          'bottom-top-right-left',
-          'left-right-top-bottom',
-          'left-right-bottom-top',
-          'right-left-top-bottom',
-          'right-left-bottom-top'
-        ]
-        _t.toggleType = arr[_t.toggleIndex]
-        console.log('_t.toggleType', _t.toggleType)
-        _t.handlerGrids(arr[_t.toggleIndex])
-        _t.toggleIndex = _t.toggleIndex + 1 < arr.length ? _t.toggleIndex + 1 : 0
+        /*
+         * 1.从上往下，从左往右 top-bottom-left-right
+         * 2.从上往下，从右往左 top-bottom-right-left
+         * 3.从下往上，从左往右 bottom-top-left-right
+         * 4.从下往上，从右往左 bottom-top-right-left
+         *
+         * 5.从左往右，从上往下 left-right-top-bottom
+         * 6.从左往右，从下往上 left-right-bottom-top
+         * 7.从右往左，从上往下 right-left-top-bottom
+         * 8.从右往左，从下往上 right-left-bottom-top
+         * */
+        if (!_t.directionArr.includes(direction)) {
+          direction = _t.directionArr[0]
+        }
+        // 更新当前激活的排序方向
+        _t.currentDirection = direction
+        // 计算格子数据
+        _t.handlerGrids(direction)
         _t.$nextTick(function () {
           // 处理iconList
           _t.iconList = _t.handlerIconList([..._t.appData.iconList])
@@ -574,28 +581,30 @@
     },
     created: function () {
       let _t = this
-      // 计算格子数据
-      /*
-       * 1.从上往下，从左往右 top-bottom-left-right
-       * 2.从上往下，从右往左 top-bottom-right-left
-       * 3.从下往上，从左往右 bottom-top-left-right
-       * 4.从下往上，从右往左 bottom-top-right-left
-       *
-       * 5.从左往右，从上往下 left-right-top-bottom
-       * 6.从左往右，从下往上 left-right-bottom-top
-       * 7.从右往左，从上往下 right-left-top-bottom
-       * 8.从右往左，从下往上 right-left-bottom-top
-       * */
-      _t.handlerGridLayout()
+      // 处理格子排序
+      _t.handlerGridLayout(_t.currentDirection)
 
+      // 监听事件
+      _t.$utils.bus.$on('platform/desktopIcon/sort', function (direction) {
+        console.log('bus on', direction)
+        if (_t.directionArr.includes(direction)) {
+          // 处理格子排序
+          _t.handlerGridLayout(direction)
+        }
+      })
+
+      let resizeTimer = null
       // 监听窗口大小调整
       window.onresize = () => {
         return (() => {
-          console.log('window resize!')
-          // 计算格子数据
-          _t.handlerGrids('top-bottom-left-right')
-          // FIXME 还需要从新计算图标位置
-          // _t.handlerIconList(_t.iconList)
+          if (resizeTimer) {
+            clearTimeout(resizeTimer)
+          }
+          resizeTimer = setTimeout(function () {
+            console.log('window resize!')
+            // 处理格子排序
+            _t.handlerGridLayout(_t.currentDirection)
+          }, 500)
         })()
       }
     }

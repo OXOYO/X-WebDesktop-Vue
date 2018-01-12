@@ -9,27 +9,14 @@
     min-width: 120px;
     width: auto !important;
     z-index: 9999;
-    /*background: #F0F0F0;*/
+    background: #FFF;
     box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, .1);
-    .context-menu-group, {
-      width: 100%;
-      &:after {
-        content: ' ';
-        width: 90%;
-        height: 1px;
-        background: #cdcdcd;
-        display: block;
-        margin-left: 5%;
-      }
-    }
-    .hide-title {
-      .ivu-menu-item-group-title {
-        display: none;
-      }
-    }
+
     .context-menu-item {
       padding: 5px 10px 5px 40px;
       position: relative;
+      cursor: default;
+
       &:before {
         content: ' ';
         display: inline-block;
@@ -41,7 +28,9 @@
         background-color: #f5f7f9;
       }
       &:hover {
-        .context-menu-group-children {
+        background: #f0f0f0;
+
+        .context-menu-child {
           display: inline-block;
         }
       }
@@ -50,10 +39,13 @@
         top: 10px;
         left: 10px;
       }
-      .context-menu-group-children {
+      .context-menu-child {
         position: absolute;
         display: none;
         background: #fff;
+        right: 0;
+        top: 0;
+        box-shadow: 0 0 2px 2px rgba(0, 0, 0, .2);
 
         .context-menu-item {
           width: auto;
@@ -64,7 +56,7 @@
 </style>
 
 <template>
-  <Menu
+  <div
     v-if="contextMenuInfo.isShow"
     class="app-context-menu"
     theme="light"
@@ -78,62 +70,33 @@
       v-if="contextMenuInfo.list && contextMenuInfo.list.length"
       v-for="item in contextMenuInfo.list"
     >
-      <!-- 无子菜单 -->
-      <Menu-item
-        class="context-menu-item"
-        v-if="item.enable && !item.children"
-        :name="item.name"
-      >
-        <Icon
-          class="context-menu-icon"
-          v-if="item.icon"
-          :type="item.icon.type"
-          :style="item.icon.style"
+      <ContextMenuItem :info="item">
+        <div
+          v-if="item.children && item.children.length"
+          class="context-menu-child"
+          :style="item.childrenStyle"
+          slot="child"
         >
-        </Icon>
-        {{ item.text }}
-      </Menu-item>
-      <!-- 有子菜单 -->
-      <Submenu
-        v-if="item.enable && item.children"
-        :name="item.name"
-        @click.stop.prevent
-      >
-        <template slot="title">
-          <Icon
-            class="context-menu-icon"
-            v-if="item.icon"
-            :type="item.icon.type"
-            :style="item.icon.style"
+          <ContextMenuItem
+            v-for="childItem in item.children"
+            :info="childItem"
+            :key="item.name"
           >
-          </Icon>
-          {{ item.text }}
-        </template>
-        <Menu-item
-          class="context-menu-item"
-          v-for="childItem in item.children"
-          v-if="childItem.enable"
-          :name="childItem.name"
-          :key="childItem.name"
-          :style="childItem.style"
-        >
-          <Icon
-            class="context-menu-icon"
-            v-if="childItem.icon"
-            :type="childItem.icon.type"
-            :style="childItem.icon.style"
-          >
-          </Icon>
-          {{ childItem.text }}
-        </Menu-item>
-      </Submenu>
+          </ContextMenuItem>
+        </div>
+      </ContextMenuItem>
     </template>
-  </Menu>
+  </div>
 </template>
 
 <script>
+  import ContextMenuItem from './components/ContextMenuItem.vue'
+
   export default {
     name: 'ContextMenu',
+    components: {
+      ContextMenuItem
+    },
     data () {
       return {
         contextMenuInfo: {

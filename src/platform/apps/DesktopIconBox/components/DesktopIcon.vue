@@ -263,6 +263,8 @@
       // FIXME 拖拽处理，可以考虑实现选区拖拽
       handlerDragStart: function (event) {
         let _t = this
+        // 广播事件，关闭菜单
+        _t.$utils.bus.$emit('platform/contextMenu/hide')
         let appInfo = _t.info
         // 鼠标点击位置相对拖拽对象位置
         let offsetX = event.offsetX
