@@ -78,7 +78,7 @@
                 type: '',
                 style: ''
               },
-              text: '排序',
+              text: '排序方式',
               enable: true,
               children: [
                 {
@@ -89,9 +89,7 @@
                   },
                   text: '从上往下，从左往右',
                   enable: true,
-                  style: {
-                    // width: '200px'
-                  },
+                  style: {},
                   action: {
                     type: 'bus',
                     handler: 'platform/desktopIcon/sort',
@@ -106,9 +104,7 @@
                   },
                   text: '从上往下，从右往左',
                   enable: true,
-                  style: {
-                    // width: '200px'
-                  },
+                  style: {},
                   action: {
                     type: 'bus',
                     handler: 'platform/desktopIcon/sort',
@@ -123,9 +119,7 @@
                   },
                   text: '从下往上，从左往右',
                   enable: true,
-                  style: {
-                    // width: '200px'
-                  },
+                  style: {},
                   action: {
                     type: 'bus',
                     handler: 'platform/desktopIcon/sort',
@@ -140,9 +134,7 @@
                   },
                   text: '从下往上，从右往左',
                   enable: true,
-                  style: {
-                    // width: '200px'
-                  },
+                  style: {},
                   action: {
                     type: 'bus',
                     handler: 'platform/desktopIcon/sort',
@@ -157,9 +149,7 @@
                   },
                   text: '从左往右，从上往下',
                   enable: true,
-                  style: {
-                    // width: '200px'
-                  },
+                  style: {},
                   action: {
                     type: 'bus',
                     handler: 'platform/desktopIcon/sort',
@@ -174,9 +164,7 @@
                   },
                   text: '从左往右，从下往上',
                   enable: true,
-                  style: {
-                    // width: '200px'
-                  },
+                  style: {},
                   action: {
                     type: 'bus',
                     handler: 'platform/desktopIcon/sort',
@@ -191,9 +179,7 @@
                   },
                   text: '从右往左，从上往下',
                   enable: true,
-                  style: {
-                    // width: '200px'
-                  },
+                  style: {},
                   action: {
                     type: 'bus',
                     handler: 'platform/desktopIcon/sort',
@@ -208,9 +194,7 @@
                   },
                   text: '从右往左，从下往上',
                   enable: true,
-                  style: {
-                    // width: '200px'
-                  },
+                  style: {},
                   action: {
                     type: 'bus',
                     handler: 'platform/desktopIcon/sort',

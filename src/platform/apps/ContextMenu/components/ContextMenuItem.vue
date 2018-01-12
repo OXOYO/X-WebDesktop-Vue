@@ -21,7 +21,16 @@
       :style="info.icon.style"
     >
     </Icon>
-    <div class="context-menu-label">{{ info.text }}</div>
+    <div class="context-menu-label">
+      <div class="context-menu-label-text">{{ info.text }}</div>
+      <Icon
+        class="context-menu-icon-child"
+        v-if="info.children && info.children.length"
+        type="arrow-right-b"
+      >
+      </Icon>
+    </div>
+
     <slot name="child"></slot>
   </div>
 </template>
