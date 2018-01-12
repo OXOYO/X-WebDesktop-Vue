@@ -11,11 +11,15 @@
     z-index: 9999;
     background: #FFF;
     box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, .1);
+    padding: 5px 0;
 
     .context-menu-item {
       padding: 5px 10px 5px 40px;
       position: relative;
       cursor: default;
+      border: 1px solid transparent;
+      border-left: none;
+      border-right: none;
 
       &:before {
         content: ' ';
@@ -29,27 +33,49 @@
       }
       &:hover {
         background: #f0f0f0;
+        border-color: #57a3f3;
+        /*box-shadow: 0 0 2px 2px rgba(45, 140, 240, .2);*/
 
         .context-menu-child {
           display: inline-block;
         }
+
+        >.context-menu-icon {
+          transform: rotate(360deg);
+          transform-origin: center center;
+        }
       }
-      .context-menu-icon {
+      >.context-menu-icon {
         position: absolute;
         top: 10px;
         left: 10px;
+        transition: All 0.4s ease-in-out;
+      }
+      .context-menu-label {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+
+        .context-menu-label-text {
+          display: inline-block;
+        }
+        .context-menu-icon-child {
+          display: inline-block;
+          position: absolute;
+          top: 50%;
+          right: 0;
+          margin-top: -0.5em;
+        }
       }
       .context-menu-child {
         position: absolute;
+        z-index: 1;
         display: none;
         background: #fff;
         right: 0;
         top: 0;
         box-shadow: 0 0 2px 2px rgba(0, 0, 0, .2);
-
-        .context-menu-item {
-          width: auto;
-        }
+        padding: 5px 0;
       }
     }
   }
@@ -59,11 +85,8 @@
   <div
     v-if="contextMenuInfo.isShow"
     class="app-context-menu"
-    theme="light"
     :style="contextMenuStyle"
-    @on-select="triggerMenu"
     @click.stop.prevent
-    :open-names="['iconSort']"
   >
     <!-- FIXME 可以考虑自定义菜单的实现 -->
     <template
@@ -128,26 +151,6 @@
           }
         }
         return tmpObj
-      }
-    },
-    methods: {
-      // 右键菜单触发
-      triggerMenu: function (menuName) {
-        let _t = this
-        // TODO 执行菜单相应操作
-        _t.$Message.info('触发菜单: ' + menuName)
-        let item = _t.contextMenuInfo.list.filter(item => item.name === menuName)[0]
-        console.log('item', item, menuName)
-        if (item && item.action && item.action.type) {
-          switch (item.action.type) {
-            case 'bus':
-              console.log('item.action.handler', item.action.handler)
-              _t.$utils.bus.$emit(item.action.handler)
-              break
-          }
-        }
-        // 关闭菜单
-        _t.contextMenuInfo.isShow = false
       }
     },
     created: function () {
