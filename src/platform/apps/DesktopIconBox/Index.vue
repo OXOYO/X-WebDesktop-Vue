@@ -1,7 +1,7 @@
 /**
 * Created by OXOYO on 2017/12/24.
 *
-* 入口文件
+* 入口文件 FIXME 【废弃】DesktopIconBox已废弃，直接在Dektop下遍历DesktopIcon
 */
 
 <style scoped lang="less" rel="stylesheet/less">
@@ -46,13 +46,14 @@
     @dragover.stop.prevent
   >
     <!-- FIXME grid列表，调试用，后期可删除 -->
+    <!--
     <template
+      v-if="isShowGrid"
       v-for="(childArr, childIndex) in gridArr"
     >
       <div
         class="grid-item"
         :class="{ 'grid-item-first': childIndex === 0  || ( childIndex === 1 && index < 5) }"
-        v-if="isShowGrid"
         v-for="(item, index) in childArr"
         :key="currentDirection + '_' + childIndex + '_' + index"
         :style="{ left: item.leftTop.x + 'px', top: item.leftTop.y + 'px' }"
@@ -66,6 +67,7 @@
         </div>
       </div>
     </template>
+    -->
     <!-- 应用列表 -->
     <DesktopIcon
       v-for="item in iconList"

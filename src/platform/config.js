@@ -40,6 +40,14 @@ export default {
       component: 'Index.vue',
       store: 'store/index.js'
     },
+    // 桌面图标
+    DesktopIcon: {
+      name: 'DesktopIcon',
+      parent: './apps',
+      path: './apps/DesktopIcon/',
+      component: 'Index.vue',
+      store: 'store/index.js'
+    },
     // 桌面控件
     DesktopWidget: {
       name: 'DesktopWidget',

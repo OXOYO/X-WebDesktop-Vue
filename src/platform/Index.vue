@@ -28,15 +28,27 @@
     </component>
     <!-- 后台 -->
     <component :is="components.Admin" v-if="userInfo.isLogin">
-      <component :is="components.Desktop">
+      <!-- TODO Desktop 需要改造，主要由于 DesktopIcon && Window 均拖拽 -->
+      <component
+        :is="components.Desktop"
+        :childComponents="{
+         DesktopIcon: components.DesktopIcon,
+         DesktopWidget: components.DesktopWidget,
+         Window: components.Window
+        }"
+      >
+        <!--
         <component :is="components.DesktopIconBox" :appData="appData"></component>
         <component :is="components.DesktopWidget"></component>
+        -->
         <component :is="components.TaskBar">
           <component :is="components.StartMenu" slot="StartMenu" :appData="appData"></component>
           <component :is="components.TaskBarIconBox" slot="TaskBarIconBox" :appData="appData"></component>
           <component :is="components.TaskBarWidget" slot="TaskBarWidget"></component>
         </component>
+        <!--
         <component :is="components.Window"></component>
+        -->
       </component>
     </component>
     <component :is="components.ContextMenu"></component>
@@ -76,7 +88,7 @@
                 left: '',
                 top: ''
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
@@ -108,7 +120,7 @@
                 left: '',
                 top: ''
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
@@ -137,7 +149,7 @@
                 left: '',
                 top: ''
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
@@ -166,7 +178,7 @@
                 left: '',
                 top: ''
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
@@ -195,7 +207,7 @@
                 left: '',
                 top: ''
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
@@ -224,7 +236,7 @@
                 left: '',
                 top: ''
               },
-              modal: {
+              window: {
                 size: 'max',
                 isShow: false,
                 zIndex: 600,
@@ -253,7 +265,7 @@
                 left: '',
                 top: ''
               },
-              modal: {
+              window: {
                 size: 'middle',
                 isShow: false,
                 zIndex: 600,
@@ -361,7 +373,7 @@
             'top': yVal + 'px'
           }
           tmpInfo = {
-            modal: {
+            window: {
               style: style
             }
           }
