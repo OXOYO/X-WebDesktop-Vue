@@ -280,6 +280,7 @@
         let _t = this
         // TODO 1.分发action，获取用户应用数据
         let appData = {
+          // FIXME 数据结构有待调整规范
           iconList: [
             {
               app: {
@@ -299,12 +300,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'open',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ],
@@ -334,12 +338,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'open',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]
@@ -366,12 +373,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]
@@ -398,12 +408,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]
@@ -430,12 +443,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]
@@ -462,12 +478,15 @@
               },
               window: {
                 size: 'max',
-                isShow: false,
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]
@@ -494,12 +513,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]
@@ -526,12 +548,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]
@@ -558,12 +583,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]
@@ -590,12 +618,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]
@@ -622,12 +653,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]
@@ -654,12 +688,15 @@
               },
               window: {
                 size: 'middle',
-                isShow: false,
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
+                  'custom',
+                  'small',
                   'min',
                   'max',
+                  'middle',
                   'reset',
                   'close'
                 ]

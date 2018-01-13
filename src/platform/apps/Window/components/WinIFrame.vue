@@ -10,7 +10,7 @@
 <template>
   <div>
     <h1>TODO WinIFrame</h1>
-    {{ info.app.title }}
+    <h1>{{ info.app.title }}</h1>
   </div>
 </template>
 
