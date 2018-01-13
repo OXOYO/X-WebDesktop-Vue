@@ -38,7 +38,13 @@
         :style="item.desktopIcon.style"
       ></component>
       <component :is="childComponents.DesktopWidget"></component>
-      <component :is="childComponents.Window"></component>
+      <component
+        :is="childComponents.Window"
+        v-for="item in iconList"
+        v-if="item.window.status !=='close'"
+        :key="item.app.id"
+        :info="item"
+      ></component>
     </div>
     <slot></slot>
   </div>
