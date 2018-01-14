@@ -44,6 +44,7 @@
         v-if="item.window.status !=='close'"
         :key="item.app.id"
         :info="item"
+        :style="item.window.style"
       ></component>
     </div>
     <slot></slot>
@@ -145,6 +146,9 @@
           case 'DesktopIcon':
             _t.handlerDesktopIconDrop(targetInfo, event)
             break
+          case 'Window':
+            _t.handlerWindowDrop(targetInfo, event)
+            break
         }
       },
       // 处理桌面图标drop
@@ -186,6 +190,34 @@
 //          ..._t.appData,
 //          iconList: iconList
 //        })
+      },
+      // 处理窗口drop
+      handlerWindowDrop: function (targetInfo) {
+        let _t = this
+        let targetData = targetInfo.data || {}
+        // 健壮，防止空数据
+        if (!Object.keys(targetData).length) {
+          return
+        }
+        // 1.计算 icon drop 时的坐标
+        let xVal = event.clientX - targetData.offsetX
+        let yVal = event.clientY - targetData.offsetY
+        let style = {
+          'margin-left': 0,
+          'margin-top': 0,
+          'left': xVal + 'px',
+          'top': yVal + 'px'
+        }
+        let iconLIst = [..._t.iconList]
+        for (let i = 0, len = iconLIst.length; i < len; i++) {
+          let item = iconLIst[i]
+          if (item.app.name === targetData.name) {
+            console.log('appName', targetData.name)
+            iconLIst[i]['window']['style'] = style
+            break
+          }
+        }
+        _t.iconList = [...iconLIst]
       },
       // 计算格子数据
       handlerGrids: function (direction) {
