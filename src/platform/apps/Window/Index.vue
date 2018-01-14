@@ -92,7 +92,13 @@
 </style>
 
 <template>
-  <div class="app-window" :class="windowSizeClass">
+  <div
+    class="app-window"
+    :class="windowSizeClass"
+    @click.stop="triggerWindow"
+    draggable="true"
+    @dragstart="handleDragStart"
+  >
     <div class="app-window-header">
       <div class="window-title">{{ info.app.title }}</div>
       <div class="window-bar">
@@ -185,6 +191,64 @@
       // 处理弹窗状态
       handleModalStatus: function (actionName = 'close') {
         console.log('actionName', actionName)
+        let _t = this
+        let tmpInfo
+        let appInfo = _t.info
+        let currentSize = appInfo.window.size
+        let currentStyle = appInfo.window.style
+        let oldSize = appInfo.window.oldSize || 'middle'
+        let oldStyle = appInfo.window.oldStyle || {}
+        // 备份
+        appInfo.window.oldSize = currentSize
+        appInfo.window.oldStyle = currentStyle
+        switch (actionName) {
+          case 'min':
+            appInfo.window.size = 'min'
+            appInfo.window.style = {}
+            break
+          case 'reset':
+            appInfo.window.size = oldSize
+            appInfo.window.style = oldStyle
+            break
+          case 'max':
+            appInfo.window.size = 'max'
+            appInfo.window.style = {}
+            break
+          case 'close':
+            appInfo.window.status = 'close'
+            break
+        }
+        if (!tmpInfo) {
+          return
+        }
+      },
+      // 处理拖拽
+      handleDragStart: function (event) {
+        let _t = this
+        let appInfo = _t.info
+        // 判断当前窗口大小
+        if (appInfo.window.size === 'max') {
+          _t.handleModalStatus('reset')
+        }
+        // 鼠标点击位置相对拖拽对象位置
+        let offsetX = event.offsetX
+        let offsetY = event.offsetY
+        // 拖拽对象数据
+        let targetInfo = {
+          target: 'Window',
+          data: {
+            id: appInfo.app.id,
+            title: appInfo.app.title,
+            name: appInfo.app.name,
+            modalKey: '',
+            offsetX: offsetX,
+            offsetY: offsetY
+          }
+        }
+        event.dataTransfer.setData('Text', JSON.stringify(targetInfo))
+      },
+      triggerWindow: function () {
+        console.log('change Window z-index')
       }
     },
     created: function () {
