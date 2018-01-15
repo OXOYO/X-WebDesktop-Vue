@@ -8,14 +8,14 @@
   .app-task-bar {
     position: absolute;
     bottom: 0;
-    z-index: 500;
+    z-index: 5000;
     width: 100%;
     height: 40px;
     display: inline-block;
     .app-task-bar-bg {
       position: absolute;
       bottom: 0;
-      z-index: 510;
+      z-index: 5010;
       width: 100%;
       height: 100%;
       display: inline-block;
@@ -28,7 +28,7 @@
     .app-task-bar-main {
       position: absolute;
       bottom: 0;
-      z-index: 520;
+      z-index: 5020;
       width: 100%;
       height: 100%;
       display: inline-block;

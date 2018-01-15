@@ -8,7 +8,7 @@
   .app-task-bar-icon-box {
     position: absolute;
     bottom: 0;
-    z-index: 520;
+    z-index: 5020;
     /*width: 100%;*/
     height: 100%;
     display: inline-block;
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import TaskBarIcon from './components/TaskBarIcon'
 
   export default {
@@ -37,17 +38,10 @@
     components: {
       TaskBarIcon
     },
-    props: {
-      appData: {
-        type: Object,
-        default: () => {
-          return {
-            iconList: [],
-            showTitle: true
-          }
-        },
-        required: true
-      }
+    computed: {
+      ...mapState('Platform/Admin', {
+        appData: state => state.appData
+      })
     }
   }
 </script>

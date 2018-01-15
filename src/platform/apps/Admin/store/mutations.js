@@ -5,5 +5,8 @@
 export default {
   'appData/set': (state, data) => {
     state.appData = data
+  },
+  'appData/backup': (state, data) => {
+    state._appData = data
   }
 }

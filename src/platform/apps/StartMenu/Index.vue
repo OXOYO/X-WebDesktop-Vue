@@ -294,6 +294,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: 'StartMenu',
     data () {
@@ -306,17 +308,10 @@
         isMouseDown: false
       }
     },
-    props: {
-      appData: {
-        type: Object,
-        default: () => {
-          return {
-            iconList: [],
-            showTitle: true
-          }
-        },
-        required: true
-      }
+    computed: {
+      ...mapState('Platform/Admin', {
+        appData: state => state.appData
+      })
     },
     methods: {
       // 鼠标按下

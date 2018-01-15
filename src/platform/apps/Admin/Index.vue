@@ -313,11 +313,14 @@
                   'close'
                 ],
                 style: {
-                  'width': '1000px'
+                  'width': '1000px',
+                  'height': '800px',
+                  'margin-left': '-500px',
+                  'margin-top': '-400px'
                 }
               },
               taskBar: {
-                isPinned: false
+                isPinned: true
               }
             },
             {
@@ -349,10 +352,11 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
-                isPinned: false
+                isPinned: true
               }
             },
             {
@@ -384,10 +388,11 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
-                isPinned: false
+                isPinned: true
               }
             },
             {
@@ -419,7 +424,8 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
                 isPinned: false
@@ -454,7 +460,8 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
                 isPinned: false
@@ -489,7 +496,8 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
                 isPinned: false
@@ -524,7 +532,8 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
                 isPinned: false
@@ -559,7 +568,8 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
                 isPinned: false
@@ -594,7 +604,8 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
                 isPinned: false
@@ -629,7 +640,8 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
                 isPinned: false
@@ -664,7 +676,8 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
                 isPinned: false
@@ -699,18 +712,59 @@
                   'middle',
                   'reset',
                   'close'
-                ]
+                ],
+                style: {}
               },
               taskBar: {
                 isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'baidu',
+                icon: '//m.baidu.com/static/search/baiduapp_icon.png',
+                title: '百度',
+                x: 0,
+                y: 480,
+                index: '',
+                url: '//www.baidu.com'
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              window: {
+                size: 'middle',
+                status: 'open',
+                zIndex: 600,
+                type: 'iframe',
+                enableResize: [
+                  'custom',
+                  'small',
+                  'min',
+                  'max',
+                  'middle',
+                  'reset',
+                  'close'
+                ],
+                style: {}
+              },
+              taskBar: {
+                isPinned: true
               }
             }
           ],
           showTitle: true
         }
+        let _appData = JSON.parse(JSON.stringify(appData))
         _t.$Message.success('获取用户应用数据成功！')
         // 分发mutations，更新用户应用数据
         _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), appData)
+        // 分发mutations，备份用户应用数据
+        _t.$store.commit(_t.$utils.store.getType('Admin/appData/backup', 'Platform'), _appData)
       }
     },
     created: function () {

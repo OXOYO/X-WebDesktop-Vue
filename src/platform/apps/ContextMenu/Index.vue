@@ -49,7 +49,7 @@
         position: absolute;
         top: 10px;
         left: 10px;
-        transition: All 0.4s ease-in-out;
+        transition: all 0.2s ease-in-out;
       }
       .context-menu-label {
         display: inline-block;

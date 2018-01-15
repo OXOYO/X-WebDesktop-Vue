@@ -78,6 +78,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: 'DesktopIcon',
     props: {
@@ -113,6 +115,11 @@
         isMouseDown: false
       }
     },
+    computed: {
+      ...mapState('Platform/Admin', {
+        _appData: state => state._appData
+      })
+    },
     methods: {
       // 鼠标按下
       mouseDownHandle: function () {
@@ -123,18 +130,31 @@
       openApp: function () {
         let _t = this
         _t.isMouseDown = false
-        let tmpInfo = {
-          ..._t.info,
-          modal: {
-            ..._t.info.window,
-            isShow: true
+        let appInfo = {..._t.info}
+        /*
+        appInfo.window.status = 'open'
+        // TODO 处理应用打开相关操作
+        _t.$Message.info('打开应用: ' + appInfo.app.title)
+        // 查找备份数据
+        let _appInfo
+        for (let i = 0, len = _t._appData.iconList.length; i < len; i++) {
+          let item = _t._appData.iconList[i]
+          if (item.app.name === appInfo.app.name) {
+            _appInfo = item
           }
         }
-        // TODO 处理应用打开相关操作
-        _t.$Message.info('打开应用: ' + _t.info.app.title)
-
+        let tmpObj = {
+          appInfo: appInfo,
+          actionName: 'open',
+          newSize: _appInfo.window.size,
+          oldSize: '',
+          newStyle: _appInfo.window.style,
+          oldStyle: '',
+          status: 'open'
+        }
+        */
         // 广播事件
-        _t.$utils.bus.$emit('platform/window/open', tmpInfo)
+        _t.$utils.bus.$emit('platform/window/open', appInfo)
       },
       // 右键菜单
       handlerRightClick: function (event) {
