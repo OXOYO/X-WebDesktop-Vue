@@ -9,10 +9,11 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    z-index: 8888;
+    z-index: 2000;
     background: #fff;
     box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .1);
     writing-mode: horizontal-tb;
+    transition: all .2s ease-out;
 
     &.app-window-small {
       width: 300px;
@@ -27,7 +28,10 @@
       margin-top: -300px;
     }
     &.app-window-min {
-      display: none;
+      width: 0;
+      height: 0;
+      /*display: none;*/
+      top: 100%;
     }
     &.app-window-max {
       display: block;
@@ -37,10 +41,62 @@
       left: 0;
     }
 
+    .app-window-resize {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      background: red;
+      z-index: 2010;
+      &.resize-top-left {
+        cursor: nw-resize;
+        top: 0;
+        left: 0;
+      }
+      &.resize-top-right {
+        cursor: ne-resize;
+        top: 0;
+        right: 0;
+      }
+      &.resize-bottom-left {
+        cursor: sw-resize;
+        bottom: 0;
+        left: 0;
+      }
+      &.resize-bottom-right {
+        cursor: se-resize;
+        bottom: 0;
+        right: 0;
+      }
+      &.resize-top-border {
+        cursor: ns-resize;
+        top: 0;
+        width: 100%;
+        height: 2px;
+      }
+      &.resize-right-border {
+        cursor: ew-resize;
+        right: 0;
+        width: 2px;
+        height: 100%;
+      }
+      &.resize-bottom-border {
+        cursor: ns-resize;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+      }
+      &.resize-left-border {
+        cursor: ew-resize;
+        left: 0;
+        width: 2px;
+        height: 100%;
+      }
+    }
+
     .app-window-header {
       position: absolute;
       top: 0;
-      z-index: 600;
+      z-index: 2000;
       display: inline-block;
       /*position: relative;*/
       width: 100%;
@@ -83,7 +139,7 @@
       position: absolute;
       top: 30px;
       bottom: 0;
-      z-index: 600;
+      z-index: 2000;
       overflow: auto;
       width: 100%;
       padding: 10px;
@@ -95,11 +151,23 @@
   <div
     class="app-window"
     :class="windowSizeClass"
-    @click.stop="triggerWindow"
-    draggable="true"
+    @mousedown.stop="triggerWindow"
+    draggable="!isStartResize"
     @dragstart="handleDragStart"
   >
-    <div class="app-window-header">
+    <!-- 拖拽缩放 -->
+    <div class="app-window-resize resize-top-left" @mousedown.stop="startResize('top-left')" @mousemove="moveResize" @mouseup.stop="stopResize"></div>
+    <div class="app-window-resize resize-top-right"></div>
+    <div class="app-window-resize resize-bottom-left"></div>
+    <div class="app-window-resize resize-bottom-right"></div>
+    <div class="app-window-resize resize-top-border"></div>
+    <div class="app-window-resize resize-right-border"></div>
+    <div class="app-window-resize resize-bottom-border"></div>
+    <div class="app-window-resize resize-left-border"></div>
+    <div
+      class="app-window-header"
+      @dblclick.stop.prevent="handleModalStatus(info.window.size === 'max' ? 'reset' : 'max')"
+    >
       <div class="window-title">{{ info.app.title }}</div>
       <div class="window-bar">
         <!-- 最小化 -->
@@ -144,8 +212,10 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import WinIFrame from './components/WinIFrame.vue'
   import WinModal from './components/WinModal.vue'
+
   export default {
     name: 'Window',
     components: {
@@ -160,10 +230,17 @@
     },
     data () {
       return {
-        windowList: []
+        windowList: [],
+        // 是否开始缩放
+        isStartResize: false,
+        // 缩放方向
+        resizeDirection: ''
       }
     },
     computed: {
+      ...mapState('Platform/Admin', {
+        _appData: state => state._appData
+      }),
       windowSizeClass: function () {
         let _t = this
         let tmpClassName = ''
@@ -192,39 +269,88 @@
       handleModalStatus: function (actionName = 'close') {
         console.log('actionName', actionName)
         let _t = this
-        let tmpInfo
-        let appInfo = _t.info
+//        let tmpInfo
+        let appInfo = {..._t.info}
         let currentSize = appInfo.window.size
         let currentStyle = appInfo.window.style
         let oldSize = appInfo.window.oldSize || 'middle'
         let oldStyle = appInfo.window.oldStyle || {}
+        // 查找备份数据
+        let _appInfo
+        for (let i = 0, len = _t._appData.iconList.length; i < len; i++) {
+          let item = _t._appData.iconList[i]
+          if (item.app.name === appInfo.app.name) {
+            _appInfo = item
+          }
+        }
         // 备份
-        appInfo.window.oldSize = currentSize
-        appInfo.window.oldStyle = currentStyle
+//        appInfo.window.oldSize = currentSize
+//        appInfo.window.oldStyle = currentStyle
+        let tmpObj = {
+          appInfo: appInfo,
+          actionName: actionName,
+          newSize: '',
+          oldSize: '',
+          newStyle: '',
+          oldStyle: '',
+          status: ''
+        }
+        // 备份
+        tmpObj['oldSize'] = currentSize
+        tmpObj['oldStyle'] = currentStyle
         switch (actionName) {
           case 'min':
-            appInfo.window.size = 'min'
-            appInfo.window.style = {}
+//            appInfo.window.size = 'min'
+//            appInfo.window.style = {}
+            tmpObj['newSize'] = 'min'
+            tmpObj['newStyle'] = {}
+            tmpObj['status'] = 'open'
             break
           case 'reset':
-            appInfo.window.size = oldSize
-            appInfo.window.style = oldStyle
+//            appInfo.window.size = oldSize
+//            appInfo.window.style = oldStyle
+            tmpObj['newSize'] = oldSize
+            tmpObj['newStyle'] = oldStyle
+            tmpObj['status'] = 'open'
             break
           case 'max':
-            appInfo.window.size = 'max'
-            appInfo.window.style = {}
+//            appInfo.window.size = 'max'
+//            appInfo.window.style = {}
+            tmpObj['newSize'] = 'max'
+            tmpObj['newStyle'] = {}
+            tmpObj['status'] = 'open'
             break
           case 'close':
-            appInfo.window.status = 'close'
+//            appInfo.window.status = 'close'
+            tmpObj['oldSize'] = ''
+            tmpObj['oldStyle'] = {}
+            tmpObj['newSize'] = _appInfo.window.size
+            tmpObj['newStyle'] = _appInfo.window.style
+            tmpObj['status'] = 'close'
             break
         }
-        if (!tmpInfo) {
-          return
+        console.log('appInfo.window.size', appInfo.window.size, _t.info.window.size)
+//        if (!tmpInfo) {
+//          return
+//        }
+        _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
+        // 如果是最小化
+        if (actionName === 'min') {
+          tmpObj['newStyle'] = {
+            'display': 'none'
+          }
+          setTimeout(function () {
+            _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
+          }, 300)
         }
       },
       // 处理拖拽
       handleDragStart: function (event) {
         let _t = this
+        console.log('handleDragStart')
+        if (_t.isStartResize) {
+          return false
+        }
         let appInfo = _t.info
         // 判断当前窗口大小
         if (appInfo.window.size === 'max') {
@@ -248,16 +374,41 @@
         event.dataTransfer.setData('Text', JSON.stringify(targetInfo))
       },
       triggerWindow: function () {
-        console.log('change Window z-index')
+        let _t = this
+        console.log('change Window zIndex', _t.info.window.zIndex)
+        _t.$utils.bus.$emit('platform/window/zIndex/change', _t.info)
+      },
+      // 开始缩放
+      startResize: function (direction) {
+        console.log('startResize')
+        let _t = this
+        // 更新窗口缩放数据
+        _t.isStartResize = true
+        // 更新缩放方向
+        _t.resizeDirection = direction
+      },
+      // 缩放中
+      moveResize: function (event) {
+        let _t = this
+        if (_t.isStartResize) {
+          console.log(event.pageX, event.pageY)
+        }
+      },
+      // 缩放停止
+      stopResize: function () {
+        let _t = this
+        // 更新窗口缩放数据
+        _t.isStartResize = false
       }
     },
     created: function () {
-      let _t = this
+//      let _t = this
       // 监听事件
-      _t.$utils.bus.$on('platform/window/open', function (val) {
-        console.log('platform/window/open', val)
-        _t.windowList.push(val)
-      })
+      // FIXME 【废弃】 改在Desktop中监听
+//      _t.$utils.bus.$on('platform/window/open', function (val) {
+//        console.log('platform/window/open', val)
+//        _t.windowList.push(val)
+//      })
     }
   }
 </script>

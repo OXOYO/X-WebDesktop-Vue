@@ -3,5 +3,6 @@
  */
 
 export default {
-  appData: {}
+  appData: {},
+  _appData: {}
 }

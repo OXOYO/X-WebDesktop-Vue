@@ -4,11 +4,14 @@
 */
 
 <style scoped lang="less" rel="stylesheet/less">
-
+  .app-window-modal {
+    width: 100%;
+    height: 100%;
+  }
 </style>
 
 <template>
-  <div>
+  <div class="app-window-modal">
     <h1>TODO WinModal</h1>
     <h1>{{ info.app.title }}</h1>
   </div>

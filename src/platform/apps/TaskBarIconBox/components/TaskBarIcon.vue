@@ -112,8 +112,8 @@
 </style>
 
 <template>
-  <!-- v-if="info.window.isShow || info.taskBar.isPinned" -->
   <div
+    v-if="info.window.status === 'open' || info.taskBar.isPinned"
     class="task-bar-icon"
     :class="{ 'task-bar-icon-pinned': info.taskBar.isPinned }"
     @mousedown.left.stop.prevent="handlerMouseDown"
@@ -123,9 +123,9 @@
     :data-name="info.app.name"
   >
     <!-- 图标 -->
-    <div class="task-bar-icon-main" :class="{ 'app-open': info.window.isShow }" :data-name="info.app.name">
+    <div class="task-bar-icon-main" :class="{ 'app-open': info.window.status === 'open' }" :data-name="info.app.name">
       <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" v-if="info.app.icon" :src="info.app.icon" :data-name="info.app.name">
-      <div class="app-icon-bg" v-show="info.app.icon && info.window.isShow" :style="appIconBg"></div>
+      <div class="app-icon-bg" v-show="info.app.icon && info.window.status === 'open'" :style="appIconBg"></div>
     </div>
   </div>
 </template>
@@ -176,6 +176,48 @@
       handlerMouseUp: function () {
         let _t = this
         _t.isMouseDown = false
+        // 打开应用
+        let appInfo = {..._t.info}
+        /*
+        // 判断应用是否已打开
+        if (appInfo.window.status === 'open') {
+          let tmpObj = {
+            appInfo: appInfo,
+            actionName: '',
+            newSize: '',
+            oldSize: '',
+            newStyle: '',
+            oldStyle: '',
+            status: ''
+          }
+          let currentSize = appInfo.window.size
+          let currentStyle = appInfo.window.style
+          let oldSize = appInfo.window.oldSize || 'middle'
+          let oldStyle = appInfo.window.oldStyle || {}
+          // 判断当前窗口是否为最小化
+          if (appInfo.window.size === 'min') {
+            // 更新
+            tmpObj['actionName'] = 'reset'
+            tmpObj['oldSize'] = currentSize
+            tmpObj['oldStyle'] = currentStyle
+            tmpObj['newSize'] = oldSize
+            tmpObj['newStyle'] = oldStyle
+            tmpObj['status'] = 'open'
+          } else {
+            // 更新
+            tmpObj['actionName'] = 'min'
+            tmpObj['oldSize'] = currentSize
+            tmpObj['oldStyle'] = currentStyle
+            tmpObj['newSize'] = 'min'
+            tmpObj['newStyle'] = {}
+            tmpObj['status'] = 'open'
+          }
+          _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
+        } else if (appInfo.window.status === 'close') {
+
+        }
+        */
+        _t.$utils.bus.$emit('platform/window/toggle', appInfo)
       },
       // 右键菜单
       handlerRightClick: function (event) {

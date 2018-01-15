@@ -4,14 +4,19 @@
 */
 
 <style scoped lang="less" rel="stylesheet/less">
-
+  .app-window-iframe {
+    width: 100%;
+    height: 100%;
+  }
 </style>
 
 <template>
-  <div>
-    <h1>TODO WinIFrame</h1>
-    <h1>{{ info.app.title }}</h1>
-  </div>
+  <iframe
+    class="app-window-iframe"
+    :src="info.app.url"
+    frameborder="0"
+  >
+  </iframe>
 </template>
 
 <script>

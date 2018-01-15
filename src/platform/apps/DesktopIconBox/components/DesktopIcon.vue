@@ -123,18 +123,12 @@
       openApp: function () {
         let _t = this
         _t.isMouseDown = false
-        let tmpInfo = {
-          ..._t.info,
-          modal: {
-            ..._t.info.window,
-            isShow: true
-          }
-        }
+        let appInfo = {..._t.info}
+        appInfo.window.status = 'open'
         // TODO 处理应用打开相关操作
-        _t.$Message.info('打开应用: ' + _t.info.app.title)
-
+        _t.$Message.info('打开应用: ' + appInfo.app.title)
         // 广播事件
-        _t.$utils.bus.$emit('platform/window/open', tmpInfo)
+        _t.$utils.bus.$emit('platform/window/open', appInfo)
       },
       // 右键菜单
       handlerRightClick: function (event) {
