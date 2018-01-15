@@ -154,6 +154,7 @@
     @mousedown.stop="triggerWindow"
     draggable="!isStartResize"
     @dragstart="handleDragStart"
+    :window-name="info.app.name"
   >
     <!-- 拖拽缩放 -->
     <div class="app-window-resize resize-top-left" @mousedown.stop="startResize('top-left')" @mousemove="moveResize" @mouseup.stop="stopResize"></div>

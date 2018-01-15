@@ -3,7 +3,7 @@
 *
 */
 
-<style scoped lang="less" rel="stylesheet/less">
+<style lang="less" rel="stylesheet/less">
   .task-bar-icon {
     display: inline-block;
     width: 60px;
@@ -12,6 +12,39 @@
     position: relative;
     user-select:none;
     &.task-bar-icon-pinned {
+    }
+
+    .task-bar-preview {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      height: 150px;
+      width: 215px;
+      padding: 10px;
+      margin-left: -107px;
+      border: 1px solid #f5f7f9;
+      background: #fff;
+      z-index: 5030;
+      box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .1);
+      transition: all .2s ease-out;
+
+      .preview-header {
+        width: 100%;
+        height: 25px;
+        line-height: 25px;
+        overflow: hidden;
+      }
+      .preview-body {
+        width: 100%;
+        height: 105px;
+        overflow: hidden;
+
+        canvas,
+        img {
+          width: 100% !important;
+          height: auto !important;
+        }
+      }
     }
     .task-bar-icon-main{
       width: 60px;
@@ -119,9 +152,19 @@
     @mousedown.left.stop.prevent="handlerMouseDown"
     @mouseup.left.stop.prevent="handlerMouseUp"
     @contextmenu.stop.prevent="handlerRightClick($event)"
+    @mouseover="handleMouseOver"
+    @mouseout="handleMouseOut"
     :title="info.app.title"
     :data-name="info.app.name"
   >
+    <!-- 预览图 -->
+    <div class="task-bar-preview" v-show="previewImg">
+      <div class="preview-header">{{ info.app.title }}</div>
+      <!--<div class="preview-body" :preview-window="info.app.name"></div>-->
+      <div class="preview-body">
+        <img :src="previewImg" alt="info.app.name">
+      </div>
+    </div>
     <!-- 图标 -->
     <div class="task-bar-icon-main" :class="{ 'app-open': info.window.status === 'open' }" :data-name="info.app.name">
       <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" v-if="info.app.icon" :src="info.app.icon" :data-name="info.app.name">
@@ -131,6 +174,8 @@
 </template>
 
 <script>
+  import html2canvas from 'html2canvas'
+
   export default {
     name: 'TaskBarIcon',
     props: {
@@ -148,7 +193,8 @@
     },
     data () {
       return {
-        isMouseDown: false
+        isMouseDown: false,
+        previewImg: null
       }
     },
     computed: {
@@ -374,6 +420,33 @@
         console.log('contextMenuInfo', contextMenuInfo)
         // 广播事件
         _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
+      },
+      // 处理鼠标移上事件
+      handleMouseOver: async function () {
+        let _t = this
+        // 进入先置空
+        _t.previewImg = null
+        let appInfo = _t.info
+        let targetWindow
+        // if (appInfo.window.type === 'iframe') {
+        // targetWindow = document.querySelector('[window-name=' + appInfo.app.name + '] iframe body')
+        // } else if (appInfo.window.type === 'modal') {
+        targetWindow = document.querySelector('[window-name=' + appInfo.app.name + ']')
+        // }
+        console.log('targetWindow', targetWindow)
+        html2canvas(targetWindow).then(function (canvas) {
+          console.log('canvas', canvas)
+          // _t.previewImg = canvas
+          // let targetPreview = document.querySelector('[preview-window=' + appInfo.app.name + ']')
+          // targetPreview.innerHTML = canvas
+          _t.previewImg = canvas.toDataURL()
+          console.log('_t.previewImg', _t.previewImg)
+        })
+      },
+      // 处理鼠标移出事件
+      handleMouseOut: function () {
+        let _t = this
+        _t.previewImg = null
       }
     }
   }
