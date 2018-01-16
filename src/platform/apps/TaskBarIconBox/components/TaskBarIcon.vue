@@ -20,33 +20,68 @@
       left: 50%;
       height: 150px;
       width: 215px;
-      padding: 10px;
+      padding: 8px;
       margin-left: -107px;
-      /*border: 1px solid #f5f7f9;*/
+      border: 1px solid rgba(245, 247, 249, .6);
+      border-radius: 5px;
       /*background: rgba(245, 247, 249, .3);*/
       background: rgba(0, 0, 0, .3);
       z-index: 5030;
-      box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .5);
+      box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, .5);
       transition: all .2s ease-out;
 
-      .preview-header {
-        width: 100%;
-        height: 25px;
-        line-height: 25px;
-        overflow: hidden;
-        color: #fff;
-      }
       .preview-body {
         width: 100%;
-        height: 105px;
-        overflow: hidden;
-        text-align: center;
+        height: 100%;
+        padding: 2px 5px 10px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        position: relative;
 
-        canvas,
-        img {
-          margin: 0 auto;
-          width: auto !important;
-          height: 100% !important;
+        .preview-bg {
+          /*content: ' ';*/
+          position: absolute;
+          display: block;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background: rgba(255, 255, 255, .2);
+          filter: blur(25px);
+          opacity: 0;
+          overflow: hidden;
+          z-index: -1;
+          /*background: url(http://cn.bing.com/az/hprichbg/rb/SaunaDolomites_ZH-CN9230743969_1920x1080.jpg) center top / cover no-repeat fixed;*/
+        }
+
+        &:hover {
+          border-color: rgba(245, 247, 249, .5);
+
+          .preview-bg {
+            opacity: 1;
+          }
+        }
+
+        .preview-title {
+          width: 100%;
+          height: 25px;
+          line-height: 25px;
+          overflow: hidden;
+          color: #fff;
+          /*background: red;*/
+        }
+        .preview-img {
+          width: 100%;
+          height: 90px;
+          overflow: hidden;
+          text-align: center;
+
+          canvas,
+          img {
+            margin: 0 auto;
+            width: auto !important;
+            height: 100% !important;
+          }
         }
       }
     }
@@ -166,10 +201,13 @@
       v-show="previewImg"
       @mouseup.left.stop.prevent="handlerMouseUp"
     >
-      <div class="preview-header">{{ info.app.title }}</div>
-      <!--<div class="preview-body" :preview-window="info.app.name"></div>-->
       <div class="preview-body">
-        <img :src="previewImg" alt="info.app.name">
+        <div class="preview-bg"></div>
+        <div class="preview-title">{{ info.app.title }}</div>
+        <!--<div class="preview-body" :preview-window="info.app.name"></div>-->
+        <div class="preview-img">
+          <img :src="previewImg" alt="info.app.name">
+        </div>
       </div>
     </div>
     <!-- 图标 -->
