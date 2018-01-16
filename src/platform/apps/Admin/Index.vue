@@ -18,6 +18,7 @@
 <template>
   <div
     class="app-admin"
+    @mousedown.left="mouseDownHandle"
     @click.stop="handlerLeftClick($event)"
     @contextmenu.stop.prevent="handlerRightClick($event)"
   >
@@ -40,6 +41,12 @@
       })
     },
     methods: {
+      // 鼠标按下
+      mouseDownHandle: function () {
+        let _t = this
+        // 广播事件
+        _t.$utils.bus.$emit('platform/window/preview/clear')
+      },
       // 桌面左键点击
       handlerLeftClick: function () {
         let _t = this
@@ -300,7 +307,7 @@
               },
               window: {
                 size: 'middle',
-                status: 'open',
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
@@ -341,7 +348,7 @@
               },
               window: {
                 size: 'middle',
-                status: 'open',
+                status: 'close',
                 zIndex: 600,
                 type: 'modal',
                 enableResize: [
@@ -728,7 +735,7 @@
                 x: 0,
                 y: 480,
                 index: '',
-                url: '//www.baidu.com'
+                url: 'http://localhost:8899/'
               },
               desktopIcon: {
                 style: {
@@ -738,7 +745,7 @@
               },
               window: {
                 size: 'middle',
-                status: 'open',
+                status: 'close',
                 zIndex: 600,
                 type: 'iframe',
                 enableResize: [

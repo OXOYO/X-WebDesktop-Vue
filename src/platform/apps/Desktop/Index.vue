@@ -14,10 +14,16 @@
 
     .app-desktop-box {
       display: inline-block;
-      position: relative;
+      /*position: relative;*/
       width: 100%;
       height: 100%;
       writing-mode: vertical-lr;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 2000;
     }
   }
 </style>
@@ -44,8 +50,8 @@
         v-if="item.window.status !=='close'"
         :key="item.app.id"
         :info="item"
-        :style="item.window.style"
       ></component>
+      <component :is="childComponents.Wallpaper" :style="{ 'z-index': 1000 }"></component>
     </div>
     <slot></slot>
   </div>

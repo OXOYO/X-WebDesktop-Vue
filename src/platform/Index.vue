@@ -25,6 +25,7 @@
     <!-- 前台 -->
     <component :is="components.Home" v-if="!userInfo.isLogin">
       <component :is="components.Login"></component>
+      <component :is="components.Wallpaper" :style="{ 'z-index': -10 }"></component>
     </component>
     <!-- 后台 -->
     <component :is="components.Admin" v-if="userInfo.isLogin">
@@ -34,7 +35,8 @@
         :childComponents="{
          DesktopIcon: components.DesktopIcon,
          DesktopWidget: components.DesktopWidget,
-         Window: components.Window
+         Window: components.Window,
+         Wallpaper: components.Wallpaper
         }"
       >
         <!--
@@ -49,10 +51,10 @@
         <!--
         <component :is="components.Window"></component>
         -->
+        <!--<component :is="components.Wallpaper" :style="{ 'z-index': 1000 }"></component>-->
       </component>
     </component>
     <component :is="components.ContextMenu"></component>
-    <component :is="components.Wallpaper"></component>
     <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <router-view></router-view>
     </transition>
