@@ -17,7 +17,6 @@
     "animate.css": "^3.5.2",
     "axios": "^0.16.2",
     "browser-update": "^2.1.4",
-    "dom-to-image": "^2.6.0",
     "html2canvas": "^1.0.0-alpha.9",
     "iview": "^2.6.0",
     "js-cookie": "^2.1.4",
