@@ -22,10 +22,11 @@
       width: 215px;
       padding: 10px;
       margin-left: -107px;
-      border: 1px solid #f5f7f9;
-      background: #fff;
+      /*border: 1px solid #f5f7f9;*/
+      /*background: rgba(245, 247, 249, .3);*/
+      background: rgba(0, 0, 0, .3);
       z-index: 5030;
-      box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .1);
+      box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .5);
       transition: all .2s ease-out;
 
       .preview-header {
@@ -33,16 +34,19 @@
         height: 25px;
         line-height: 25px;
         overflow: hidden;
+        color: #fff;
       }
       .preview-body {
         width: 100%;
         height: 105px;
         overflow: hidden;
+        text-align: center;
 
         canvas,
         img {
-          width: 100% !important;
-          height: auto !important;
+          margin: 0 auto;
+          width: auto !important;
+          height: 100% !important;
         }
       }
     }
@@ -152,13 +156,16 @@
     @mousedown.left.stop.prevent="handlerMouseDown"
     @mouseup.left.stop.prevent="handlerMouseUp"
     @contextmenu.stop.prevent="handlerRightClick($event)"
-    @mouseover="handleMouseOver"
-    @mouseout="handleMouseOut"
+    @mouseenter="handleMouseOver"
+    @mouseleave="handleMouseOut"
     :title="info.app.title"
     :data-name="info.app.name"
   >
     <!-- 预览图 -->
-    <div class="task-bar-preview" v-show="previewImg">
+    <div class="task-bar-preview"
+      v-show="previewImg"
+      @mouseup.left.stop.prevent="handlerMouseUp"
+    >
       <div class="preview-header">{{ info.app.title }}</div>
       <!--<div class="preview-body" :preview-window="info.app.name"></div>-->
       <div class="preview-body">
@@ -175,6 +182,7 @@
 
 <script>
   import html2canvas from 'html2canvas'
+//  import domtoimage from 'dom-to-image'
 
   export default {
     name: 'TaskBarIcon',
@@ -194,7 +202,8 @@
     data () {
       return {
         isMouseDown: false,
-        previewImg: null
+        previewImg: null,
+        targetWindow: null
       }
     },
     computed: {
@@ -224,6 +233,11 @@
         _t.isMouseDown = false
         // 打开应用
         let appInfo = {..._t.info}
+        // 清空预览图
+        _t.previewImg = null
+        _t.targetWindow = null
+        // 清除预览窗口样式
+        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
         /*
         // 判断应用是否已打开
         if (appInfo.window.status === 'open') {
@@ -263,191 +277,249 @@
 
         }
         */
-        _t.$utils.bus.$emit('platform/window/toggle', appInfo)
+        _t.$nextTick(function () {
+          _t.$utils.bus.$emit('platform/window/toggle', appInfo)
+        })
       },
       // 右键菜单
       handlerRightClick: function (event) {
         let _t = this
-        console.log('event', event)
-        let xVal = parseInt(event.clientX) - parseInt(event.offsetX)
-        let yVal = parseInt(event.clientY) - parseInt(event.offsetY)
-        let appName = event.target.dataset['name'] || _t.info.app.name || null
-        // 菜单信息
-        let contextMenuInfo = {
-          isShow: true,
-          x: xVal,
-          y: yVal,
-          target: 'taskBarIcon-' + _t.type,
-          appName: appName,
-          data: {
-            ..._t.info
-          },
-          list: [
-            {
-              name: 'refresh',
-              icon: {
-                type: 'refresh',
-                style: ''
-              },
-              text: '刷新',
-              enable: true,
-              action: {
-                type: 'bus',
-                handler: 'platform/refresh'
-              }
+        let appInfo = {..._t.info}
+        // 清空预览图
+        _t.previewImg = null
+        _t.targetWindow = null
+        // 清除预览窗口样式
+        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
+        _t.$nextTick(function () {
+          console.log('event', event)
+          let xVal = parseInt(event.clientX) - parseInt(event.offsetX)
+          let yVal = parseInt(event.clientY) - parseInt(event.offsetY)
+          let appName = event.target.dataset['name'] || _t.info.app.name || null
+          // 菜单信息
+          let contextMenuInfo = {
+            isShow: true,
+            x: xVal,
+            y: yVal,
+            target: 'taskBarIcon-' + _t.type,
+            appName: appName,
+            data: {
+              ..._t.info
             },
-            {
-              name: 'fullScreen',
-              icon: {
-                type: 'arrow-expand',
-                style: ''
-              },
-              text: '全屏',
-              enable: true,
-              action: {
-                type: 'bus',
-                handler: 'platform/fullScreen/open'
-              }
-            },
-            {
-              name: 'cancelFullScreen',
-              icon: {
-                type: 'arrow-shrink',
-                style: ''
-              },
-              text: '取消全屏',
-              enable: true,
-              action: {
-                type: 'bus',
-                handler: 'platform/fullScreen/close'
-              }
-            },
-            {
-              name: 'wallpaper',
-              icon: {
-                type: '',
-                style: ''
-              },
-              text: '切换壁纸',
-              enable: true,
-              action: {
-                type: 'bus',
-                handler: 'platform/wallpaper/switch'
-              }
-            },
-            {
-              name: 'openApp',
-              icon: {
-                type: '',
-                style: ''
-              },
-              text: '打开',
-              enable: true,
-              action: {
-                type: 'bus',
-                handler: 'platform/app/open'
-              }
-            },
-            {
-              name: 'openAppInNewBrowserTab',
-              icon: {
-                type: '',
-                style: ''
-              },
-              text: '在新标签页中打开',
-              enable: _t.info.window.type === 'iframe' && _t.info.app.url,
-              action: {
-                type: 'bus',
-                handler: 'platform/app/openInNewBrowserTab'
-              }
-            },
-            {
-              name: 'uninstallApp',
-              icon: {
-                type: '',
-                style: ''
-              },
-              text: '卸载',
-              enable: true,
-              action: {
-                type: 'bus',
-                handler: 'platform/app/uninstall'
-              }
-            },
-            {
-              name: 'pinToTaskBar',
-              icon: {
-                type: '',
-                style: {
-                  transform: 'rotate(90deg)'
+            list: [
+              {
+                name: 'refresh',
+                icon: {
+                  type: 'refresh',
+                  style: ''
+                },
+                text: '刷新',
+                enable: true,
+                action: {
+                  type: 'bus',
+                  handler: 'platform/refresh'
                 }
               },
-              text: '将此程序锁定到任务栏',
-              enable: !_t.info.taskBar.isPinned,
-              action: {
-                type: 'bus',
-                handler: 'platform/taskBar/pin'
-              }
-            },
-            {
-              name: 'unpinToTaskBar',
-              icon: {
-                type: '',
-                style: ''
+              {
+                name: 'fullScreen',
+                icon: {
+                  type: 'arrow-expand',
+                  style: ''
+                },
+                text: '全屏',
+                enable: true,
+                action: {
+                  type: 'bus',
+                  handler: 'platform/fullScreen/open'
+                }
               },
-              text: '将此程序从任务栏解锁',
-              enable: _t.info.taskBar.isPinned,
-              action: {
-                type: 'bus',
-                handler: 'platform/taskBar/unpin'
-              }
-            },
-            {
-              name: 'closeApp',
-              icon: {
-                type: '',
-                style: ''
+              {
+                name: 'cancelFullScreen',
+                icon: {
+                  type: 'arrow-shrink',
+                  style: ''
+                },
+                text: '取消全屏',
+                enable: true,
+                action: {
+                  type: 'bus',
+                  handler: 'platform/fullScreen/close'
+                }
               },
-              text: '关闭',
-              enable: true,
-              action: {
-                type: 'bus',
-                handler: 'platform/app/close'
+              {
+                name: 'wallpaper',
+                icon: {
+                  type: '',
+                  style: ''
+                },
+                text: '切换壁纸',
+                enable: true,
+                action: {
+                  type: 'bus',
+                  handler: 'platform/wallpaper/switch'
+                }
+              },
+              {
+                name: 'openApp',
+                icon: {
+                  type: '',
+                  style: ''
+                },
+                text: '打开',
+                enable: true,
+                action: {
+                  type: 'bus',
+                  handler: 'platform/app/open'
+                }
+              },
+              {
+                name: 'openAppInNewBrowserTab',
+                icon: {
+                  type: '',
+                  style: ''
+                },
+                text: '在新标签页中打开',
+                enable: _t.info.window.type === 'iframe' && _t.info.app.url,
+                action: {
+                  type: 'bus',
+                  handler: 'platform/app/openInNewBrowserTab'
+                }
+              },
+              {
+                name: 'uninstallApp',
+                icon: {
+                  type: '',
+                  style: ''
+                },
+                text: '卸载',
+                enable: true,
+                action: {
+                  type: 'bus',
+                  handler: 'platform/app/uninstall'
+                }
+              },
+              {
+                name: 'pinToTaskBar',
+                icon: {
+                  type: '',
+                  style: {
+                    transform: 'rotate(90deg)'
+                  }
+                },
+                text: '将此程序锁定到任务栏',
+                enable: !_t.info.taskBar.isPinned,
+                action: {
+                  type: 'bus',
+                  handler: 'platform/taskBar/pin'
+                }
+              },
+              {
+                name: 'unpinToTaskBar',
+                icon: {
+                  type: '',
+                  style: ''
+                },
+                text: '将此程序从任务栏解锁',
+                enable: _t.info.taskBar.isPinned,
+                action: {
+                  type: 'bus',
+                  handler: 'platform/taskBar/unpin'
+                }
+              },
+              {
+                name: 'closeApp',
+                icon: {
+                  type: '',
+                  style: ''
+                },
+                text: '关闭',
+                enable: true,
+                action: {
+                  type: 'bus',
+                  handler: 'platform/app/close'
+                }
               }
-            }
-          ]
-        }
-        console.log('contextMenuInfo', contextMenuInfo)
-        // 广播事件
-        _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
+            ]
+          }
+          console.log('contextMenuInfo', contextMenuInfo)
+          // 广播事件
+          _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
+        })
       },
       // 处理鼠标移上事件
-      handleMouseOver: async function () {
+      handleMouseOver: function () {
         let _t = this
-        // 进入先置空
-        _t.previewImg = null
-        let appInfo = _t.info
+        let appInfo = {..._t.info}
+//        // 清空预览图
+//        _t.previewImg = null
+//        // 清除预览窗口样式
+//        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
+//        _t.$nextTick(function () {
+//          setTimeout(function () {
+          // 判断应用是否打开
+        if (appInfo.window.status !== 'open') {
+          return
+        }
         let targetWindow
         // if (appInfo.window.type === 'iframe') {
         // targetWindow = document.querySelector('[window-name=' + appInfo.app.name + '] iframe body')
         // } else if (appInfo.window.type === 'modal') {
         targetWindow = document.querySelector('[window-name=' + appInfo.app.name + ']')
         // }
-        console.log('targetWindow', targetWindow)
-        html2canvas(targetWindow).then(function (canvas) {
-          console.log('canvas', canvas)
-          // _t.previewImg = canvas
-          // let targetPreview = document.querySelector('[preview-window=' + appInfo.app.name + ']')
-          // targetPreview.innerHTML = canvas
-          _t.previewImg = canvas.toDataURL()
-          console.log('_t.previewImg', _t.previewImg)
-        })
+        // 判断应用size，当size 为min时无法截图，需将窗口显示在浏览器窗口范围内
+        if (appInfo.window.size === 'min') {
+          console.log('targetWindow.style', targetWindow.style)
+//          targetWindow.style.top = 0
+          _t.$utils.bus.$emit('platform/window/preview/open', appInfo)
+        }
+        _t.tagetWindow = targetWindow
+//        _t.$nextTick(function () {
+        setTimeout(function () {
+          console.log('targetWindow', targetWindow)
+          html2canvas(targetWindow).then(function (canvas) {
+            // console.log('canvas', canvas)
+            _t.previewImg = canvas.toDataURL()
+          }).catch(function (error) {
+            console.error('html2canvas render error!', error)
+          })
+        }, 200)
+//        })
+  //        domtoimage.toPng(targetWindow).then(function (dataUrl) {
+  //          console.log('dataUrl', dataUrl)
+  //          _t.previewImg = dataUrl
+  //        }).catch(function (error) {
+  //          console.error('oops, something went wrong!', error)
+  //        })
+//          }, 1000)
+//        })
       },
       // 处理鼠标移出事件
       handleMouseOut: function () {
         let _t = this
         _t.previewImg = null
+        _t.targetWindow = null
+        let appInfo = {..._t.info}
+        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
       }
+    },
+    created: function () {
+      let _t = this
+      // 监听 window 预览
+      _t.$utils.bus.$on('platform/window/preview/open/done', function (appInfo) {
+        if (appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow) {
+//          console.log('targetWindow', targetWindow)
+          html2canvas(_t.targetWindow).then(function (canvas) {
+            // console.log('canvas', canvas)
+            _t.previewImg = canvas.toDataURL()
+          }).catch(function (error) {
+            console.error('html2canvas render error!', error)
+          })
+        }
+      })
+      // 清除预览
+      _t.$utils.bus.$on('platform/window/preview/clear', function () {
+        _t.previewImg = null
+        _t.targetWindow = null
+      })
     }
   }
 </script>

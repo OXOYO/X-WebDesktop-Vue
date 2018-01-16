@@ -159,6 +159,7 @@
       _t.$utils.bus.$on('platform/contextMenu/show', function (val) {
         // 广播事件
         _t.$utils.bus.$emit('platform/startMenu/hide')
+        _t.$utils.bus.$emit('platform/window/preview/clear')
         console.log('contextMenu data', val)
         if (val) {
           _t.contextMenuInfo = val

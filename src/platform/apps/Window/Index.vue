@@ -6,10 +6,12 @@
 
 <style scoped lang="less" rel="stylesheet/less">
   .app-window {
+    display: inline-block;
     position: absolute;
     left: 50%;
     top: 50%;
     z-index: 2000;
+    overflow: hidden;
     background: #fff;
     box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .1);
     writing-mode: horizontal-tb;
@@ -155,6 +157,7 @@
     draggable="!isStartResize"
     @dragstart="handleDragStart"
     :window-name="info.app.name"
+    :style="windowStyle"
   >
     <!-- 拖拽缩放 -->
     <div class="app-window-resize resize-top-left" @mousedown.stop="startResize('top-left')" @mousemove="moveResize" @mouseup.stop="stopResize"></div>
@@ -235,7 +238,9 @@
         // 是否开始缩放
         isStartResize: false,
         // 缩放方向
-        resizeDirection: ''
+        resizeDirection: '',
+        // 预览样式
+        previewStyle: {}
       }
     },
     computed: {
@@ -263,6 +268,17 @@
             break
         }
         return tmpClassName
+      },
+      windowStyle: function () {
+        let _t = this
+        let tmpObj = Object.keys(_t.previewStyle) ? Object.assign({}, _t.info.window.style, _t.previewStyle) : _t.info.window.style
+        if (Object.keys(_t.previewStyle)) {
+          _t.$nextTick(function () {
+            let appInfo = {..._t.info}
+            _t.$utils.bus.$emit('platform/window/preview/open/done', appInfo)
+          })
+        }
+        return tmpObj
       }
     },
     methods: {
@@ -378,6 +394,7 @@
         let _t = this
         console.log('change Window zIndex', _t.info.window.zIndex)
         _t.$utils.bus.$emit('platform/window/zIndex/change', _t.info)
+        _t.$utils.bus.$emit('platform/window/preview/clear')
       },
       // 开始缩放
       startResize: function (direction) {
@@ -400,16 +417,67 @@
         let _t = this
         // 更新窗口缩放数据
         _t.isStartResize = false
+      },
+      // 处理窗口预览
+      handleWindowPreviewOpen: function () {
+        let _t = this
+        _t.previewStyle = {
+          'z-index': -1,
+          position: 'absolute',
+          display: 'inline-block',
+          left: '50%',
+          top: '50%',
+          width: '800px',
+          height: '600px',
+          'margin-left': '-400px',
+          'margin-top': '-300px'
+        }
+//        _t.$nextTick(function () {
+//          setTimeout(function () {
+//            _t.previewStyle = {
+//              ..._t.previewStyle,
+//              position: 'absolute',
+//              display: 'inline-block',
+//              left: '50%',
+//              top: '50%',
+//              width: '800px',
+//              height: '600px',
+//              'margin-left': '-400px',
+//              'margin-top': '-300px'
+//            }
+//            _t.$nextTick(function () {
+//              let appInfo = {..._t.info}
+//              _t.$utils.bus.$emit('platform/window/preview/open/done', appInfo)
+//            })
+//          }, 100)
+//        })
+      },
+      handleWindowPreviewClose: function () {
+        let _t = this
+        _t.previewStyle = {}
       }
     },
     created: function () {
-//      let _t = this
+      let _t = this
       // 监听事件
       // FIXME 【废弃】 改在Desktop中监听
 //      _t.$utils.bus.$on('platform/window/open', function (val) {
 //        console.log('platform/window/open', val)
 //        _t.windowList.push(val)
 //      })
+      // 监听 window 预览
+      _t.$utils.bus.$on('platform/window/preview/open', function (appInfo) {
+        if (appInfo && appInfo.app.name === _t.info.app.name) {
+          // 处理窗口预览
+          _t.handleWindowPreviewOpen(appInfo)
+        }
+      })
+      _t.$utils.bus.$on('platform/window/preview/close', function (appInfo) {
+        if (appInfo && appInfo.app.name === _t.info.app.name) {
+          // 处理窗口预览
+          _t.handleWindowPreviewClose(appInfo)
+        }
+      })
     }
   }
 </script>
