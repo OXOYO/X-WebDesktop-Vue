@@ -172,7 +172,7 @@
       class="app-window-header"
       @dblclick.stop.prevent="handleModalStatus(info.window.size === 'max' ? 'reset' : 'max')"
     >
-      <div class="window-title">{{ info.app.title }}</div>
+      <div class="window-title">{{ info.app.title }} {{ info.window.style['z-index'] ? info.window.style['z-index'] : 'xxxxxx' }}</div>
       <div class="window-bar">
         <!-- 最小化 -->
         <div
@@ -240,7 +240,9 @@
         // 缩放方向
         resizeDirection: '',
         // 预览样式
-        previewStyle: {}
+        previewStyle: {},
+        // 预览当前窗口样式
+        previewCurrentStyle: {}
       }
     },
     computed: {
@@ -271,12 +273,18 @@
       },
       windowStyle: function () {
         let _t = this
-        let tmpObj = Object.keys(_t.previewStyle) ? Object.assign({}, _t.info.window.style, _t.previewStyle) : _t.info.window.style
-        if (Object.keys(_t.previewStyle)) {
+        let tmpObj = {}
+        console.log('_t.previewStyle', _t.previewStyle, _t.previewCurrentStyle)
+        if (Object.keys(_t.previewStyle).length) {
+          tmpObj = Object.assign({}, _t.info.window.style, _t.previewStyle)
           _t.$nextTick(function () {
             let appInfo = {..._t.info}
             _t.$utils.bus.$emit('platform/window/preview/open/done', appInfo)
           })
+        } else if (Object.keys(_t.previewCurrentStyle).length) {
+          tmpObj = Object.assign({}, _t.info.window.style, _t.previewCurrentStyle)
+        } else {
+          tmpObj = _t.info.window.style
         }
         return tmpObj
       }
@@ -293,9 +301,10 @@
         let oldSize = appInfo.window.oldSize || 'middle'
         let oldStyle = appInfo.window.oldStyle || {}
         // 查找备份数据
+        let _appData = JSON.parse(JSON.stringify(_t._appData))
         let _appInfo
-        for (let i = 0, len = _t._appData.iconList.length; i < len; i++) {
-          let item = _t._appData.iconList[i]
+        for (let i = 0, len = _appData.iconList.length; i < len; i++) {
+          let item = _appData.iconList[i]
           if (item.app.name === appInfo.app.name) {
             _appInfo = item
           }
@@ -392,8 +401,9 @@
       },
       triggerWindow: function () {
         let _t = this
+        let appInfo = {..._t.info}
         console.log('change Window zIndex', _t.info.window.zIndex)
-        _t.$utils.bus.$emit('platform/window/zIndex/change', _t.info)
+        _t.$utils.bus.$emit('platform/window/zIndex/change', appInfo)
         _t.$utils.bus.$emit('platform/window/preview/clear')
       },
       // 开始缩放
@@ -455,6 +465,41 @@
       handleWindowPreviewClose: function () {
         let _t = this
         _t.previewStyle = {}
+      },
+      handleWindowPreviewCurrentOpen: function () {
+        console.log('ccccccccccccccccccccddddddddddddddddddd')
+        let _t = this
+        _t.previewStyle = {}
+        if (_t.info.window.size === 'min') {
+          _t.previewCurrentStyle = {
+            'z-index': 2000,
+            position: 'absolute',
+            display: 'inline-block',
+            left: '50%',
+            top: '50%',
+            width: '800px',
+            height: '600px',
+            'margin-left': '-400px',
+            'margin-top': '-300px'
+          }
+        }
+      },
+      handleWindowPreviewOtherClose: function () {
+        let _t = this
+        _t.previewStyle = {}
+        _t.previewCurrentStyle = {
+          'z-index': -1
+        }
+      },
+      handleWindowPreviewCurrentClose: function () {
+        let _t = this
+        _t.previewStyle = {}
+        _t.previewCurrentStyle = {}
+      },
+      handleWindowPreviewOtherOpen: function () {
+        let _t = this
+        _t.previewStyle = {}
+        _t.previewCurrentStyle = {}
       }
     },
     created: function () {
@@ -476,6 +521,28 @@
         if (appInfo && appInfo.app.name === _t.info.app.name) {
           // 处理窗口预览
           _t.handleWindowPreviewClose(appInfo)
+        }
+      })
+      _t.$utils.bus.$on('platform/window/preview/current/open', function (appInfo) {
+        if (appInfo && appInfo.app.name === _t.info.app.name) {
+          // 处理窗口预览
+          _t.handleWindowPreviewCurrentOpen(appInfo)
+        } else {
+          // 处理其他窗口预览
+          _t.handleWindowPreviewOtherClose()
+        }
+      })
+      _t.$utils.bus.$on('platform/window/preview/current/close', function (appInfo) {
+        if (appInfo && appInfo.app.name === _t.info.app.name) {
+          // 处理窗口预览
+          _t.handleWindowPreviewCurrentClose(appInfo)
+          _t.$nextTick(function () {
+            let appInfo = {..._t.info}
+            _t.$utils.bus.$emit('platform/window/preview/current/close/done', appInfo)
+          })
+        } else {
+          // 处理其他窗口预览
+          _t.handleWindowPreviewOtherOpen()
         }
       })
     }

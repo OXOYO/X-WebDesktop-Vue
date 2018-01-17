@@ -38,7 +38,7 @@
       <component
         :is="childComponents.DesktopIcon"
         v-for="item in appData.iconList"
-        :key="item.app.id"
+        :key="item"
         :info="item"
         :showTitle="appData.showTitle"
         :style="item.desktopIcon.style"
@@ -48,7 +48,7 @@
         :is="childComponents.Window"
         v-for="item in appData.iconList"
         v-if="item.window.status !=='close'"
-        :key="item.app.id"
+        :key="item"
         :info="item"
       ></component>
       <component :is="childComponents.Wallpaper" :style="{ 'z-index': 1000 }"></component>
@@ -230,10 +230,12 @@
           }
         }
 //        _t.iconList = [...iconList]
-        _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
+        // 分发mutations，更新用户应用数据
+        let appData = JSON.parse(JSON.stringify({
           ..._t.appData,
           iconList: iconList
-        })
+        }))
+        _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), appData)
       },
       // 计算格子数据
       handlerGrids: function (direction) {
@@ -636,6 +638,7 @@
           if (tmpArr.includes(item.app.name)) {
             computedZIndex = defZIndex + tmpArr.indexOf(item.app.name)
             iconList[i]['window']['style']['z-index'] = computedZIndex
+            console.log('computedZIndex', computedZIndex, item.app.name)
           }
         }
         return iconList
@@ -697,11 +700,12 @@
       // 处理窗口打开
       handleWindowOpen: function (appInfo) {
         let _t = this
-        console.log('platform/window/open', appInfo)
+        console.log('platform/window/open', appInfo.app.name)
         // 查找备份数据
+        let _appData = JSON.parse(JSON.stringify(_t._appData))
         let _appInfo
-        for (let i = 0, len = _t._appData.iconList.length; i < len; i++) {
-          let item = _t._appData.iconList[i]
+        for (let i = 0, len = _appData.iconList.length; i < len; i++) {
+          let item = _appData.iconList[i]
           if (item.app.name === appInfo.app.name) {
             _appInfo = item
           }
@@ -738,9 +742,10 @@
         let _t = this
         console.log('platform/window/toggle', appInfo)
         // 查找备份数据
+        let _appData = JSON.parse(JSON.stringify(_t._appData))
         let _appInfo
-        for (let i = 0, len = _t._appData.iconList.length; i < len; i++) {
-          let item = _t._appData.iconList[i]
+        for (let i = 0, len = _appData.iconList.length; i < len; i++) {
+          let item = _appData.iconList[i]
           if (item.app.name === appInfo.app.name) {
             _appInfo = item
           }
