@@ -19,9 +19,9 @@
       bottom: 40px;
       left: 50%;
       height: 150px;
-      width: 215px;
+      max-width: 215px;
       padding: 8px;
-      margin-left: -107px;
+      margin-left: -50%;
       border: 1px solid rgba(245, 247, 249, .6);
       border-radius: 5px;
       /*background: rgba(245, 247, 249, .3);*/
