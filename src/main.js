@@ -38,6 +38,8 @@ Vue.config.productionTip = isDev
 Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(iView)
+import XDrag from './global/directives/XDrag'
+Vue.use(XDrag)
 
 // 注册全局 Cookies
 Vue.prototype.$Cookies = Cookies
