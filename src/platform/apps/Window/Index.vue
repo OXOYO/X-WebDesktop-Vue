@@ -43,6 +43,12 @@
       left: 0;
     }
 
+    &.app-window-drag-start,
+    &.app-window-drag-move {
+      transition: none;
+      opacity: .9;
+    }
+
     .app-window-resize {
       width: 20px;
       height: 20px;
@@ -158,7 +164,7 @@
     @dragstart="handleDragStart"
     :window-name="info.app.name"
     :style="windowStyle"
-    v-x-drag
+    v-x-drag="dragConfig"
   >
     <!-- 拖拽缩放 -->
     <div class="app-window-resize resize-top-left" @mousedown.stop="startResize('top-left')" @mousemove="moveResize" @mouseup.stop="stopResize"></div>
@@ -243,7 +249,18 @@
         // 预览样式
         previewStyle: {},
         // 预览当前窗口样式
-        previewCurrentStyle: {}
+        previewCurrentStyle: {},
+        // 拖拽配置
+        dragConfig: {
+          // 指定拖拽栏元素
+          bar: '.window-title',
+          // 指定拖拽时target的样式
+          className: {
+            start: 'app-window-drag-start',
+            move: 'app-window-drag-move',
+            done: 'app-window-drag-done'
+          }
+        }
       }
     },
     computed: {
