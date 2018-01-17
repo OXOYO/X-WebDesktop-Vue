@@ -51,14 +51,14 @@
           opacity: 0;
           overflow: hidden;
           z-index: -1;
-          /*background: url(http://cn.bing.com/az/hprichbg/rb/SaunaDolomites_ZH-CN9230743969_1920x1080.jpg) center top / cover no-repeat fixed;*/
+          background: center top / cover no-repeat fixed;
         }
 
         &:hover {
           border-color: rgba(245, 247, 249, .5);
 
           .preview-bg {
-            opacity: 1;
+            opacity: .3;
           }
         }
 
@@ -199,12 +199,17 @@
     <!-- 预览图 -->
     <div class="task-bar-preview"
       v-show="previewImg"
-      @mouseup.left.stop.prevent="handlerMouseUp"
     >
-      <div class="preview-body">
-        <div class="preview-bg"></div>
+      <div
+        class="preview-body"
+        @mousedown.left.stop.prevent
+        @mouseup.left.stop.prevent="handleCurrentWindowOpen"
+        @contextmenu.stop.prevent
+        @mouseenter="previewCurrentWindowOpen"
+        @mouseleave="previewCurrentWindowClose"
+      >
+        <div class="preview-bg" :style="{ 'background-image': 'url('+ previewImg + ')' }"></div>
         <div class="preview-title">{{ info.app.title }}</div>
-        <!--<div class="preview-body" :preview-window="info.app.name"></div>-->
         <div class="preview-img">
           <img :src="previewImg" alt="info.app.name">
         </div>
@@ -276,48 +281,17 @@
         _t.targetWindow = null
         // 清除预览窗口样式
         _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
-        /*
-        // 判断应用是否已打开
-        if (appInfo.window.status === 'open') {
-          let tmpObj = {
-            appInfo: appInfo,
-            actionName: '',
-            newSize: '',
-            oldSize: '',
-            newStyle: '',
-            oldStyle: '',
-            status: ''
-          }
-          let currentSize = appInfo.window.size
-          let currentStyle = appInfo.window.style
-          let oldSize = appInfo.window.oldSize || 'middle'
-          let oldStyle = appInfo.window.oldStyle || {}
-          // 判断当前窗口是否为最小化
-          if (appInfo.window.size === 'min') {
-            // 更新
-            tmpObj['actionName'] = 'reset'
-            tmpObj['oldSize'] = currentSize
-            tmpObj['oldStyle'] = currentStyle
-            tmpObj['newSize'] = oldSize
-            tmpObj['newStyle'] = oldStyle
-            tmpObj['status'] = 'open'
-          } else {
-            // 更新
-            tmpObj['actionName'] = 'min'
-            tmpObj['oldSize'] = currentSize
-            tmpObj['oldStyle'] = currentStyle
-            tmpObj['newSize'] = 'min'
-            tmpObj['newStyle'] = {}
-            tmpObj['status'] = 'open'
-          }
-          _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
-        } else if (appInfo.window.status === 'close') {
-
-        }
-        */
         _t.$nextTick(function () {
           _t.$utils.bus.$emit('platform/window/toggle', appInfo)
         })
+      },
+      // 打开当前窗口
+      handleCurrentWindowOpen: function () {
+        let _t = this
+        // FIXME 【BUG】当存在两个窗口时，当前打开的窗口层级不正确
+        // 打开应用
+//        let appInfo = {..._t.info}
+        _t.previewCurrentWindowClose()
       },
       // 右键菜单
       handlerRightClick: function (event) {
@@ -537,6 +511,18 @@
         _t.targetWindow = null
         let appInfo = {..._t.info}
         _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
+      },
+      // 预览当前窗口 打开
+      previewCurrentWindowOpen: function () {
+        let _t = this
+        let appInfo = {..._t.info}
+        _t.$utils.bus.$emit('platform/window/preview/current/open', appInfo)
+      },
+      // 预览当前窗口 关闭
+      previewCurrentWindowClose: function () {
+        let _t = this
+        let appInfo = {..._t.info}
+        _t.$utils.bus.$emit('platform/window/preview/current/close', appInfo)
       }
     },
     created: function () {
@@ -557,6 +543,13 @@
       _t.$utils.bus.$on('platform/window/preview/clear', function () {
         _t.previewImg = null
         _t.targetWindow = null
+      })
+      _t.$utils.bus.$on('platform/window/preview/current/close/done', function (appInfo) {
+        if (appInfo && appInfo.app.name === _t.info.app.name) {
+          _t.$nextTick(function () {
+            _t.$utils.bus.$emit('platform/window/open', appInfo)
+          })
+        }
       })
     }
   }
