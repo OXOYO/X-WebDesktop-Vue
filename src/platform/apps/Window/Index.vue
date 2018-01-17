@@ -158,6 +158,7 @@
     @dragstart="handleDragStart"
     :window-name="info.app.name"
     :style="windowStyle"
+    v-x-drag
   >
     <!-- 拖拽缩放 -->
     <div class="app-window-resize resize-top-left" @mousedown.stop="startResize('top-left')" @mousemove="moveResize" @mouseup.stop="stopResize"></div>
