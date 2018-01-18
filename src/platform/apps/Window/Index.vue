@@ -8,45 +8,56 @@
   .app-window {
     display: inline-block;
     position: absolute;
-    left: 50%;
-    top: 50%;
-    z-index: 2000;
+    /*left: 50%;*/
+    /*top: 50%;*/
+    /*z-index: 2000;*/
     overflow: hidden;
     background: #fff;
     box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .1);
     writing-mode: horizontal-tb;
-    transition: all .2s ease-out;
+    transition: all .5s ease-out;
 
     &.app-window-small {
+      /*
       width: 300px;
       height: 200px;
+      left: 50%;
+      top: 50%;
       margin-left: -150px;
       margin-top: -100px;
+      */
     }
     &.app-window-middle {
+      /*
       width: 800px;
       height: 600px;
+      left: 50%;
+      top: 50%;
       margin-left: -400px;
       margin-top: -300px;
+      */
     }
     &.app-window-min {
+      /*
       width: 0;
       height: 0;
-      /*display: none;*/
       top: 100%;
+      */
     }
     &.app-window-max {
+      /*
       display: block;
       top: 0;
       right: 0;
       bottom: 42px;
       left: 0;
+      */
     }
 
     &.app-window-drag-start,
     &.app-window-drag-move {
       transition: none;
-      opacity: .9;
+      opacity: .7;
     }
 
     .app-window-resize {
@@ -150,21 +161,29 @@
       z-index: 2000;
       overflow: auto;
       width: 100%;
-      padding: 10px;
+      /*padding: 10px;*/
     }
+  }
+  .x-drag {
+    transform: translateZ(0)
   }
 </style>
 
 <template>
+  <!--
+  draggable="true"
+  @dragstart="handleDragStart"
+
+  v-x-drag="dragConfig"
+  -->
   <div
     class="app-window"
     :class="windowSizeClass"
     @mousedown.stop="triggerWindow"
-    draggable="!isStartResize"
-    @dragstart="handleDragStart"
     :window-name="info.app.name"
     :style="windowStyle"
-    v-x-drag="dragConfig"
+    draggable="true"
+    @dragstart="handleDragStart"
   >
     <!-- 拖拽缩放 -->
     <div class="app-window-resize resize-top-left" @mousedown.stop="startResize('top-left')" @mousemove="moveResize" @mouseup.stop="stopResize"></div>
@@ -177,14 +196,24 @@
     <div class="app-window-resize resize-left-border"></div>
     <div
       class="app-window-header"
-      @dblclick.stop.prevent="handleModalStatus(info.window.size === 'max' ? 'reset' : 'max')"
     >
-      <div class="window-title">{{ info.app.title }} {{ info.window.style['z-index'] ? info.window.style['z-index'] : 'xxxxxx' }}</div>
+      <div
+        class="window-title"
+        @mousedown.stop
+        @mousemove.stop
+        @mouseup.stop
+        @dblclick.stop.prevent="handleModalStatus(info.window.size === 'max' ? 'reset' : 'max')"
+      >
+        {{ info.app.title }}
+      </div>
       <div class="window-bar">
         <!-- 最小化 -->
         <div
           v-if="info.window.enableResize.includes('min')"
           class="window-bar-item"
+          @mousedown.stop
+          @mousemove.stop
+          @mouseup.stop
           @click.stop.prevent="handleModalStatus('min')"
         >
           <Icon type="minus"></Icon>
@@ -193,6 +222,9 @@
         <div
           v-if="info.window.enableResize.includes('max') && info.window.size !== 'max'"
           class="window-bar-item"
+          @mousedown.stop
+          @mousemove.stop
+          @mouseup.stop
           @click.stop.prevent="handleModalStatus('max')"
         >
           <Icon type="android-checkbox-outline-blank"></Icon>
@@ -201,6 +233,9 @@
         <div
           v-if="info.window.enableResize.includes('reset') && info.window.size === 'max'"
           class="window-bar-item"
+          @mousedown.stop
+          @mousemove.stop
+          @mouseup.stop
           @click.stop.prevent="handleModalStatus('reset')"
         >
           <Icon type="ios-browsers-outline"></Icon>
@@ -209,6 +244,9 @@
         <div
           v-if="info.window.enableResize.includes('close')"
           class="window-bar-item"
+          @mousedown.stop
+          @mousemove.stop
+          @mouseup.stop
           @click.stop.prevent="handleModalStatus('close')"
         >
           <Icon type="close"></Icon>
@@ -240,6 +278,7 @@
       }
     },
     data () {
+      let _t = this
       return {
         windowList: [],
         // 是否开始缩放
@@ -252,13 +291,52 @@
         previewCurrentStyle: {},
         // 拖拽配置
         dragConfig: {
+          // 上下文，如需广播事件则必须
+          context: _t,
           // 指定拖拽栏元素
           bar: '.window-title',
           // 指定拖拽时target的样式
           className: {
             start: 'app-window-drag-start',
             move: 'app-window-drag-move',
-            done: 'app-window-drag-done'
+            done: 'app-window-drag-done',
+            main: 'x-drag'
+          },
+          // 指定bus 广播事件名称
+          bus: {
+            start: 'drag-start-' + _t.info.app.name,
+//            move: 'drag-move-' + _t.info.app.name,
+            done: 'drag-done-' + _t.info.app.name
+          }
+        },
+        // 通过行内样式控制
+        windowStyleBySize: {
+          small: {
+            width: '300px',
+            height: '200px',
+            left: '50%',
+            top: '50%',
+            'margin-left': '-150px',
+            'margin-top': '-100px'
+          },
+          middle: {
+            width: '800px',
+            height: '600px',
+            left: '50%',
+            top: '50%',
+            'margin-left': '-400px',
+            'margin-top': '-300px'
+          },
+          max: {
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: '42px'
+          },
+          min: {
+            width: 0,
+            height: 0,
+            top: '100%'
           }
         }
       }
@@ -291,19 +369,28 @@
       },
       windowStyle: function () {
         let _t = this
-        let tmpObj = {}
-        console.log('_t.previewStyle', _t.previewStyle, _t.previewCurrentStyle)
+        let windowStyleBySize = _t.windowStyleBySize[_t.info.window.size] || {}
+        let tmpObj = windowStyleBySize
+        console.log('_t.previewStyle', tmpObj, _t.previewStyle, _t.previewCurrentStyle)
         if (Object.keys(_t.previewStyle).length) {
-          tmpObj = Object.assign({}, _t.info.window.style, _t.previewStyle)
-          _t.$nextTick(function () {
-            let appInfo = {..._t.info}
-            _t.$utils.bus.$emit('platform/window/preview/open/done', appInfo)
-          })
+          tmpObj = {
+            ...tmpObj,
+            ..._t.info.window.style,
+            ..._t.previewStyle
+          }
         } else if (Object.keys(_t.previewCurrentStyle).length) {
-          tmpObj = Object.assign({}, _t.info.window.style, _t.previewCurrentStyle)
+          tmpObj = {
+            ...tmpObj,
+            ..._t.info.window.style,
+            ..._t.previewCurrentStyle
+          }
         } else {
-          tmpObj = _t.info.window.style
+          tmpObj = {
+            ...tmpObj,
+            ..._t.info.window.style
+          }
         }
+        console.log('windowStyle', _t.info.app.name, tmpObj, tmpObj['z-index'])
         return tmpObj
       }
     },
@@ -392,6 +479,8 @@
       handleDragStart: function (event) {
         let _t = this
         console.log('handleDragStart')
+        // 使其半透明
+        event.target.style.opacity = 0
         if (_t.isStartResize) {
           return false
         }
@@ -419,10 +508,12 @@
       },
       triggerWindow: function () {
         let _t = this
-        let appInfo = {..._t.info}
         console.log('change Window zIndex', _t.info.window.zIndex)
-        _t.$utils.bus.$emit('platform/window/zIndex/change', appInfo)
         _t.$utils.bus.$emit('platform/window/preview/clear')
+        _t.$nextTick(function () {
+          let appInfo = {..._t.info}
+          _t.$utils.bus.$emit('platform/window/zIndex/change', appInfo)
+        })
       },
       // 开始缩放
       startResize: function (direction) {
@@ -460,25 +551,10 @@
           'margin-left': '-400px',
           'margin-top': '-300px'
         }
-//        _t.$nextTick(function () {
-//          setTimeout(function () {
-//            _t.previewStyle = {
-//              ..._t.previewStyle,
-//              position: 'absolute',
-//              display: 'inline-block',
-//              left: '50%',
-//              top: '50%',
-//              width: '800px',
-//              height: '600px',
-//              'margin-left': '-400px',
-//              'margin-top': '-300px'
-//            }
-//            _t.$nextTick(function () {
-//              let appInfo = {..._t.info}
-//              _t.$utils.bus.$emit('platform/window/preview/open/done', appInfo)
-//            })
-//          }, 100)
-//        })
+        _t.$nextTick(function () {
+          let appInfo = {..._t.info}
+          _t.$utils.bus.$emit('platform/window/preview/open/done', appInfo)
+        })
       },
       handleWindowPreviewClose: function () {
         let _t = this
@@ -550,18 +626,30 @@
           _t.handleWindowPreviewOtherClose()
         }
       })
-      _t.$utils.bus.$on('platform/window/preview/current/close', function (appInfo) {
+      _t.$utils.bus.$on('platform/window/preview/current/close', function (tmpInfo) {
+        let {appInfo, needDone} = tmpInfo
         if (appInfo && appInfo.app.name === _t.info.app.name) {
           // 处理窗口预览
           _t.handleWindowPreviewCurrentClose(appInfo)
-          _t.$nextTick(function () {
-            let appInfo = {..._t.info}
-            _t.$utils.bus.$emit('platform/window/preview/current/close/done', appInfo)
-          })
+          if (needDone) {
+            _t.$nextTick(function () {
+              let appInfo = {..._t.info}
+              _t.$utils.bus.$emit('platform/window/preview/current/close/done', appInfo)
+            })
+          }
         } else {
           // 处理其他窗口预览
           _t.handleWindowPreviewOtherOpen()
         }
+      })
+      // 监听拖拽事件
+      _t.$utils.bus.$on(_t.dragConfig.bus.done, function (position) {
+        let appInfo = {..._t.info}
+        // 广播事件
+        _t.$utils.bus.$emit('platform/window/position/change', {
+          appInfo: appInfo,
+          ...position
+        })
       })
     }
   }

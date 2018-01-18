@@ -205,8 +205,8 @@
         @mousedown.left.stop.prevent
         @mouseup.left.stop.prevent="handleCurrentWindowOpen"
         @contextmenu.stop.prevent
-        @mouseenter="previewCurrentWindowOpen"
-        @mouseleave="previewCurrentWindowClose"
+        @mouseover.stop="previewCurrentWindowOpen"
+        @mouseout.stop="previewCurrentWindowClose"
       >
         <div class="preview-bg" :style="{ 'background-image': 'url('+ previewImg + ')' }"></div>
         <div class="preview-title">{{ info.app.title }}</div>
@@ -289,9 +289,16 @@
       handleCurrentWindowOpen: function () {
         let _t = this
         // FIXME 【BUG】当存在两个窗口时，当前打开的窗口层级不正确
+        // 清空预览图
+        _t.previewImg = null
+        _t.targetWindow = null
         // 打开应用
-//        let appInfo = {..._t.info}
-        _t.previewCurrentWindowClose()
+        let appInfo = {..._t.info}
+        // 关闭预览窗口
+        _t.$utils.bus.$emit('platform/window/preview/current/close', {
+          appInfo: appInfo,
+          needDone: true
+        })
       },
       // 右键菜单
       handlerRightClick: function (event) {
@@ -462,7 +469,7 @@
         let _t = this
         let appInfo = {..._t.info}
 //        // 清空预览图
-//        _t.previewImg = null
+        _t.previewImg = null
 //        // 清除预览窗口样式
 //        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
 //        _t.$nextTick(function () {
@@ -509,8 +516,8 @@
         let _t = this
         _t.previewImg = null
         _t.targetWindow = null
-        let appInfo = {..._t.info}
-        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
+//        let appInfo = {..._t.info}
+//        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
       },
       // 预览当前窗口 打开
       previewCurrentWindowOpen: function () {
@@ -522,7 +529,10 @@
       previewCurrentWindowClose: function () {
         let _t = this
         let appInfo = {..._t.info}
-        _t.$utils.bus.$emit('platform/window/preview/current/close', appInfo)
+        _t.$utils.bus.$emit('platform/window/preview/current/close', {
+          appInfo: appInfo,
+          needDone: false
+        })
       }
     },
     created: function () {
@@ -546,9 +556,15 @@
       })
       _t.$utils.bus.$on('platform/window/preview/current/close/done', function (appInfo) {
         if (appInfo && appInfo.app.name === _t.info.app.name) {
-          _t.$nextTick(function () {
-            _t.$utils.bus.$emit('platform/window/open', appInfo)
-          })
+          if (_t.info.window.size === 'min') {
+            _t.$nextTick(function () {
+              _t.$utils.bus.$emit('platform/window/open', appInfo)
+            })
+          } else {
+            _t.$nextTick(function () {
+              _t.$utils.bus.$emit('platform/window/zIndex/change', appInfo)
+            })
+          }
         }
       })
     }
