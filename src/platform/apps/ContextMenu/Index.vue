@@ -160,14 +160,14 @@
         // 广播事件
         _t.$utils.bus.$emit('platform/startMenu/hide')
         _t.$utils.bus.$emit('platform/window/preview/clear')
-        console.log('contextMenu data', val)
+        console.log('contextMenu show data', val)
         if (val) {
           _t.contextMenuInfo = val
         }
         _t.contextMenuInfo.isShow = true
       })
       _t.$utils.bus.$on('platform/contextMenu/hide', function (val) {
-        console.log('contextMenu data', val)
+        console.log('contextMenu hide data', val)
         // 重置 contextMenuInfo
         _t.contextMenuInfo = {
           x: 0,

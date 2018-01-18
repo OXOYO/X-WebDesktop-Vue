@@ -38,7 +38,7 @@
       <component
         :is="childComponents.DesktopIcon"
         v-for="item in appData.iconList"
-        :key="item"
+        :key="item.app.name"
         :info="item"
         :showTitle="appData.showTitle"
         :style="item.desktopIcon.style"
@@ -48,7 +48,7 @@
         :is="childComponents.Window"
         v-for="item in appData.iconList"
         v-if="item.window.status !=='close'"
-        :key="item"
+        :key="item.app.name + (new Date()).getTime()"
         :info="item"
       ></component>
       <component :is="childComponents.Wallpaper" :style="{ 'z-index': 1000 }"></component>
@@ -90,7 +90,10 @@
     },
     computed: {
       ...mapState('Platform/Admin', {
-        appData: state => state.appData,
+        appData: state => {
+          console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+          return state.appData
+        },
         _appData: state => state._appData
       })
     },
@@ -604,21 +607,23 @@
         let defZIndex = 2000
         let tmpArr = []
         // 先计算打开的窗口的数量
+        let indexArr = []
         for (let i = 0, len = iconList.length; i < len; i++) {
           let item = iconList[i]
           if (item.window.status === 'open') {
             tmpArr.push(item.app.name)
+            indexArr.push(i)
           }
         }
-        console.log('tmpArr', tmpArr)
+        console.log('tmpArr', tmpArr, indexArr)
         // 处理当前窗口
-        for (let i = 0, len = iconList.length; i < len; i++) {
-          let item = iconList[i]
+        for (let j = 0, len = iconList.length; j < len; j++) {
+          let item = iconList[j]
           let computedZIndex = defZIndex
           if (item.window.status === 'open') {
             // FIXME 只需要处理打开的窗口
             if (item.app.name === appInfo.app.name) {
-              console.log('appName', appInfo.app.name, iconList[i]['window'])
+              console.log('appName', appInfo.app.name, iconList[j]['window'])
               computedZIndex = defZIndex + tmpArr.length - 1
               // 移除已处理的窗口
               tmpArr = tmpArr.filter(item => item !== appInfo.app.name)
@@ -627,18 +632,25 @@
               // 重置为默认层级
               computedZIndex = defZIndex
             }
-            iconList[i]['window']['style']['z-index'] = computedZIndex
-            console.log('computed z-index', iconList[i]['window']['style']['z-index'])
+            iconList[j]['window']['style']['z-index'] = computedZIndex
+            console.log('computed z-index', iconList[j]['window']['style']['z-index'], iconList[j].app.name)
           }
         }
         // 处理其他窗口的层级
-        for (let i = 0, len = iconList.length; i < len; i++) {
-          let item = iconList[i]
-          let computedZIndex = defZIndex
-          if (tmpArr.includes(item.app.name)) {
-            computedZIndex = defZIndex + tmpArr.indexOf(item.app.name)
-            iconList[i]['window']['style']['z-index'] = computedZIndex
-            console.log('computedZIndex', computedZIndex, item.app.name)
+        if (tmpArr.length) {
+          for (let k = 0, len = iconList.length; k < len; k++) {
+            let item = iconList[k]
+            let computedZIndex = defZIndex
+            if (tmpArr.includes(item.app.name)) {
+              computedZIndex = defZIndex + tmpArr.indexOf(item.app.name)
+              iconList[k]['window']['style']['z-index'] = computedZIndex
+              console.log('computedZIndex', computedZIndex, item.app.name)
+            }
+          }
+        }
+        if (indexArr.length) {
+          for (let index of indexArr) {
+            console.log('iconList indexArr', index, iconList[index].app.name, iconList[index]['window']['style']['z-index'])
           }
         }
         return iconList
@@ -691,7 +703,7 @@
         }
         // 处理窗口层级变化
         iconList = _t.doWindowZIndexChange(iconList, appInfo)
-        // 处理窗口层级
+        // 分发mutation，更新数据
         _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
           ..._t.appData,
           iconList: iconList
@@ -788,6 +800,24 @@
         }
         // 处理窗口大小改变
         _t.handleWindowSizeChange(tmpObj)
+      },
+      // 处理窗口位置变化
+      handleWindowPositionChange: function (tmpInfo) {
+        let _t = this
+        let {appInfo, ...positionInfo} = tmpInfo
+        let iconList = [..._t.appData.iconList]
+        for (let i = 0, len = iconList.length; i < len; i++) {
+          let item = iconList[i]
+          if (item.app.name === appInfo.app.name) {
+            iconList[i]['window']['style']['left'] = parseInt(positionInfo.x) + 'px'
+            iconList[i]['window']['style']['top'] = parseInt(positionInfo.y) + 'px'
+          }
+        }
+        // 分发mutation，更新数据
+        _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
+          ..._t.appData,
+          iconList: iconList
+        })
       }
     },
     created: function () {
@@ -829,6 +859,13 @@
         if (appInfo) {
           // 处理窗口大小改变
           _t.handleWindowToggle(appInfo)
+        }
+      })
+      // 监听 window 位置变化
+      _t.$utils.bus.$on('platform/window/position/change', function (tmpInfo) {
+        if (tmpInfo) {
+          // 处理窗口位置改变
+          _t.handleWindowPositionChange(tmpInfo)
         }
       })
 
