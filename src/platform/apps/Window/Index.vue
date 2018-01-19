@@ -326,12 +326,11 @@
               done: 'x-drag-done',
               main: 'x-drag'
             },
-            // 指定拖拽时bus 广播事件名称，名称需唯一
-            // FIXME 【暂弃】
-            bus: {
-              start: 'x-drag-start',
-              move: 'x-drag-move',
-              done: 'x-drag-done'
+            // 回调
+            callback: {
+              start: null,
+              move: null,
+              done: _t.handleDragResizeDone
             }
           },
           // 缩放配置
@@ -356,12 +355,11 @@
               done: 'x-resize-done',
               main: 'x-resize'
             },
-            // 指定缩放时bus 广播事件名称，名称需唯一
-            // FIXME 【暂弃】
-            bus: {
-              start: 'x-resize-start',
-              move: 'x-resize-move',
-              done: 'x-resize-done'
+            // 回调
+            callback: {
+              start: null,
+              move: null,
+              done: _t.handleDragResizeDone
             }
           }
         },
@@ -652,6 +650,18 @@
         let _t = this
         _t.previewStyle = {}
         _t.previewCurrentStyle = {}
+      },
+      // 拖拽完成回调
+      handleDragResizeDone: function (style) {
+        let _t = this
+        console.log('drag resize style', style)
+        // 分发mutations，更新窗口样式
+        let appInfo = {..._t.info}
+        appInfo['window']['style'] = {
+          ...appInfo['window']['style'],
+          ...style
+        }
+        _t.$utils.bus.$emit('platform/window/style/change', appInfo)
       }
     },
     created: function () {
