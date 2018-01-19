@@ -16,6 +16,8 @@ API服务：[X-WebDesktop-Api-Koa](https://github.com/OXOYO/X-WebDesktop-Api-Koa
 
 ![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_admin.png "preview_admin")
 
+![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_drag_resize.gif "preview_drag_resize")
+
 ## Start
 
 ```bash
