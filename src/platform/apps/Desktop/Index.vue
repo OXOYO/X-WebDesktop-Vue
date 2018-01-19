@@ -91,7 +91,6 @@
     computed: {
       ...mapState('Platform/Admin', {
         appData: state => {
-          console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
           return state.appData
         },
         _appData: state => state._appData
@@ -818,6 +817,22 @@
           ..._t.appData,
           iconList: iconList
         })
+      },
+      // 处理窗口样式变化
+      handleWindowStyleChange: function (appInfo) {
+        let _t = this
+        let iconList = [..._t.appData.iconList]
+        for (let i = 0, len = iconList.length; i < len; i++) {
+          let item = iconList[i]
+          if (item.app.name === appInfo.app.name) {
+            iconList[i] = appInfo
+          }
+        }
+        // 分发mutation，更新数据
+        _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
+          ..._t.appData,
+          iconList: iconList
+        })
       }
     },
     created: function () {
@@ -868,7 +883,13 @@
           _t.handleWindowPositionChange(tmpInfo)
         }
       })
-
+      // 监听 window 样式变化
+      _t.$utils.bus.$on('platform/window/style/change', function (appInfo) {
+        if (appInfo) {
+          // 处理窗口位置改变
+          _t.handleWindowStyleChange(appInfo)
+        }
+      })
       let resizeTimer = null
       // 监听窗口大小调整
       window.onresize = () => {
