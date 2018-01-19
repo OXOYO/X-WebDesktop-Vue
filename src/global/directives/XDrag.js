@@ -29,12 +29,13 @@ XDrag.install = function (Vue) {
             done: 'x-drag-done',
             main: 'x-drag'
           },
-          // 指定拖拽时bus 广播事件名称，名称需唯一
-          // FIXME 【暂弃】
-          bus: {
-            start: 'x-drag-start',
-            move: 'x-drag-move',
-            done: 'x-drag-done'
+          // 回调
+          callback: {
+            start: null,
+            move: null,
+            done: (style) => {
+              console.log('drag done', style)
+            }
           }
         },
         // 缩放配置
@@ -50,12 +51,13 @@ XDrag.install = function (Vue) {
             done: 'x-resize-done',
             main: 'x-resize'
           },
-          // 指定缩放时bus 广播事件名称，名称需唯一
-          // FIXME 【暂弃】
-          bus: {
-            start: 'x-resize-start',
-            move: 'x-resize-move',
-            done: 'x-resize-done'
+          // 回调
+          callback: {
+            start: null,
+            move: null,
+            done: (style) => {
+              console.log('resize done', style)
+            }
           }
         }
       }
@@ -78,14 +80,13 @@ XDrag.install = function (Vue) {
               flag: false,
               position: {
                 left: 0,
-                top: 0,
-                marginLeft: 0,
-                marginTop: 0
+                top: 0
               },
               start: {
                 x: 0,
                 y: 0
-              }
+              },
+              done: {}
             }
             // 绑定事件
             bar.onmousedown = function (event) {
@@ -104,9 +105,10 @@ XDrag.install = function (Vue) {
               }
               dragInfo.position = {
                 left: parseFloat(target.offsetLeft),
-                top: parseFloat(target.offsetTop),
-                marginLeft: parseFloat(getStyle(target, 'margin-left')),
-                marginTop: parseFloat(getStyle(target, 'margin-top'))
+                top: parseFloat(target.offsetTop)
+              }
+              if (config.drag.callback && typeof config.drag.callback.start === 'function') {
+                config.drag.callback.start(dragInfo.position)
               }
               // 绑定mousemove事件
               document.onmousemove = function (event) {
@@ -127,15 +129,16 @@ XDrag.install = function (Vue) {
                     x: event.clientX - dragInfo.start.x,
                     y: event.clientY - dragInfo.start.y
                   }
-                  let style = {
-                    marginLeft: 0,
-                    marginTop: 0,
-                    left: dragInfo.position.left + dragInfo.position.marginLeft + dis.x + 'px',
-                    top: dragInfo.position.top + dragInfo.position.marginTop + dis.y + 'px'
+                  dragInfo.done = {
+                    left: dragInfo.position.left + dis.x + 'px',
+                    top: dragInfo.position.top + dis.y + 'px'
                   }
-                  Object.keys(style).map(function (key) {
-                    target.style[key] = style[key]
+                  Object.keys(dragInfo.done).map(function (key) {
+                    target.style[key] = dragInfo.done[key]
                   })
+                  if (config.drag.callback && typeof config.drag.callback.move === 'function') {
+                    config.drag.callback.move(dragInfo.style)
+                  }
                 }
               }
               // 绑定mouseup事件
@@ -150,6 +153,9 @@ XDrag.install = function (Vue) {
                 Object.values(config.drag.class).map(function (className) {
                   target.classList.remove(className)
                 })
+                if (config.drag.callback && typeof config.drag.callback.done === 'function') {
+                  config.drag.callback.done(dragInfo.done)
+                }
                 bar.onmouseup = null
                 document.onmousemove = null
               }
@@ -180,9 +186,7 @@ XDrag.install = function (Vue) {
               flag: false,
               position: {
                 left: 0,
-                top: 0,
-                marginLeft: 0,
-                marginTop: 0
+                top: 0
               },
               start: {
                 x: 0,
@@ -208,8 +212,6 @@ XDrag.install = function (Vue) {
               resizeInfo.position = {
                 left: parseFloat(target.offsetLeft),
                 top: parseFloat(target.offsetTop),
-                marginLeft: parseFloat(getStyle(target, 'margin-left')),
-                marginTop: parseFloat(getStyle(target, 'margin-top')),
                 width: parseFloat(getStyle(target, 'width')),
                 height: parseFloat(getStyle(target, 'height'))
               }
