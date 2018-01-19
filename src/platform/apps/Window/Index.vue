@@ -64,7 +64,7 @@
       width: 20px;
       height: 20px;
       position: absolute;
-      background: red;
+      background: transparent;
       z-index: 2010;
       &.resize-top-left {
         cursor: nw-resize;
@@ -164,8 +164,12 @@
       /*padding: 10px;*/
     }
   }
-  .x-drag {
-    transform: translateZ(0)
+  .x-drag,
+  .x-drag-start,
+  .x-drag-move {
+    transition: none;
+    opacity: .7;
+    /*transform: translateZ(0);*/
   }
 </style>
 
@@ -182,11 +186,10 @@
     @mousedown.stop="triggerWindow"
     :window-name="info.app.name"
     :style="windowStyle"
-    draggable="true"
-    @dragstart="handleDragStart"
+    v-x-drag="dragResizeConfig"
   >
     <!-- 拖拽缩放 -->
-    <div class="app-window-resize resize-top-left" @mousedown.stop="startResize('top-left')" @mousemove="moveResize" @mouseup.stop="stopResize"></div>
+    <div class="app-window-resize resize-top-left"></div>
     <div class="app-window-resize resize-top-right"></div>
     <div class="app-window-resize resize-bottom-left"></div>
     <div class="app-window-resize resize-bottom-right"></div>
@@ -199,9 +202,6 @@
     >
       <div
         class="window-title"
-        @mousedown.stop
-        @mousemove.stop
-        @mouseup.stop
         @dblclick.stop.prevent="handleModalStatus(info.window.size === 'max' ? 'reset' : 'max')"
       >
         {{ info.app.title }}
@@ -309,23 +309,81 @@
             done: 'drag-done-' + _t.info.app.name
           }
         },
+        // 拖拽缩放配置
+        dragResizeConfig: {
+          // 上下文，如需广播事件则必须
+          context: _t,
+          // 拖拽配置
+          drag: {
+            // 是否启用拖拽
+            enable: true,
+            // 指定拖拽把手元素，支持一个或多个把手
+            handler: ['.window-title'],
+            // 拖拽不同阶段 className
+            class: {
+              start: 'x-drag-start',
+              move: 'x-drag-move',
+              done: 'x-drag-done',
+              main: 'x-drag'
+            },
+            // 指定拖拽时bus 广播事件名称，名称需唯一
+            // FIXME 【暂弃】
+            bus: {
+              start: 'x-drag-start',
+              move: 'x-drag-move',
+              done: 'x-drag-done'
+            }
+          },
+          // 缩放配置
+          resize: {
+            // 是否启用缩放
+            enable: true,
+            // 指定缩放把手元素，支持一个或多个把手
+            handler: {
+              'top-left': '.resize-top-left',
+              'top-right': '.resize-top-right',
+              'bottom-left': '.resize-bottom-left',
+              'bottom-right': '.resize-bottom-right',
+              'top-border': '.resize-top-border',
+              'right-border': '.resize-right-border',
+              'bottom-border': '.resize-bottom-border',
+              'left-border': '.resize-left-border'
+            },
+            // 缩放不同阶段 className
+            class: {
+              start: 'x-resize-start',
+              move: 'x-resize-move',
+              done: 'x-resize-done',
+              main: 'x-resize'
+            },
+            // 指定缩放时bus 广播事件名称，名称需唯一
+            // FIXME 【暂弃】
+            bus: {
+              start: 'x-resize-start',
+              move: 'x-resize-move',
+              done: 'x-resize-done'
+            }
+          }
+        },
         // 通过行内样式控制
         windowStyleBySize: {
           small: {
             width: '300px',
             height: '200px',
-            left: '50%',
-            top: '50%',
-            'margin-left': '-150px',
-            'margin-top': '-100px'
+            left: 'calc(50% - 150px)',
+            top: 'calc(50% - 100px)'
+//            ,
+//            'margin-left': '-150px',
+//            'margin-top': '-100px'
           },
           middle: {
             width: '800px',
             height: '600px',
-            left: '50%',
-            top: '50%',
-            'margin-left': '-400px',
-            'margin-top': '-300px'
+            left: 'calc(50% - 400px)',
+            top: 'calc(50% - 300px)'
+//            ,
+//            'margin-left': '-400px',
+//            'margin-top': '-300px'
           },
           max: {
             left: 0,
