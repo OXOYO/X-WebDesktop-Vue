@@ -137,7 +137,7 @@ XDrag.install = function (Vue) {
                     target.style[key] = dragInfo.done[key]
                   })
                   if (config.drag.callback && typeof config.drag.callback.move === 'function') {
-                    config.drag.callback.move(dragInfo.style)
+                    config.drag.callback.move(dragInfo.done)
                   }
                 }
               }
@@ -192,7 +192,8 @@ XDrag.install = function (Vue) {
                 x: 0,
                 y: 0
               },
-              direction: direction
+              direction: direction,
+              done: {}
             }
             // 绑定事件
             bar.onmousedown = function (event) {
@@ -214,6 +215,9 @@ XDrag.install = function (Vue) {
                 top: parseFloat(target.offsetTop),
                 width: parseFloat(getStyle(target, 'width')),
                 height: parseFloat(getStyle(target, 'height'))
+              }
+              if (config.resize.callback && typeof config.resize.callback.start === 'function') {
+                config.resize.callback.start(resizeInfo.position)
               }
               // 绑定mousemove事件
               document.onmousemove = function (event) {
@@ -287,9 +291,15 @@ XDrag.install = function (Vue) {
                       }
                       break
                   }
-                  Object.keys(style).map(function (key) {
-                    target.style[key] = style[key]
+                  resizeInfo.done = {
+                    ...style
+                  }
+                  Object.keys(resizeInfo.done).map(function (key) {
+                    target.style[key] = resizeInfo.done[key]
                   })
+                  if (config.resize.callback && typeof config.resize.callback.move === 'function') {
+                    config.resize.callback.move(resizeInfo.done)
+                  }
                 }
               }
               // 绑定mouseup事件
@@ -304,6 +314,9 @@ XDrag.install = function (Vue) {
                 Object.values(config.resize.class).map(function (className) {
                   target.classList.remove(className)
                 })
+                if (config.resize.callback && typeof config.resize.callback.done === 'function') {
+                  config.resize.callback.done(resizeInfo.done)
+                }
                 bar.onmouseup = null
                 document.onmousemove = null
               }
