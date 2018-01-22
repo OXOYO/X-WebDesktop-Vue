@@ -127,15 +127,6 @@
       ...mapState('Platform/Admin', {
         appData: state => state.appData
       })
-//      ,
-//      iconList: function () {
-//        let _t = this
-//        // 处理iconList
-//        console.log(';;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;')
-//        let iconList = [..._t.appData.iconList]
-//        iconList = _t.handlerIconList(iconList)
-//        return iconList
-//      }
     },
     methods: {
       // 处理iconList
@@ -145,25 +136,20 @@
         for (let item of iconList) {
           let xVal = 0
           let yVal = 0
-          let leftVal = parseFloat(item.desktopIcon.style.left)
-          let topVal = parseFloat(item.desktopIcon.style.top)
-          console.log('leftVal', leftVal, 'topVal', topVal)
+//          let leftVal = parseFloat(item.desktopIcon.style.left)
+//          let topVal = parseFloat(item.desktopIcon.style.top)
           let firstGrid = _t.gridArr[0][0]
-          console.log('firstGrid', firstGrid.leftTop.x, firstGrid.leftTop.y)
           // FIXME 取中心点坐标
           xVal = (firstGrid.rightBottom.x - firstGrid.leftTop.x) / 2 + firstGrid.leftTop.x
           yVal = (firstGrid.rightBottom.y - firstGrid.leftTop.y) / 2 + firstGrid.leftTop.y
-          console.log('xVal', xVal, 'yVal', yVal)
 
           let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
           let distanceArrBack = [...distanceArr]
           if (flag) {
-            console.log('distanceArr', distanceArr)
             flag = false
           }
           // 目标Grid，FIXME 【BUG】此处需要考虑从上到下，从左到有的排布规则
           let targetGrid = _t.findGridForAuto(distanceArr, distanceArrBack)
-          console.log('targetGrid', targetGrid.leftTop.x, targetGrid.leftTop.y)
           // 更新style
           let style = {
             'left': targetGrid.leftTop.x + 'px',
@@ -171,7 +157,6 @@
           }
           for (let i = 0, len = iconList.length; i < len; i++) {
             if (iconList[i].app.name === item.app.name) {
-              console.log('handlerIconList style', i, item.app.name, item.app.title, style)
               iconList[i]['desktopIcon']['style'] = style
             }
           }
@@ -191,7 +176,6 @@
         // 获取拖拽对象数据
         let targetInfo = JSON.parse(event.dataTransfer.getData('Text'))
         // TODO 判断target，根据target分别处理
-        console.log('targetInfo.target', targetInfo.target)
         switch (targetInfo.target) {
           case 'DesktopIcon':
             _t.handlerDesktopIconDrop(targetInfo, event)
@@ -216,17 +200,14 @@
         // 目标Grid
         let appInfo = targetData.appInfo
         let targetGrid = _t.findGridForDrag(distanceArr, distanceArrBack, appInfo)
-        console.log('handlerDesktopIconDrop targetGrid', targetGrid.leftTop.x, targetGrid.leftTop.y)
         // 更新style
         let style = {
           'left': targetGrid.leftTop.x + 'px',
           'top': targetGrid.leftTop.y + 'px'
         }
         let iconList = [..._t.iconList]
-        console.log(iconList, style)
         for (let i = 0, len = iconList.length; i < len; i++) {
           if (iconList[i].app.name === targetData.name) {
-            console.log('handlerDesktopIconDrop style', i, targetData.name, style)
             iconList[i]['desktopIcon']['style'] = style
           }
         }
@@ -259,12 +240,10 @@
         // 处理宽高
         let height = document.body.clientHeight
         let width = document.body.clientWidth
-        console.log('height', height, 'width', width)
         // 每个图标宽高80px margin 10px
         let itemWidthHeight = 100
         let xNum = Math.floor(width / itemWidthHeight)
         let yNum = Math.floor(height / itemWidthHeight)
-        console.log('xNum', xNum, 'yNum', yNum)
         switch (direction) {
           case 'top-bottom-left-right':
             // 从上往下，从左往右
@@ -435,8 +414,6 @@
             }
             break
         }
-
-        console.log('gridArr', gridArr)
         _t.gridArr = gridArr
       },
       // 2.2.递归查找距离最小且未占用的grid FIXME 【BUG】此处需要考虑从上到下，从左到有的排布规则
@@ -522,7 +499,6 @@
             // 标记targetGrid占用
             _t.gridArr[childIndex][childItemIndex]['isOccupied'] = true
             // 解除之前的grid占用
-            console.log('appInfo', appInfo)
             let leftVal = parseFloat(appInfo.desktopIcon.style.left)
             let topVal = parseFloat(appInfo.desktopIcon.style.top)
             for (let childIndex in _t.gridArr) {
@@ -588,7 +564,6 @@
 
       // 监听事件
       _t.$utils.bus.$on('platform/desktopIcon/sort', function (direction) {
-        console.log('bus on', direction)
         if (_t.directionArr.includes(direction)) {
           // 处理格子排序
           _t.handlerGridLayout(direction)
@@ -609,6 +584,12 @@
           }, 500)
         })()
       }
+    },
+    beforeDestroy: function () {
+      let _t = this
+      _t.$utils.bus.$off([
+        'platform/desktopIcon/sort'
+      ])
     }
   }
 </script>

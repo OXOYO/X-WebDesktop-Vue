@@ -174,12 +174,6 @@
 </style>
 
 <template>
-  <!--
-  draggable="true"
-  @dragstart="handleDragStart"
-
-  v-x-drag="dragConfig"
-  -->
   <div
     class="app-window"
     :class="windowSizeClass"
@@ -289,26 +283,6 @@
         previewStyle: {},
         // 预览当前窗口样式
         previewCurrentStyle: {},
-        // 拖拽配置
-        dragConfig: {
-          // 上下文，如需广播事件则必须
-          context: _t,
-          // 指定拖拽栏元素
-          bar: '.window-title',
-          // 指定拖拽时target的样式
-          className: {
-            start: 'app-window-drag-start',
-            move: 'app-window-drag-move',
-            done: 'app-window-drag-done',
-            main: 'x-drag'
-          },
-          // 指定bus 广播事件名称
-          bus: {
-            start: 'drag-start-' + _t.info.app.name,
-//            move: 'drag-move-' + _t.info.app.name,
-            done: 'drag-done-' + _t.info.app.name
-          }
-        },
         // 拖拽缩放配置
         dragResizeConfig: {
           // 上下文，如需广播事件则必须
@@ -394,7 +368,8 @@
             height: 0,
             top: '100%'
           }
-        }
+        },
+        windowStyle: {}
       }
     },
     computed: {
@@ -422,38 +397,38 @@
             break
         }
         return tmpClassName
-      },
-      windowStyle: function () {
-        let _t = this
-        let windowStyleBySize = _t.windowStyleBySize[_t.info.window.size] || {}
-        let tmpObj = windowStyleBySize
-        console.log('_t.previewStyle', tmpObj, _t.previewStyle, _t.previewCurrentStyle)
-        if (Object.keys(_t.previewStyle).length) {
-          tmpObj = {
-            ...tmpObj,
-            ..._t.info.window.style,
-            ..._t.previewStyle
-          }
-        } else if (Object.keys(_t.previewCurrentStyle).length) {
-          tmpObj = {
-            ...tmpObj,
-            ..._t.info.window.style,
-            ..._t.previewCurrentStyle
-          }
-        } else {
-          tmpObj = {
-            ...tmpObj,
-            ..._t.info.window.style
-          }
-        }
-        console.log('windowStyle', _t.info.app.name, tmpObj, tmpObj['z-index'])
-        return tmpObj
       }
+//      ,
+//      windowStyle: function () {
+//        let _t = this
+//        let windowStyleBySize = _t.windowStyleBySize[_t.info.window.size] || {}
+//        let tmpObj = windowStyleBySize
+//        console.log('_t.previewStyle', tmpObj, _t.previewStyle, _t.previewCurrentStyle)
+//        if (Object.keys(_t.previewStyle).length) {
+//          tmpObj = {
+//            ...tmpObj,
+//            ..._t.info.window.style,
+//            ..._t.previewStyle
+//          }
+//        } else if (Object.keys(_t.previewCurrentStyle).length) {
+//          tmpObj = {
+//            ...tmpObj,
+//            ..._t.info.window.style,
+//            ..._t.previewCurrentStyle
+//          }
+//        } else {
+//          tmpObj = {
+//            ...tmpObj,
+//            ..._t.info.window.style
+//          }
+//        }
+//        console.log('windowStyle', _t.info.app.name, tmpObj, tmpObj['z-index'])
+//        return tmpObj
+//      }
     },
     methods: {
       // 处理弹窗状态
       handleModalStatus: function (actionName = 'close') {
-        console.log('actionName', actionName)
         let _t = this
 //        let tmpInfo
         let appInfo = {..._t.info}
@@ -516,25 +491,24 @@
             tmpObj['status'] = 'close'
             break
         }
-        console.log('appInfo.window.size', appInfo.window.size, _t.info.window.size)
+//        console.log('appInfo.window.size', appInfo.window.size, _t.info.window.size)
 //        if (!tmpInfo) {
 //          return
 //        }
         _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
         // 如果是最小化
-        if (actionName === 'min') {
-          tmpObj['newStyle'] = {
-            'display': 'none'
-          }
-          setTimeout(function () {
-            _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
-          }, 300)
-        }
+//        if (actionName === 'min') {
+//          tmpObj['newStyle'] = {
+//            'display': 'none'
+//          }
+//          setTimeout(function () {
+//            _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
+//          }, 300)
+//        }
       },
       // 处理拖拽
       handleDragStart: function (event) {
         let _t = this
-        console.log('handleDragStart')
         // 使其半透明
         event.target.style.opacity = 0
         if (_t.isStartResize) {
@@ -564,7 +538,7 @@
       },
       triggerWindow: function () {
         let _t = this
-        console.log('change Window zIndex', _t.info.window.zIndex)
+//        console.log('change Window zIndex', _t.info.window.zIndex)
         _t.$utils.bus.$emit('platform/window/preview/clear')
         _t.$nextTick(function () {
           let appInfo = {..._t.info}
@@ -573,7 +547,7 @@
       },
       // 开始缩放
       startResize: function (direction) {
-        console.log('startResize')
+//        console.log('startResize')
         let _t = this
         // 更新窗口缩放数据
         _t.isStartResize = true
@@ -596,6 +570,7 @@
       // 处理窗口预览
       handleWindowPreviewOpen: function () {
         let _t = this
+        console.log('_t.previewStyle handleWindowPreviewOpen', Object.keys(_t.previewStyle))
         _t.previewStyle = {
           'z-index': -1,
           position: 'absolute',
@@ -607,32 +582,43 @@
           'margin-left': '-400px',
           'margin-top': '-300px'
         }
+        _t.handleWindowStyle()
         _t.$nextTick(function () {
           let appInfo = {..._t.info}
-          _t.$utils.bus.$emit('platform/window/preview/open/done', appInfo)
+          console.log('jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj')
+          _t.$utils.bus.$emit('platform/window/preview/open/done/' + appInfo.app.name, appInfo)
         })
       },
       handleWindowPreviewClose: function () {
         let _t = this
         _t.previewStyle = {}
+        _t.handleWindowStyle()
       },
       handleWindowPreviewCurrentOpen: function () {
-        console.log('ccccccccccccccccccccddddddddddddddddddd')
         let _t = this
         _t.previewStyle = {}
         if (_t.info.window.size === 'min') {
-          _t.previewCurrentStyle = {
-            'z-index': 2000,
-            position: 'absolute',
-            display: 'inline-block',
-            left: '50%',
-            top: '50%',
-            width: '800px',
-            height: '600px',
-            'margin-left': '-400px',
-            'margin-top': '-300px'
+          console.log('Object.keys(_t.info.window.oldStyle).length', Object.keys(_t.info.window.oldStyle).length)
+          if (Object.keys(_t.info.window.oldStyle).length) {
+            _t.previewCurrentStyle = {
+              ..._t.info.window.oldStyle,
+              display: 'inline-block'
+            }
+          } else {
+            _t.previewCurrentStyle = {
+              'z-index': 2000,
+              position: 'absolute',
+              display: 'inline-block',
+              left: '50%',
+              top: '50%',
+              width: '800px',
+              height: '600px',
+              'margin-left': '-400px',
+              'margin-top': '-300px'
+            }
           }
         }
+        _t.handleWindowStyle()
       },
       handleWindowPreviewOtherClose: function () {
         let _t = this
@@ -640,21 +626,24 @@
         _t.previewCurrentStyle = {
           'z-index': -1
         }
+        _t.handleWindowStyle()
       },
       handleWindowPreviewCurrentClose: function () {
         let _t = this
         _t.previewStyle = {}
         _t.previewCurrentStyle = {}
+        _t.handleWindowStyle()
       },
       handleWindowPreviewOtherOpen: function () {
         let _t = this
         _t.previewStyle = {}
         _t.previewCurrentStyle = {}
+        _t.handleWindowStyle()
       },
       // 拖拽完成回调
       handleDragResizeDone: function (style) {
         let _t = this
-        console.log('drag resize style', style)
+//        console.log('drag resize style', style)
         // 分发mutations，更新窗口样式
         let appInfo = {..._t.info}
         appInfo['window']['style'] = {
@@ -662,30 +651,60 @@
           ...style
         }
         _t.$utils.bus.$emit('platform/window/style/change', appInfo)
+      },
+      handleWindowStyle: function () {
+        let _t = this
+        _t.windowStyle = {}
+        _t.$nextTick(function () {
+          let windowStyleBySize = _t.windowStyleBySize[_t.info.window.size] || {}
+          let tmpObj = windowStyleBySize
+          console.log('_t.previewStyle', tmpObj, _t.previewStyle, _t.previewCurrentStyle)
+          console.log('00000000001111111111', Object.keys(_t.previewStyle).length, Object.keys(_t.previewCurrentStyle).length)
+          if (Object.keys(_t.previewStyle).length) {
+            console.log('xxx 001')
+            tmpObj = {
+              ...tmpObj,
+              ..._t.info.window.style,
+              ..._t.previewStyle
+            }
+          } else if (Object.keys(_t.previewCurrentStyle).length) {
+            console.log('xxx 002')
+            tmpObj = {
+              ...tmpObj,
+              ..._t.info.window.style,
+              ..._t.previewCurrentStyle
+            }
+          } else {
+            console.log('xxx 003')
+            tmpObj = {
+              ...tmpObj,
+              ..._t.info.window.style
+            }
+          }
+          console.log('windowStyle', _t.info.app.name, tmpObj, tmpObj['z-index'])
+          _t.windowStyle = tmpObj
+        })
       }
     },
     created: function () {
       let _t = this
+      let appName = _t.info.app.name
       // 监听事件
-      // FIXME 【废弃】 改在Desktop中监听
-//      _t.$utils.bus.$on('platform/window/open', function (val) {
-//        console.log('platform/window/open', val)
-//        _t.windowList.push(val)
-//      })
+      _t.handleWindowStyle()
       // 监听 window 预览
-      _t.$utils.bus.$on('platform/window/preview/open', function (appInfo) {
+      _t.$utils.bus.$on('platform/window/preview/open/' + appName, function (appInfo) {
         if (appInfo && appInfo.app.name === _t.info.app.name) {
           // 处理窗口预览
           _t.handleWindowPreviewOpen(appInfo)
         }
       })
-      _t.$utils.bus.$on('platform/window/preview/close', function (appInfo) {
+      _t.$utils.bus.$on('platform/window/preview/close/' + appName, function (appInfo) {
         if (appInfo && appInfo.app.name === _t.info.app.name) {
           // 处理窗口预览
           _t.handleWindowPreviewClose(appInfo)
         }
       })
-      _t.$utils.bus.$on('platform/window/preview/current/open', function (appInfo) {
+      _t.$utils.bus.$on('platform/window/preview/current/open/' + appName, function (appInfo) {
         if (appInfo && appInfo.app.name === _t.info.app.name) {
           // 处理窗口预览
           _t.handleWindowPreviewCurrentOpen(appInfo)
@@ -694,7 +713,7 @@
           _t.handleWindowPreviewOtherClose()
         }
       })
-      _t.$utils.bus.$on('platform/window/preview/current/close', function (tmpInfo) {
+      _t.$utils.bus.$on('platform/window/preview/current/close/' + appName, function (tmpInfo) {
         let {appInfo, needDone} = tmpInfo
         if (appInfo && appInfo.app.name === _t.info.app.name) {
           // 处理窗口预览
@@ -702,7 +721,7 @@
           if (needDone) {
             _t.$nextTick(function () {
               let appInfo = {..._t.info}
-              _t.$utils.bus.$emit('platform/window/preview/current/close/done', appInfo)
+              _t.$utils.bus.$emit('platform/window/preview/current/close/done/' + appInfo.app.name, appInfo)
             })
           }
         } else {
@@ -710,15 +729,18 @@
           _t.handleWindowPreviewOtherOpen()
         }
       })
-      // 监听拖拽事件
-      _t.$utils.bus.$on(_t.dragConfig.bus.done, function (position) {
-        let appInfo = {..._t.info}
-        // 广播事件
-        _t.$utils.bus.$emit('platform/window/position/change', {
-          appInfo: appInfo,
-          ...position
-        })
-      })
+    },
+    beforeDestroy: function () {
+//    destroyed: function () {
+      let _t = this
+      let appName = _t.info.app.name
+      console.log('ffffffffffffffffffffffffffffffffffffff', _t)
+      _t.$utils.bus.$off([
+        'platform/window/preview/open/' + appName,
+        'platform/window/preview/close/' + appName,
+        'platform/window/preview/current/open/' + appName,
+        'platform/window/preview/current/close/' + appName
+      ])
     }
   }
 </script>
