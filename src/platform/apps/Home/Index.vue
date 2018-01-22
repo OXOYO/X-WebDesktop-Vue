@@ -33,7 +33,6 @@
       // 桌面左键点击
       handlerLeftClick: function () {
         let _t = this
-        console.log('jjjjjjjjjjjjj')
         // 广播事件
         _t.$utils.bus.$emit('platform/startMenu/hide')
         _t.$utils.bus.$emit('platform/contextMenu/hide')

@@ -175,6 +175,13 @@
           isShow: false
         }
       })
+    },
+    beforeDestroy: function () {
+      let _t = this
+      _t.$utils.bus.$off([
+        'platform/contextMenu/show',
+        'platform/contextMenu/hide'
+      ])
     }
   }
 </script>

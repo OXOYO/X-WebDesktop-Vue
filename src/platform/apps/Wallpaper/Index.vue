@@ -204,9 +204,14 @@
       _t.init()
       // 监听事件
       _t.$utils.bus.$on('platform/wallpaper/switch', function () {
-        console.log('lllllllllllll')
         _t.doSwitch()
       })
+    },
+    beforeDestroy: function () {
+      let _t = this
+      _t.$utils.bus.$off([
+        'platform/wallpaper/switch'
+      ])
     }
   }
 </script>
