@@ -345,12 +345,12 @@
       _t.$utils.bus.$on('platform/startMenu/hide', function () {
         _t.isShow = false
       })
+    },
+    beforeDestroy: function () {
+      let _t = this
+      _t.$utils.bus.$off([
+        'platform/startMenu/hide'
+      ])
     }
-    // ,
-    // destroyed: function () {
-    //   let _t = this
-    //   // 注销事件监听
-    //   _t.$utils.bus.$off('platform/startMenu/hide')
-    // }
   }
 </script>

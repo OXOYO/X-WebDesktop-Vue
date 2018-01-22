@@ -128,7 +128,6 @@
           // }
         }
         _t.components = components
-        console.log('_t.components', _t.components)
       },
       // 节点drop
       handlerDrop: function (event) {
@@ -169,13 +168,11 @@
           }
         }
         // TODO 处理应用拖拽后相关操作
-        console.log('tmpInfo', tmpInfo)
         _t.$utils.bus.$emit('platform/desktop/right/click', tmpInfo)
       },
       // 桌面左键点击
       handlerLeftClick: function () {
         let _t = this
-        console.log('xxxxxxxxxxxxxx')
         // 广播事件
         _t.$utils.bus.$emit('platform/startMenu/hide')
         _t.$utils.bus.$emit('platform/contextMenu/hide')
@@ -282,6 +279,14 @@
           document.msExitFullscreen()
         }
       })
+    },
+    beforeDestroy: function () {
+      let _t = this
+      _t.$utils.bus.$off([
+        'platform/refresh',
+        'platform/fullScreen/open',
+        'platform/fullScreen/close'
+      ])
     }
   }
 </script>
