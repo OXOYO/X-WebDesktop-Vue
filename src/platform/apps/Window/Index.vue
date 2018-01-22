@@ -179,7 +179,7 @@
     :class="windowSizeClass"
     @mousedown.stop="triggerWindow"
     :window-name="info.app.name"
-    :style="windowStyle"
+    :style="info.window.style"
     v-x-drag="dragResizeConfig"
   >
     <!-- 拖拽缩放 -->
@@ -572,7 +572,7 @@
         let _t = this
         console.log('_t.previewStyle handleWindowPreviewOpen', Object.keys(_t.previewStyle))
         _t.previewStyle = {
-          'z-index': -1,
+          'z-index': '-1',
           position: 'absolute',
           display: 'inline-block',
           left: '50%',
@@ -664,25 +664,31 @@
             console.log('xxx 001')
             tmpObj = {
               ...tmpObj,
-              ..._t.info.window.style,
+              // ..._t.info.window.style,
               ..._t.previewStyle
             }
           } else if (Object.keys(_t.previewCurrentStyle).length) {
             console.log('xxx 002')
             tmpObj = {
               ...tmpObj,
-              ..._t.info.window.style,
+              // ..._t.info.window.style,
               ..._t.previewCurrentStyle
             }
-          } else {
-            console.log('xxx 003')
-            tmpObj = {
-              ...tmpObj,
-              ..._t.info.window.style
-            }
+          // } else {
+          //   console.log('xxx 003')
+          //   tmpObj = {
+          //     ...tmpObj,
+          //     ..._t.info.window.style
+          //   }
           }
           console.log('windowStyle', _t.info.app.name, tmpObj, tmpObj['z-index'])
-          _t.windowStyle = tmpObj
+          // _t.windowStyle = tmpObj
+          let appInfo = {..._t.info}
+          appInfo['window']['style'] = {
+            ...appInfo['window']['style'],
+            ...tmpObj
+          }
+          _t.$utils.bus.$emit('platform/window/style/change', appInfo)
         })
       }
     },
