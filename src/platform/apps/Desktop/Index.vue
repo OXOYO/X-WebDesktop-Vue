@@ -48,7 +48,7 @@
         :is="childComponents.Window"
         v-for="item in appData.iconList"
         v-if="item.window.status !=='close'"
-        :key="item.app.name + (new Date()).getTime()"
+        :key="item.app.name"
         :info="item"
       ></component>
       <component :is="childComponents.Wallpaper" :style="{ 'z-index': 1000 }"></component>
