@@ -104,25 +104,18 @@
         for (let item of iconList) {
           let xVal = 0
           let yVal = 0
-          let leftVal = parseFloat(item.desktopIcon.style.left)
-          let topVal = parseFloat(item.desktopIcon.style.top)
-          console.log('leftVal', leftVal, 'topVal', topVal)
           let firstGrid = _t.gridArr[0][0]
-          console.log('firstGrid', firstGrid.leftTop.x, firstGrid.leftTop.y)
           // FIXME 取中心点坐标
           xVal = (firstGrid.rightBottom.x - firstGrid.leftTop.x) / 2 + firstGrid.leftTop.x
           yVal = (firstGrid.rightBottom.y - firstGrid.leftTop.y) / 2 + firstGrid.leftTop.y
-          console.log('xVal', xVal, 'yVal', yVal)
 
           let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
           let distanceArrBack = [...distanceArr]
           if (flag) {
-            console.log('distanceArr', distanceArr)
             flag = false
           }
           // 目标Grid，FIXME 【BUG】此处需要考虑从上到下，从左到有的排布规则
           let targetGrid = _t.findGridForAuto(distanceArr, distanceArrBack)
-          console.log('targetGrid', targetGrid.leftTop.x, targetGrid.leftTop.y)
           // 更新style
           let style = {
             'left': targetGrid.leftTop.x + 'px',
@@ -130,7 +123,6 @@
           }
           for (let i = 0, len = iconList.length; i < len; i++) {
             if (iconList[i].app.name === item.app.name) {
-              console.log('handlerIconList style', i, item.app.name, item.app.title, style)
               iconList[i]['desktopIcon']['style'] = style
             }
           }
@@ -150,7 +142,6 @@
         // 获取拖拽对象数据
         let targetInfo = JSON.parse(event.dataTransfer.getData('Text'))
         // TODO 判断target，根据target分别处理
-        console.log('targetInfo.target', targetInfo.target)
         switch (targetInfo.target) {
           case 'DesktopIcon':
             _t.handlerDesktopIconDrop(targetInfo, event)
@@ -178,7 +169,6 @@
         // 目标Grid
         let appInfo = targetData.appInfo
         let targetGrid = _t.findGridForDrag(distanceArr, distanceArrBack, appInfo)
-        console.log('handlerDesktopIconDrop targetGrid', targetGrid.leftTop.x, targetGrid.leftTop.y)
         // 更新style
         let style = {
           'left': targetGrid.leftTop.x + 'px',
@@ -186,16 +176,15 @@
         }
 //        let iconList = [..._t.iconList]
         let iconList = [..._t.appData.iconList]
-        console.log(iconList, style)
         for (let i = 0, len = iconList.length; i < len; i++) {
           if (iconList[i].app.name === targetData.name) {
-            console.log('handlerDesktopIconDrop style', i, targetData.name, style)
             iconList[i]['desktopIcon']['style'] = style
           }
         }
 //        _t.iconList = [...iconList]
         // TODO 分发action，更新用户应用数据
         // 分发mutations，更新用户应用数据
+        console.log('Admin/appData/set 001')
         _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
           ..._t.appData,
           iconList: iconList
@@ -223,7 +212,6 @@
         for (let i = 0, len = iconList.length; i < len; i++) {
           let item = iconList[i]
           if (item.app.name === targetData.name) {
-            console.log('appName', targetData.name)
             iconList[i]['window']['style'] = {
               ...iconList[i]['window']['style'],
               ...style
@@ -237,6 +225,7 @@
           ..._t.appData,
           iconList: iconList
         }))
+        console.log('Admin/appData/set 002')
         _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), appData)
       },
       // 计算格子数据
@@ -260,12 +249,10 @@
         // 处理宽高
         let height = document.body.clientHeight
         let width = document.body.clientWidth
-        console.log('height', height, 'width', width)
         // 每个图标宽高80px margin 10px
         let itemWidthHeight = 100
         let xNum = Math.floor(width / itemWidthHeight)
         let yNum = Math.floor(height / itemWidthHeight)
-        console.log('xNum', xNum, 'yNum', yNum)
         switch (direction) {
           case 'top-bottom-left-right':
             // 从上往下，从左往右
@@ -436,8 +423,6 @@
             }
             break
         }
-
-        console.log('gridArr', gridArr)
         _t.gridArr = gridArr
       },
       // 2.2.递归查找距离最小且未占用的grid FIXME 【BUG】此处需要考虑从上到下，从左到有的排布规则
@@ -523,7 +508,6 @@
             // 标记targetGrid占用
             _t.gridArr[childIndex][childItemIndex]['isOccupied'] = true
             // 解除之前的grid占用
-            console.log('appInfo', appInfo)
             let leftVal = parseFloat(appInfo.desktopIcon.style.left)
             let topVal = parseFloat(appInfo.desktopIcon.style.top)
             for (let childIndex in _t.gridArr) {
@@ -581,6 +565,7 @@
 //          _t.iconList = _t.handlerIconList([..._t.appData.iconList])
           let iconList = _t.handlerIconList([..._t.appData.iconList])
           // 分发mutations，更新用户应用数据
+          console.log('Admin/appData/set 003')
           _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
             ..._t.appData,
             iconList: iconList
@@ -595,6 +580,7 @@
         // 处理窗口层级变化
         iconList = _t.doWindowZIndexChange(iconList, appInfo)
 //        _t.iconList = [...iconList]
+        console.log('Admin/appData/set 004')
         _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
           ..._t.appData,
           iconList: iconList
@@ -614,7 +600,6 @@
             indexArr.push(i)
           }
         }
-        console.log('tmpArr', tmpArr, indexArr)
         // 处理当前窗口
         for (let j = 0, len = iconList.length; j < len; j++) {
           let item = iconList[j]
@@ -622,17 +607,14 @@
           if (item.window.status === 'open') {
             // FIXME 只需要处理打开的窗口
             if (item.app.name === appInfo.app.name) {
-              console.log('appName', appInfo.app.name, iconList[j]['window'])
               computedZIndex = defZIndex + tmpArr.length - 1
               // 移除已处理的窗口
               tmpArr = tmpArr.filter(item => item !== appInfo.app.name)
             } else {
-              console.log('tmpArr.indexOf(item.app.name)', tmpArr.indexOf(item.app.name), item.app.name)
               // 重置为默认层级
               computedZIndex = defZIndex
             }
             iconList[j]['window']['style']['z-index'] = computedZIndex
-            console.log('computed z-index', iconList[j]['window']['style']['z-index'], iconList[j].app.name)
           }
         }
         // 处理其他窗口的层级
@@ -643,13 +625,7 @@
             if (tmpArr.includes(item.app.name)) {
               computedZIndex = defZIndex + tmpArr.indexOf(item.app.name)
               iconList[k]['window']['style']['z-index'] = computedZIndex
-              console.log('computedZIndex', computedZIndex, item.app.name)
             }
-          }
-        }
-        if (indexArr.length) {
-          for (let index of indexArr) {
-            console.log('iconList indexArr', index, iconList[index].app.name, iconList[index]['window']['style']['z-index'])
           }
         }
         return iconList
@@ -657,11 +633,9 @@
       // 处理窗口大小改变
       handleWindowSizeChange: function (tmpInfo) {
         let _t = this
-        console.log('handleWindowSizeChange appInfo', tmpInfo)
         let {appInfo, ...sizeInfo} = tmpInfo
 
         let iconList = [..._t.appData.iconList]
-        console.log('appInfo sizeInfo', appInfo, sizeInfo)
         for (let i = 0, len = iconList.length; i < len; i++) {
           let item = iconList[i]
           if (item.app.name === appInfo.app.name) {
@@ -673,19 +647,18 @@
                 break
               } else {
                 iconList[i]['window']['status'] = 'open'
-                iconList[i]['window']['size'] = sizeInfo.newSize
+                iconList[i]['window']['size'] = sizeInfo.newSize || ''
+                iconList[i]['window']['oldSize'] = sizeInfo.oldSize || ''
                 iconList[i]['window']['style'] = sizeInfo.newStyle || {}
                 iconList[i]['window']['oldStyle'] = sizeInfo.oldStyle || {}
                 if (sizeInfo.actionName === 'min') {
                   let taskBarList = []
                   for (let j = 0, length = iconList.length; j < length; j++) {
                     let appItem = iconList[j]
-                    console.log()
                     if (appItem.window.status === 'open' || appItem.taskBar.isPinned) {
                       taskBarList.push(appItem.app.name)
                     }
                   }
-                  console.log('taskBarList.length', taskBarList.length, taskBarList)
                   if (taskBarList.length) {
                     let taskBarIndex = taskBarList.indexOf(appInfo.app.name)
                     // FIXME 每个任务栏图标实际宽度 68px
@@ -703,6 +676,7 @@
         // 处理窗口层级变化
         iconList = _t.doWindowZIndexChange(iconList, appInfo)
         // 分发mutation，更新数据
+        console.log('Admin/appData/set 005')
         _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
           ..._t.appData,
           iconList: iconList
@@ -711,7 +685,6 @@
       // 处理窗口打开
       handleWindowOpen: function (appInfo) {
         let _t = this
-        console.log('platform/window/open', appInfo.app.name)
         // 查找备份数据
         let _appData = JSON.parse(JSON.stringify(_t._appData))
         let _appInfo
@@ -721,19 +694,40 @@
             _appInfo = item
           }
         }
-        console.log('_appInfo', _appInfo.window.style)
         let tmpObj
         // 判断当前应用窗口是否已打开
         if (appInfo.window.status === 'open') {
-          tmpObj = {
-            appInfo: _appInfo,
-            actionName: 'open',
-            newSize: _appInfo.window.size,
-            oldSize: appInfo.window.oldSize,
-            newStyle: _appInfo.window.style,
-            oldStyle: appInfo.window.oldStyle,
-            status: 'open'
+          console.log('appInfo.window.size', appInfo.window.size)
+          if (appInfo.window.size === 'min') {
+            tmpObj = {
+              appInfo: appInfo,
+              actionName: 'open',
+              newSize: appInfo.window.oldSize || _appInfo.window.size,
+              oldSize: '',
+              newStyle: appInfo.window.oldStyle,
+              oldStyle: {},
+              status: 'open'
+            }
+          } else {
+            tmpObj = {
+              appInfo: appInfo,
+              actionName: 'open',
+              newSize: appInfo.window.oldSize || _appInfo.window.size,
+              oldSize: appInfo.window.size,
+              newStyle: appInfo.window.oldStyle || _appInfo.window.style,
+              oldStyle: appInfo.window.oldStyle,
+              status: 'open'
+            }
           }
+//          tmpObj = {
+//            appInfo: _appInfo,
+//            actionName: 'open',
+//            newSize: appInfo.window.oldSize,
+//            oldSize: _appInfo.window.size,
+//            newStyle: Object.keys(appInfo.window.oldStyle).length,
+//            oldStyle: _appInfo.window.style,
+//            status: 'open'
+//          }
         } else if (appInfo.window.status === 'close') {
           tmpObj = {
             appInfo: _appInfo,
@@ -746,12 +740,12 @@
           }
         }
         // 处理窗口大小改变
+        console.log('handleWindowSizeChange 001')
         _t.handleWindowSizeChange(tmpObj)
       },
       // 处理窗口toggle
       handleWindowToggle: function (appInfo) {
         let _t = this
-        console.log('platform/window/toggle', appInfo)
         // 查找备份数据
         let _appData = JSON.parse(JSON.stringify(_t._appData))
         let _appInfo
@@ -761,7 +755,6 @@
             _appInfo = item
           }
         }
-        console.log('_appInfo', _appInfo.window.style)
         let tmpObj
         // 判断当前应用窗口是否已打开
         if (appInfo.window.status === 'open') {
@@ -798,6 +791,7 @@
           }
         }
         // 处理窗口大小改变
+        console.log('handleWindowSizeChange 002')
         _t.handleWindowSizeChange(tmpObj)
       },
       // 处理窗口位置变化
@@ -813,6 +807,7 @@
           }
         }
         // 分发mutation，更新数据
+        console.log('Admin/appData/set 006')
         _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
           ..._t.appData,
           iconList: iconList
@@ -829,6 +824,7 @@
           }
         }
         // 分发mutation，更新数据
+        console.log('Admin/appData/set 007')
         _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
           ..._t.appData,
           iconList: iconList
@@ -842,7 +838,6 @@
 
       // 监听事件
       _t.$utils.bus.$on('platform/desktopIcon/sort', function (direction) {
-        console.log('bus on', direction)
         if (_t.directionArr.includes(direction)) {
           // 处理格子排序
           _t.handlerGridLayout(direction)
@@ -859,6 +854,7 @@
       _t.$utils.bus.$on('platform/window/size/change', function (tmpInfo) {
         if (tmpInfo) {
           // 处理窗口大小改变
+          console.log('handleWindowSizeChange 003')
           _t.handleWindowSizeChange(tmpInfo)
         }
       })
@@ -904,6 +900,18 @@
           }, 500)
         })()
       }
+    },
+    beforeDestroy: function () {
+      let _t = this
+      _t.$utils.bus.$off([
+        'platform/desktopIcon/sort',
+        'platform/window/zIndex/change',
+        'platform/window/size/change',
+        'platform/window/open',
+        'platform/window/toggle',
+        'platform/window/position/change',
+        'platform/window/style/change'
+      ])
     }
   }
 </script>

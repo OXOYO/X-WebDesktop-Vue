@@ -280,7 +280,7 @@
         _t.previewImg = null
         _t.targetWindow = null
         // 清除预览窗口样式
-        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
+        _t.$utils.bus.$emit('platform/window/preview/close/' + appInfo.app.name, appInfo)
         _t.$nextTick(function () {
           _t.$utils.bus.$emit('platform/window/toggle', appInfo)
         })
@@ -295,7 +295,8 @@
         // 打开应用
         let appInfo = {..._t.info}
         // 关闭预览窗口
-        _t.$utils.bus.$emit('platform/window/preview/current/close', {
+        console.log('platform/window/preview/current/close 001')
+        _t.$utils.bus.$emit('platform/window/preview/current/close/' + appInfo.app.name, {
           appInfo: appInfo,
           needDone: true
         })
@@ -308,9 +309,8 @@
         _t.previewImg = null
         _t.targetWindow = null
         // 清除预览窗口样式
-        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
+        _t.$utils.bus.$emit('platform/window/preview/close/' + appInfo.app.name, appInfo)
         _t.$nextTick(function () {
-          console.log('event', event)
           let xVal = parseInt(event.clientX) - parseInt(event.offsetX)
           let yVal = parseInt(event.clientY) - parseInt(event.offsetY)
           let appName = event.target.dataset['name'] || _t.info.app.name || null
@@ -459,7 +459,6 @@
               }
             ]
           }
-          console.log('contextMenuInfo', contextMenuInfo)
           // 广播事件
           _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
         })
@@ -468,6 +467,14 @@
       handleMouseOver: function () {
         let _t = this
         let appInfo = {..._t.info}
+        // 转换方法
+        let handler = function () {
+          html2canvas(_t.targetWindow).then(function (canvas) {
+            _t.previewImg = canvas.toDataURL()
+          }).catch(function (error) {
+            console.error('html2canvas render error!', error)
+          })
+        }
 //        // 清空预览图
         _t.previewImg = null
 //        // 清除预览窗口样式
@@ -484,52 +491,54 @@
         // } else if (appInfo.window.type === 'modal') {
         targetWindow = document.querySelector('[window-name=' + appInfo.app.name + ']')
         // }
+        _t.targetWindow = targetWindow
         // 判断应用size，当size 为min时无法截图，需将窗口显示在浏览器窗口范围内
         if (appInfo.window.size === 'min') {
-          console.log('targetWindow.style', targetWindow.style)
-//          targetWindow.style.top = 0
-          _t.$utils.bus.$emit('platform/window/preview/open', appInfo)
-        }
-        _t.tagetWindow = targetWindow
-//        _t.$nextTick(function () {
-        setTimeout(function () {
-          console.log('targetWindow', targetWindow)
-          html2canvas(targetWindow).then(function (canvas) {
-            // console.log('canvas', canvas)
-            _t.previewImg = canvas.toDataURL()
-          }).catch(function (error) {
-            console.error('html2canvas render error!', error)
+          _t.$utils.bus.$emit('platform/window/preview/open/' + appInfo.app.name, appInfo)
+          // 监听 window 预览
+          _t.$utils.bus.$on('platform/window/preview/open/done/' + appInfo.app.name, function (appInfo) {
+            console.log('doneeeeeeeeeeeeeeeeee', appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow)
+            if (appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow) {
+              _t.$nextTick(function () {
+                // 执行处理函数
+                handler()
+              })
+            }
           })
-        }, 200)
-//        })
-  //        domtoimage.toPng(targetWindow).then(function (dataUrl) {
-  //          console.log('dataUrl', dataUrl)
-  //          _t.previewImg = dataUrl
-  //        }).catch(function (error) {
-  //          console.error('oops, something went wrong!', error)
-  //        })
-//          }, 1000)
-//        })
+        } else {
+          // 执行处理函数
+          handler()
+        }
+//        setTimeout(function () {
+//          html2canvas(targetWindow).then(function (canvas) {
+//            _t.previewImg = canvas.toDataURL()
+//          }).catch(function (error) {
+//            console.error('html2canvas render error!', error)
+//          })
+//        }, 200)
       },
       // 处理鼠标移出事件
       handleMouseOut: function () {
         let _t = this
         _t.previewImg = null
         _t.targetWindow = null
-//        let appInfo = {..._t.info}
+        let appInfo = {..._t.info}
 //        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
+        // 取消监听
+        _t.$utils.bus.$off('platform/window/preview/open/done/' + appInfo.app.name)
       },
       // 预览当前窗口 打开
       previewCurrentWindowOpen: function () {
         let _t = this
         let appInfo = {..._t.info}
-        _t.$utils.bus.$emit('platform/window/preview/current/open', appInfo)
+        _t.$utils.bus.$emit('platform/window/preview/current/open/' + appInfo.app.name, appInfo)
       },
       // 预览当前窗口 关闭
       previewCurrentWindowClose: function () {
         let _t = this
         let appInfo = {..._t.info}
-        _t.$utils.bus.$emit('platform/window/preview/current/close', {
+        console.log('platform/window/preview/current/close 002')
+        _t.$utils.bus.$emit('platform/window/preview/current/close/' + appInfo.app.name, {
           appInfo: appInfo,
           needDone: false
         })
@@ -537,24 +546,23 @@
     },
     created: function () {
       let _t = this
-      // 监听 window 预览
-      _t.$utils.bus.$on('platform/window/preview/open/done', function (appInfo) {
-        if (appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow) {
-//          console.log('targetWindow', targetWindow)
-          html2canvas(_t.targetWindow).then(function (canvas) {
-            // console.log('canvas', canvas)
-            _t.previewImg = canvas.toDataURL()
-          }).catch(function (error) {
-            console.error('html2canvas render error!', error)
-          })
-        }
-      })
+//      // 监听 window 预览
+//      _t.$utils.bus.$on('platform/window/preview/open/done', function (appInfo) {
+//        console.log('doneeeeeeeeeeeeeeeeee', appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow)
+//        if (appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow) {
+//          html2canvas(_t.targetWindow).then(function (canvas) {
+//            _t.previewImg = canvas.toDataURL()
+//          }).catch(function (error) {
+//            console.error('html2canvas render error!', error)
+//          })
+//        }
+//      })
       // 清除预览
       _t.$utils.bus.$on('platform/window/preview/clear', function () {
         _t.previewImg = null
         _t.targetWindow = null
       })
-      _t.$utils.bus.$on('platform/window/preview/current/close/done', function (appInfo) {
+      _t.$utils.bus.$on('platform/window/preview/current/close/done/' + _t.info.app.name, function (appInfo) {
         if (appInfo && appInfo.app.name === _t.info.app.name) {
           if (_t.info.window.size === 'min') {
             _t.$nextTick(function () {
@@ -567,6 +575,15 @@
           }
         }
       })
+    },
+    beforeDestroy: function () {
+      let _t = this
+      let appName = _t.info.app.name
+      _t.$utils.bus.$off([
+//        'platform/window/preview/open/done',
+        'platform/window/preview/clear',
+        'platform/window/preview/current/close/done/' + appName
+      ])
     }
   }
 </script>
