@@ -882,6 +882,10 @@
           _t.handleWindowStyleChange(appInfo)
         }
       })
+      // 监听 window 操作
+      _t.$utils.bus.$on('platform/window/trigger', function (tmpInfo) {
+        console.log('platform/window/trigger tmpInfo', tmpInfo)
+      })
       let resizeTimer = null
       // 监听窗口大小调整
       window.onresize = () => {

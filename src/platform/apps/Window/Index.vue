@@ -179,7 +179,7 @@
     :class="windowSizeClass"
     @mousedown.stop="onWindowMouseDown"
     :window-name="info.app.name"
-    :style="windowStyle"
+    :style="info.window.style"
     v-x-drag="dragResizeConfig"
   >
     <!-- 拖拽缩放 -->
@@ -196,7 +196,7 @@
     >
       <div
         class="window-title"
-        @dblclick.stop.prevent="handleModalStatus(info.window.size === 'max' ? 'reset' : 'max')"
+        @dblclick.stop.prevent="handleWindowSize(info.window.size === 'max' ? 'reset' : 'max')"
       >
         {{ info.app.title }}
       </div>
@@ -208,7 +208,7 @@
           @mousedown.stop
           @mousemove.stop
           @mouseup.stop
-          @click.stop.prevent="handleModalStatus('min')"
+          @click.stop.prevent="handleWindowSize('min')"
         >
           <Icon type="minus"></Icon>
         </div>
@@ -219,7 +219,7 @@
           @mousedown.stop
           @mousemove.stop
           @mouseup.stop
-          @click.stop.prevent="handleModalStatus('max')"
+          @click.stop.prevent="handleWindowSize('max')"
         >
           <Icon type="android-checkbox-outline-blank"></Icon>
         </div>
@@ -230,7 +230,7 @@
           @mousedown.stop
           @mousemove.stop
           @mouseup.stop
-          @click.stop.prevent="handleModalStatus('reset')"
+          @click.stop.prevent="handleWindowSize('reset')"
         >
           <Icon type="ios-browsers-outline"></Icon>
         </div>
@@ -241,7 +241,7 @@
           @mousedown.stop
           @mousemove.stop
           @mouseup.stop
-          @click.stop.prevent="handleModalStatus('close')"
+          @click.stop.prevent="handleWindowSize('close')"
         >
           <Icon type="close"></Icon>
         </div>
@@ -421,7 +421,7 @@
     },
     methods: {
       // 处理弹窗状态
-      handleModalStatus: function (actionName = 'close') {
+      handleWindowSize: function (actionName = 'close') {
         let _t = this
 //        let tmpInfo
         let appInfo = {..._t.info}
@@ -488,25 +488,42 @@
 //        if (!tmpInfo) {
 //          return
 //        }
-        _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
-        // 如果是最小化
-        if (actionName === 'min') {
-          tmpObj['newStyle'] = {
-            'display': 'none'
+        // 广播事件 触发window事件
+        _t.$utils.bus.$emit('platform/window/trigger', {
+          // 通过窗口控制按钮缩放窗口
+          action: 'resizeByWindowBar',
+          data: {
+            appInfo: appInfo
           }
-          setTimeout(function () {
-            _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
-          }, 300)
-        }
+        })
+//        _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
+//        // 如果是最小化
+//        if (actionName === 'min') {
+//          tmpObj['newStyle'] = {
+//            'display': 'none'
+//          }
+//          setTimeout(function () {
+//            _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
+//          }, 300)
+//        }
       },
       onWindowMouseDown: function () {
         let _t = this
 //        console.log('change Window zIndex', _t.info.window.zIndex)
-        _t.$utils.bus.$emit('platform/window/preview/clear')
-        _t.$nextTick(function () {
-          let appInfo = {..._t.info}
-          _t.$utils.bus.$emit('platform/window/zIndex/change', appInfo)
+        // 广播事件 触发window事件
+        let appInfo = {..._t.info}
+        _t.$utils.bus.$emit('platform/window/trigger', {
+          // 通过窗口控制按钮缩放窗口
+          action: 'zIndexChangeByWindow',
+          data: {
+            appInfo: appInfo
+          }
         })
+//        _t.$utils.bus.$emit('platform/window/preview/clear')
+//        _t.$nextTick(function () {
+//          let appInfo = {..._t.info}
+//          _t.$utils.bus.$emit('platform/window/zIndex/change', appInfo)
+//        })
       },
       // 处理窗口预览
       handleWindowPreviewOpen: function () {
@@ -591,7 +608,15 @@
           ...appInfo['window']['style'],
           ...style
         }
-        _t.$utils.bus.$emit('platform/window/style/change', appInfo)
+        // 广播事件 触发window事件
+        _t.$utils.bus.$emit('platform/window/trigger', {
+          // 通过XDrag控制窗口拖拽、缩放
+          action: 'dragResize',
+          data: {
+            appInfo: appInfo
+          }
+        })
+//        _t.$utils.bus.$emit('platform/window/style/change', appInfo)
       },
       handleWindowStyle: function () {
         let _t = this
