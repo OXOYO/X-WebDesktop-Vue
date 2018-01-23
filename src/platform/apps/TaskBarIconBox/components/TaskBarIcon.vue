@@ -273,16 +273,24 @@
       onIconMouseUp: function () {
         let _t = this
         _t.isMouseDown = false
-        // 打开应用
-        let appInfo = {..._t.info}
         // 清空预览图
         _t.previewImg = null
         _t.targetWindow = null
-        // 清除预览窗口样式
-        _t.$utils.bus.$emit('platform/window/preview/close/' + appInfo.app.name, appInfo)
-        _t.$nextTick(function () {
-          _t.$utils.bus.$emit('platform/window/toggle', appInfo)
+        // 应用数据
+        let appInfo = {..._t.info}
+        // 广播事件 触发window事件 open
+        _t.$utils.bus.$emit('platform/window/trigger', {
+          // 通过任务栏图标打开
+          action: 'openByTaskBarIcon',
+          data: {
+            appInfo: appInfo
+          }
         })
+        // 清除预览窗口样式
+//        _t.$utils.bus.$emit('platform/window/preview/close/' + appInfo.app.name, appInfo)
+//        _t.$nextTick(function () {
+//          _t.$utils.bus.$emit('platform/window/toggle', appInfo)
+//        })
       },
       // 打开当前窗口
       onPreviewMouseUp: function () {
@@ -291,14 +299,22 @@
         // 清空预览图
         _t.previewImg = null
         _t.targetWindow = null
-        // 打开应用
+        // 应用数据
         let appInfo = {..._t.info}
-        // 关闭预览窗口
-        console.log('platform/window/preview/current/close 001')
-        _t.$utils.bus.$emit('platform/window/preview/current/close/' + appInfo.app.name, {
-          appInfo: appInfo,
-          needDone: true
+        // 广播事件 触发window事件
+        _t.$utils.bus.$emit('platform/window/trigger', {
+          // 通过预览图打开窗口
+          action: 'openByPreviewThumb',
+          data: {
+            appInfo: appInfo
+          }
         })
+        // 关闭预览窗口
+//        console.log('platform/window/preview/current/close 001')
+//        _t.$utils.bus.$emit('platform/window/preview/current/close/' + appInfo.app.name, {
+//          appInfo: appInfo,
+//          needDone: true
+//        })
       },
       // 右键菜单
       onIconRightClick: function (event) {
@@ -474,12 +490,8 @@
             console.error('html2canvas render error!', error)
           })
         }
-//        // 清空预览图
+        // 清空预览图
         _t.previewImg = null
-//        // 清除预览窗口样式
-//        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
-//        _t.$nextTick(function () {
-//          setTimeout(function () {
           // 判断应用是否打开
         if (appInfo.window.status !== 'open') {
           return
@@ -493,16 +505,27 @@
         _t.targetWindow = targetWindow
         // 判断应用size，当size 为min时无法截图，需将窗口显示在浏览器窗口范围内
         if (appInfo.window.size === 'min') {
-          _t.$utils.bus.$emit('platform/window/preview/open/' + appInfo.app.name, appInfo)
-          // 监听 window 预览
-          _t.$utils.bus.$on('platform/window/preview/open/done/' + appInfo.app.name, function (appInfo) {
-            if (appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow) {
-              _t.$nextTick(function () {
-                // 执行处理函数
-                handler()
-              })
+          // 广播事件 触发window事件
+          _t.$utils.bus.$emit('platform/window/trigger', {
+            // 预览缩略图显示
+            action: 'previewThumbShow',
+            data: {
+              appInfo: appInfo,
+              callback: {
+                done: () => {}
+              }
             }
           })
+//          _t.$utils.bus.$emit('platform/window/preview/open/' + appInfo.app.name, appInfo)
+//          // 监听 window 预览
+//          _t.$utils.bus.$on('platform/window/preview/open/done/' + appInfo.app.name, function (appInfo) {
+//            if (appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow) {
+//              _t.$nextTick(function () {
+//                // 执行处理函数
+//                handler()
+//              })
+//            }
+//          })
         } else {
           // 执行处理函数
           handler()
@@ -521,25 +544,48 @@
         _t.previewImg = null
         _t.targetWindow = null
         let appInfo = {..._t.info}
-//        _t.$utils.bus.$emit('platform/window/preview/close', appInfo)
+        // 广播事件 触发window事件
+        _t.$utils.bus.$emit('platform/window/trigger', {
+          // 预览缩略图关闭
+          action: 'previewThumbHide',
+          data: {
+            appInfo: appInfo
+          }
+        })
         // 取消监听
-        _t.$utils.bus.$off('platform/window/preview/open/done/' + appInfo.app.name)
+//        _t.$utils.bus.$off('platform/window/preview/open/done/' + appInfo.app.name)
       },
       // 预览当前窗口 打开
       onPreviewMouseOver: function () {
         let _t = this
         let appInfo = {..._t.info}
-        _t.$utils.bus.$emit('platform/window/preview/current/open/' + appInfo.app.name, appInfo)
+        // 广播事件 触发window事件
+        _t.$utils.bus.$emit('platform/window/trigger', {
+          // 通过预览缩略图显示窗口
+          action: 'showByPreviewThumb',
+          data: {
+            appInfo: appInfo
+          }
+        })
+//        _t.$utils.bus.$emit('platform/window/preview/current/open/' + appInfo.app.name, appInfo)
       },
       // 预览当前窗口 关闭
       onPreviewMouseOut: function () {
         let _t = this
         let appInfo = {..._t.info}
-        console.log('platform/window/preview/current/close 002')
-        _t.$utils.bus.$emit('platform/window/preview/current/close/' + appInfo.app.name, {
-          appInfo: appInfo,
-          needDone: false
+        // 广播事件 触发window事件
+        _t.$utils.bus.$emit('platform/window/trigger', {
+          // 通过预览缩略图隐藏窗口
+          action: 'hideByPreviewThumb',
+          data: {
+            appInfo: appInfo
+          }
         })
+//        console.log('platform/window/preview/current/close 002')
+//        _t.$utils.bus.$emit('platform/window/preview/current/close/' + appInfo.app.name, {
+//          appInfo: appInfo,
+//          needDone: false
+//        })
       }
     },
     created: function () {
