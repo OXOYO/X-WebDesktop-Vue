@@ -71,8 +71,6 @@
     data () {
       return {
         gridArr: [],
-        isShowGrid: false,
-        toggleIndex: 0,
         iconList: [],
         directionArr: [
           'top-bottom-left-right',
@@ -90,9 +88,7 @@
     },
     computed: {
       ...mapState('Platform/Admin', {
-        appData: state => {
-          return state.appData
-        },
+        appData: state => state.appData,
         _appData: state => state._appData
       })
     },
