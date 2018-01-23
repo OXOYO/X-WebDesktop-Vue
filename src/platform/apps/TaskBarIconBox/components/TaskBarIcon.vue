@@ -188,11 +188,11 @@
     v-if="info.window.status === 'open' || info.taskBar.isPinned"
     class="task-bar-icon"
     :class="{ 'task-bar-icon-pinned': info.taskBar.isPinned }"
-    @mousedown.left.stop.prevent="handlerMouseDown"
-    @mouseup.left.stop.prevent="handlerMouseUp"
-    @contextmenu.stop.prevent="handlerRightClick($event)"
-    @mouseenter="handleMouseOver"
-    @mouseleave="handleMouseOut"
+    @mousedown.left.stop.prevent="onIconMouseDown"
+    @mouseup.left.stop.prevent="onIconMouseUp"
+    @contextmenu.stop.prevent="onIconRightClick($event)"
+    @mouseenter="onIconMouseOver"
+    @mouseleave="onIconMouseOut"
     :title="info.app.title"
     :data-name="info.app.name"
   >
@@ -203,10 +203,10 @@
       <div
         class="preview-body"
         @mousedown.left.stop.prevent
-        @mouseup.left.stop.prevent="handleCurrentWindowOpen"
+        @mouseup.left.stop.prevent="onPreviewMouseUp"
         @contextmenu.stop.prevent
-        @mouseover.stop="previewCurrentWindowOpen"
-        @mouseout.stop="previewCurrentWindowClose"
+        @mouseover.stop="onPreviewMouseOver"
+        @mouseout.stop="onPreviewMouseOut"
       >
         <div class="preview-bg" :style="{ 'background-image': 'url('+ previewImg + ')' }"></div>
         <div class="preview-title">{{ info.app.title }}</div>
@@ -265,12 +265,12 @@
     },
     methods: {
       // 鼠标按下
-      handlerMouseDown: function () {
+      onIconMouseDown: function () {
         let _t = this
         _t.isMouseDown = true
       },
       // 鼠标抬起
-      handlerMouseUp: function () {
+      onIconMouseUp: function () {
         let _t = this
         _t.isMouseDown = false
         // 打开应用
@@ -285,7 +285,7 @@
         })
       },
       // 打开当前窗口
-      handleCurrentWindowOpen: function () {
+      onPreviewMouseUp: function () {
         let _t = this
         // FIXME 【BUG】当存在两个窗口时，当前打开的窗口层级不正确
         // 清空预览图
@@ -301,7 +301,7 @@
         })
       },
       // 右键菜单
-      handlerRightClick: function (event) {
+      onIconRightClick: function (event) {
         let _t = this
         let appInfo = {..._t.info}
         // 清空预览图
@@ -463,7 +463,7 @@
         })
       },
       // 处理鼠标移上事件
-      handleMouseOver: function () {
+      onIconMouseOver: function () {
         let _t = this
         let appInfo = {..._t.info}
         // 转换方法
@@ -516,7 +516,7 @@
 //        }, 200)
       },
       // 处理鼠标移出事件
-      handleMouseOut: function () {
+      onIconMouseOut: function () {
         let _t = this
         _t.previewImg = null
         _t.targetWindow = null
@@ -526,13 +526,13 @@
         _t.$utils.bus.$off('platform/window/preview/open/done/' + appInfo.app.name)
       },
       // 预览当前窗口 打开
-      previewCurrentWindowOpen: function () {
+      onPreviewMouseOver: function () {
         let _t = this
         let appInfo = {..._t.info}
         _t.$utils.bus.$emit('platform/window/preview/current/open/' + appInfo.app.name, appInfo)
       },
       // 预览当前窗口 关闭
-      previewCurrentWindowClose: function () {
+      onPreviewMouseOut: function () {
         let _t = this
         let appInfo = {..._t.info}
         console.log('platform/window/preview/current/close 002')
