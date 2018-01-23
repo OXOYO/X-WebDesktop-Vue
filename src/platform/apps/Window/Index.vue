@@ -177,7 +177,7 @@
   <div
     class="app-window"
     :class="windowSizeClass"
-    @mousedown.stop="triggerWindow"
+    @mousedown.stop="onWindowMouseDown"
     :window-name="info.app.name"
     :style="windowStyle"
     v-x-drag="dragResizeConfig"
@@ -499,7 +499,7 @@
           }, 300)
         }
       },
-      triggerWindow: function () {
+      onWindowMouseDown: function () {
         let _t = this
 //        console.log('change Window zIndex', _t.info.window.zIndex)
         _t.$utils.bus.$emit('platform/window/preview/clear')
