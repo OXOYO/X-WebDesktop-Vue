@@ -497,7 +497,6 @@
           _t.$utils.bus.$emit('platform/window/preview/open/' + appInfo.app.name, appInfo)
           // 监听 window 预览
           _t.$utils.bus.$on('platform/window/preview/open/done/' + appInfo.app.name, function (appInfo) {
-            console.log('doneeeeeeeeeeeeeeeeee', appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow)
             if (appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow) {
               _t.$nextTick(function () {
                 // 执行处理函数

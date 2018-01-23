@@ -139,7 +139,6 @@
         if (!res || res.status !== 200) {
           return
         }
-        console.log('res', res)
         let userInfo = res.data.userInfo || null
         let tokenKey = _t.$Config.Cookie.getItem('token')
         let token = res.data[tokenKey] || null
