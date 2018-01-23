@@ -274,11 +274,6 @@
     data () {
       let _t = this
       return {
-        windowList: [],
-        // 是否开始缩放
-        isStartResize: false,
-        // 缩放方向
-        resizeDirection: '',
         // 预览样式
         previewStyle: {},
         // 预览当前窗口样式
@@ -369,8 +364,6 @@
             top: '100%'
           }
         }
-//        ,
-//        windowStyle: {}
       }
     },
     computed: {
@@ -506,36 +499,6 @@
           }, 300)
         }
       },
-      // 处理拖拽
-      handleDragStart: function (event) {
-        let _t = this
-        // 使其半透明
-        event.target.style.opacity = 0
-        if (_t.isStartResize) {
-          return false
-        }
-        let appInfo = _t.info
-        // 判断当前窗口大小
-        if (appInfo.window.size === 'max') {
-          _t.handleModalStatus('reset')
-        }
-        // 鼠标点击位置相对拖拽对象位置
-        let offsetX = event.offsetX
-        let offsetY = event.offsetY
-        // 拖拽对象数据
-        let targetInfo = {
-          target: 'Window',
-          data: {
-            id: appInfo.app.id,
-            title: appInfo.app.title,
-            name: appInfo.app.name,
-            modalKey: '',
-            offsetX: offsetX,
-            offsetY: offsetY
-          }
-        }
-        event.dataTransfer.setData('Text', JSON.stringify(targetInfo))
-      },
       triggerWindow: function () {
         let _t = this
 //        console.log('change Window zIndex', _t.info.window.zIndex)
@@ -544,28 +507,6 @@
           let appInfo = {..._t.info}
           _t.$utils.bus.$emit('platform/window/zIndex/change', appInfo)
         })
-      },
-      // 开始缩放
-      startResize: function (direction) {
-//        console.log('startResize')
-        let _t = this
-        // 更新窗口缩放数据
-        _t.isStartResize = true
-        // 更新缩放方向
-        _t.resizeDirection = direction
-      },
-      // 缩放中
-      moveResize: function (event) {
-        let _t = this
-        if (_t.isStartResize) {
-          console.log(event.pageX, event.pageY)
-        }
-      },
-      // 缩放停止
-      stopResize: function () {
-        let _t = this
-        // 更新窗口缩放数据
-        _t.isStartResize = false
       },
       // 处理窗口预览
       handleWindowPreviewOpen: function () {
@@ -695,8 +636,6 @@
     created: function () {
       let _t = this
       let appName = _t.info.app.name
-      // 监听事件
-//      _t.handleWindowStyle()
       // 监听 window 预览
       _t.$utils.bus.$on('platform/window/preview/open/' + appName, function (appInfo) {
         if (appInfo && appInfo.app.name === _t.info.app.name) {
@@ -737,7 +676,6 @@
       })
     },
     beforeDestroy: function () {
-//    destroyed: function () {
       let _t = this
       let appName = _t.info.app.name
       _t.$utils.bus.$off([
