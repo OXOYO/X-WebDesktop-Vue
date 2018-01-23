@@ -69,7 +69,6 @@
 
   export default {
     name: 'Platform',
-    // components: {},
     data () {
       return {
         components: {},
