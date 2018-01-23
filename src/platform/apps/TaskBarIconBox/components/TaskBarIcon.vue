@@ -225,7 +225,6 @@
 
 <script>
   import html2canvas from 'html2canvas'
-//  import domtoimage from 'dom-to-image'
 
   export default {
     name: 'TaskBarIcon',
@@ -545,18 +544,7 @@
     },
     created: function () {
       let _t = this
-//      // 监听 window 预览
-//      _t.$utils.bus.$on('platform/window/preview/open/done', function (appInfo) {
-//        console.log('doneeeeeeeeeeeeeeeeee', appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow)
-//        if (appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow) {
-//          html2canvas(_t.targetWindow).then(function (canvas) {
-//            _t.previewImg = canvas.toDataURL()
-//          }).catch(function (error) {
-//            console.error('html2canvas render error!', error)
-//          })
-//        }
-//      })
-      // 清除预览
+      // 监听事件 清除预览
       _t.$utils.bus.$on('platform/window/preview/clear', function () {
         _t.previewImg = null
         _t.targetWindow = null
@@ -579,7 +567,6 @@
       let _t = this
       let appName = _t.info.app.name
       _t.$utils.bus.$off([
-//        'platform/window/preview/open/done',
         'platform/window/preview/clear',
         'platform/window/preview/current/close/done/' + appName
       ])
