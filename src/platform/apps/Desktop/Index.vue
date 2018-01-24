@@ -83,7 +83,39 @@
           'right-left-bottom-top'
         ],
         // 当前激活的排序方向
-        currentDirection: 'top-bottom-left-right'
+        currentDirection: 'top-bottom-left-right',
+        // 通过行内样式控制
+        windowStyleBySize: {
+          small: {
+            width: '300px',
+            height: '200px',
+            left: 'calc(50% - 150px)',
+            top: 'calc(50% - 100px)'
+//            ,
+//            'margin-left': '-150px',
+//            'margin-top': '-100px'
+          },
+          middle: {
+            width: '800px',
+            height: '600px',
+            left: 'calc(50% - 400px)',
+            top: 'calc(50% - 300px)'
+//            ,
+//            'margin-left': '-400px',
+//            'margin-top': '-300px'
+          },
+          max: {
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: '42px'
+          },
+          min: {
+            width: 0,
+            height: 0,
+            top: '100%'
+          }
+        }
       }
     },
     computed: {
@@ -825,6 +857,72 @@
           ..._t.appData,
           iconList: iconList
         })
+      },
+      handleWindowTrigger: function (tmpInfo) {
+        let _t = this
+        let {action, data} = tmpInfo
+        let iconList = [..._t.appData.iconList]
+        console.log('handleWindowTrigger', 'action:', action, 'data:', data)
+        // 查找索引
+        let findAppIndex = function (iconList, condition) {
+          return iconList.findIndex((item) => {
+            return condition(item)
+          })
+        }
+        // 处理索引
+        let handleWindowZIndex = function (iconList, appIndex) {
+          // let defZIndex = 2000
+          // 查找已打开的window的index
+          let openedWindowIndexArr = []
+
+          _t.$utils.timeConsuming.start(0)
+          iconList.forEach(function (appItem) {
+            let openedAppIndex = findAppIndex(iconList, (item) => appItem.app.name === item.app.name && item.window.status === 'open')
+            console.log('openedAppIndex', openedAppIndex)
+            if (openedAppIndex > -1) {
+              openedWindowIndexArr.push(openedAppIndex)
+            }
+          })
+          _t.$utils.timeConsuming.end(0)
+          _t.$utils.timeConsuming.start(0)
+          let indexArr = []
+          for (let i = 0, len = iconList.length; i < len; i++) {
+            let item = iconList[i]
+            if (item.window.status === 'open') {
+              indexArr.push(i)
+            }
+          }
+          _t.$utils.timeConsuming.end(1)
+          console.log('openedWindowIndexArr', openedWindowIndexArr, indexArr)
+        }
+        let handleOpenByTaskBarIcon = function (data) {
+          let appInfo = data.appInfo || {}
+          if (!Object.keys(appInfo).length || !appInfo.window) {
+            return
+          }
+          let windowStyleBySize = _t.windowStyleBySize[appInfo.window.size] || {}
+          if (appInfo.window.status === 'close') {
+            _t.$utils.timeConsuming.start(2)
+            let appIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+            console.log('appIndex', appIndex)
+            iconList[appIndex]['window']['status'] = 'open'
+            iconList[appIndex]['window']['style'] = windowStyleBySize
+            _t.$utils.timeConsuming.end(2)
+            // 处理窗口层级
+            handleWindowZIndex(iconList, appIndex)
+          } else if (appInfo.window.status === 'open') {
+
+          }
+          _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
+            ..._t.appData,
+            iconList: iconList
+          })
+        }
+        switch (action) {
+          case 'openByTaskBarIcon':
+            handleOpenByTaskBarIcon(data)
+            break
+        }
       }
     },
     created: function () {
@@ -885,6 +983,7 @@
       // 监听 window 操作
       _t.$utils.bus.$on('platform/window/trigger', function (tmpInfo) {
         console.log('platform/window/trigger tmpInfo', tmpInfo)
+        _t.handleWindowTrigger(tmpInfo)
       })
       let resizeTimer = null
       // 监听窗口大小调整
