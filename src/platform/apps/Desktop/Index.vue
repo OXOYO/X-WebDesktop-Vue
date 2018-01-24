@@ -884,7 +884,7 @@
             }
           })
           _t.$utils.timeConsuming.end(0)
-          _t.$utils.timeConsuming.start(0)
+          _t.$utils.timeConsuming.start(1)
           let indexArr = []
           for (let i = 0, len = iconList.length; i < len; i++) {
             let item = iconList[i]
