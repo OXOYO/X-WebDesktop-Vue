@@ -5,10 +5,12 @@
 import bus from './bus'
 import filters from './filters'
 import store from './store'
+import timeConsuming from './timeConsuming'
 
 export default {
   bus,
   filters,
-  store
-  // 注册路由
+  store,
+  // 耗时
+  timeConsuming
 }
