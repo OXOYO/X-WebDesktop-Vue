@@ -875,7 +875,6 @@
           console.log('appIndex', appIndex)
           let timeNow = new Date().getTime()
           // 查找已打开的window的index
-          _t.$utils.timeConsuming.start(timeNow + '_1')
           let openedWindowIndexArr = []
           for (let i = 0, len = iconList.length; i < len; i++) {
             let item = iconList[i]
@@ -883,17 +882,16 @@
               openedWindowIndexArr.push(i)
             }
           }
-          _t.$utils.timeConsuming.end(timeNow + '_1')
           console.log('openedWindowIndexArr', openedWindowIndexArr, openedWindowIndexArr)
           // 处理z-index
-          _t.$utils.timeConsuming.start(timeNow + '_3')
           let len = openedWindowIndexArr.length
           if (len) {
             if (len === 1) {
               iconList[appIndex]['window']['style']['z-index'] = defZIndex
             } else {
               // 1.先处理当前打开的window，放到最大
-              iconList[appIndex]['window']['style']['z-index'] = defZIndex + len
+              iconList[appIndex]['window']['style']['z-index'] = defZIndex + len - 1
+              console.log('iconList[appIndex][\'window\'][\'style\'][\'z-index\']', iconList[appIndex]['window']['style']['z-index'])
               _t.$utils.timeConsuming.start(timeNow + '_4')
               // 2.移除当前打开的window
               openedWindowIndexArr = openedWindowIndexArr.filter((_appIndex) => _appIndex !== appIndex)
@@ -904,12 +902,12 @@
               for (let i = 0, len = openedWindowIndexArr.length, index; i < len; i++) {
                 index = openedWindowIndexArr[i]
                 iconList[index]['window']['style']['z-index'] = defZIndex + i
+                console.log('iconList[index][\'window\'][\'style\'][\'z-index\']', iconList[index]['window']['style']['z-index'])
               }
               _t.$utils.timeConsuming.end(timeNow + '_5')
             }
           }
-          console.log('iconList[index][window][style][z-index]', iconList[1]['window']['style']['z-index'], iconList[2]['window']['style']['z-index'])
-          _t.$utils.timeConsuming.end(timeNow + '_3')
+          // console.log('iconList[index][window][style][z-index]', iconList[1]['window']['style']['z-index'], iconList[2]['window']['style']['z-index'])
           return iconList
         }
         let handleOpenByTaskBarIcon = function (data) {
