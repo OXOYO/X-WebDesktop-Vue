@@ -4,9 +4,9 @@
 
 export default {
   'appData/set': (state, data) => {
-    state.appData = data
+    state.appData = JSON.parse(JSON.stringify(data))
   },
   'appData/backup': (state, data) => {
-    state._appData = data
+    state._appData = JSON.parse(JSON.stringify(data))
   }
 }
