@@ -871,45 +871,63 @@
         }
         // 处理索引
         let handleWindowZIndex = function (iconList, appIndex) {
-          // let defZIndex = 2000
+          let defZIndex = 2000
+          console.log('appIndex', appIndex)
+          let timeNow = new Date().getTime()
           // 查找已打开的window的index
+          _t.$utils.timeConsuming.start(timeNow + '_1')
           let openedWindowIndexArr = []
-
-          _t.$utils.timeConsuming.start(0)
-          iconList.forEach(function (appItem) {
-            let openedAppIndex = findAppIndex(iconList, (item) => appItem.app.name === item.app.name && item.window.status === 'open')
-            console.log('openedAppIndex', openedAppIndex)
-            if (openedAppIndex > -1) {
-              openedWindowIndexArr.push(openedAppIndex)
-            }
-          })
-          _t.$utils.timeConsuming.end(0)
-          _t.$utils.timeConsuming.start(1)
-          let indexArr = []
           for (let i = 0, len = iconList.length; i < len; i++) {
             let item = iconList[i]
             if (item.window.status === 'open') {
-              indexArr.push(i)
+              openedWindowIndexArr.push(i)
             }
           }
-          _t.$utils.timeConsuming.end(1)
-          console.log('openedWindowIndexArr', openedWindowIndexArr, indexArr)
+          _t.$utils.timeConsuming.end(timeNow + '_1')
+          console.log('openedWindowIndexArr', openedWindowIndexArr, openedWindowIndexArr)
+          // 处理z-index
+          _t.$utils.timeConsuming.start(timeNow + '_3')
+          let len = openedWindowIndexArr.length
+          if (len) {
+            if (len === 1) {
+              iconList[appIndex]['window']['style']['z-index'] = defZIndex
+            } else {
+              // 1.先处理当前打开的window，放到最大
+              iconList[appIndex]['window']['style']['z-index'] = defZIndex + len
+              _t.$utils.timeConsuming.start(timeNow + '_4')
+              // 2.移除当前打开的window
+              openedWindowIndexArr = openedWindowIndexArr.filter((_appIndex) => _appIndex !== appIndex)
+              console.log('openedWindowIndexArr new', openedWindowIndexArr)
+              _t.$utils.timeConsuming.end(timeNow + '_4')
+              _t.$utils.timeConsuming.start(timeNow + '_5')
+              // 3.再处理其他已打开的window
+              for (let i = 0, len = openedWindowIndexArr.length, index; i < len; i++) {
+                index = openedWindowIndexArr[i]
+                iconList[index]['window']['style']['z-index'] = defZIndex + i
+              }
+              _t.$utils.timeConsuming.end(timeNow + '_5')
+            }
+          }
+          console.log('iconList[index][window][style][z-index]', iconList[1]['window']['style']['z-index'], iconList[2]['window']['style']['z-index'])
+          _t.$utils.timeConsuming.end(timeNow + '_3')
+          return iconList
         }
         let handleOpenByTaskBarIcon = function (data) {
+          let timeNow = new Date().getTime()
           let appInfo = data.appInfo || {}
           if (!Object.keys(appInfo).length || !appInfo.window) {
             return
           }
           let windowStyleBySize = _t.windowStyleBySize[appInfo.window.size] || {}
           if (appInfo.window.status === 'close') {
-            _t.$utils.timeConsuming.start(2)
+            _t.$utils.timeConsuming.start(timeNow + '_2')
             let appIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
             console.log('appIndex', appIndex)
             iconList[appIndex]['window']['status'] = 'open'
             iconList[appIndex]['window']['style'] = windowStyleBySize
-            _t.$utils.timeConsuming.end(2)
+            _t.$utils.timeConsuming.end(timeNow + '_2')
             // 处理窗口层级
-            handleWindowZIndex(iconList, appIndex)
+            iconList = handleWindowZIndex(iconList, appIndex)
           } else if (appInfo.window.status === 'open') {
 
           }
