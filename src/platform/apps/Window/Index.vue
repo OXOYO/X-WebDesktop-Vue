@@ -493,7 +493,8 @@
           // 通过窗口控制按钮缩放窗口
           action: 'resizeByWindowBar',
           data: {
-            appInfo: appInfo
+            appInfo: appInfo,
+            action: actionName
           }
         })
 //        _t.$utils.bus.$emit('platform/window/size/change', tmpObj)
