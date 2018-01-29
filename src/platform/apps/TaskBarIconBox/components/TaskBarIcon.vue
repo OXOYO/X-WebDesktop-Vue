@@ -453,19 +453,6 @@
                   type: 'bus',
                   handler: 'platform/taskBar/unpin'
                 }
-              },
-              {
-                name: 'closeApp',
-                icon: {
-                  type: '',
-                  style: ''
-                },
-                text: '关闭',
-                enable: true,
-                action: {
-                  type: 'bus',
-                  handler: 'platform/app/close'
-                }
               }
             ]
           }
@@ -539,8 +526,6 @@
             }
           })
         }
-        // 取消监听
-//        _t.$utils.bus.$off('platform/window/preview/open/done/' + appInfo.app.name)
       },
       // 预览当前窗口 打开
       onPreviewMouseOver: function () {

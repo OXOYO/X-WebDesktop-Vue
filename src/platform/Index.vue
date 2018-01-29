@@ -79,6 +79,7 @@
         let _t = this
         // 动态导入组件
         let components = {}
+        console.groupCollapsed('COMPONENTS OR STORE LOAD ERROR::')
         // FIXME 可以考虑通过接口获取 components 配置信息
         for (let key in config.components) {
           let item = config.components[key]
@@ -117,6 +118,7 @@
           //   }
           // }
         }
+        console.groupEnd()
         _t.components = components
       },
       // 节点drop
