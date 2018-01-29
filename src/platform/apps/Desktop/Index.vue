@@ -46,8 +46,7 @@
       <component :is="childComponents.DesktopWidget"></component>
       <component
         :is="childComponents.Window"
-        v-for="item in appData.iconList"
-        v-if="item.window.status !=='close'"
+        v-for="item in openedWindowList"
         :key="item.app.name"
         :info="item"
       ></component>
@@ -124,7 +123,12 @@
       ...mapState('Platform/Admin', {
         appData: state => state.appData,
         _appData: state => state._appData
-      })
+      }),
+      openedWindowList: function () {
+        let _t = this
+        let tmpArr = _t.appData.iconList.filter(item => item.window.status !== 'close')
+        return tmpArr
+      }
     },
     methods: {
       // 处理iconList
