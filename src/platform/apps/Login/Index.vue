@@ -63,7 +63,6 @@
       <div class="app-login">
         <div class="login-modal-header">
           <img class="login-logo" :src="$Config.System.logo" :alt="$Config.System.title">
-          <!--<div class="login-title">{{ $Config.System.subtitle }}</div>-->
         </div>
         <div class="login-modal-body">
           <Form class="login-form" ref="signInForm" :model="formData" :rules="signInFormRules">
@@ -80,11 +79,6 @@
             </Form-item>
           </Form>
         </div>
-        <!--
-        <div>
-          <Button type="primary" :loading="loading" @click="handleSignIn">登录</Button>
-        </div>
-        -->
       </div>
     </Col>
   </Row>

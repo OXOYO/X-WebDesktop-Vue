@@ -29,7 +29,6 @@
     </component>
     <!-- 后台 -->
     <component :is="components.Admin" v-if="userInfo.isLogin">
-      <!-- TODO Desktop 需要改造，主要由于 DesktopIcon && Window 均拖拽 -->
       <component
         :is="components.Desktop"
         :childComponents="{
@@ -39,19 +38,11 @@
          Wallpaper: components.Wallpaper
         }"
       >
-        <!--
-        <component :is="components.DesktopIconBox" :appData="appData"></component>
-        <component :is="components.DesktopWidget"></component>
-        -->
         <component :is="components.TaskBar">
           <component :is="components.StartMenu" slot="StartMenu"></component>
           <component :is="components.TaskBarIconBox" slot="TaskBarIconBox"></component>
           <component :is="components.TaskBarWidget" slot="TaskBarWidget"></component>
         </component>
-        <!--
-        <component :is="components.Window"></component>
-        -->
-        <!--<component :is="components.Wallpaper" :style="{ 'z-index': 1000 }"></component>-->
       </component>
     </component>
     <component :is="components.ContextMenu"></component>

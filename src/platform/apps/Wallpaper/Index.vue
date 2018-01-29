@@ -34,7 +34,6 @@
     <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <!-- 图片背景 -->
       <div class="wallpaper-images" v-if="currentWallpaper.type === 'images'" :style="currentWallpaper.style">
-        <!--<img :src="currentWallpaper.src" alt="">-->
       </div>
       <!-- 组件背景 -->
       <div class="wallpaper-components" v-if="currentWallpaper.type === 'components'">

@@ -45,29 +45,6 @@
     @drop.stop.prevent="handlerDrop"
     @dragover.stop.prevent
   >
-    <!-- FIXME grid列表，调试用，后期可删除 -->
-    <!--
-    <template
-      v-if="isShowGrid"
-      v-for="(childArr, childIndex) in gridArr"
-    >
-      <div
-        class="grid-item"
-        :class="{ 'grid-item-first': childIndex === 0  || ( childIndex === 1 && index < 5) }"
-        v-for="(item, index) in childArr"
-        :key="currentDirection + '_' + childIndex + '_' + index"
-        :style="{ left: item.leftTop.x + 'px', top: item.leftTop.y + 'px' }"
-      >
-        <div class="grid-item-label">{{ childIndex * childArr.length + index + 1 }}</div>
-        <div class="grid-item-label">
-          LT: {{ item.leftTop.x + ', ' + item.leftTop.y }}
-        </div>
-        <div class="grid-item-label">
-          RB: {{ item.rightBottom.x + ', ' + item.rightBottom.y }}
-        </div>
-      </div>
-    </template>
-    -->
     <!-- 应用列表 -->
     <DesktopIcon
       v-for="item in iconList"
