@@ -475,6 +475,7 @@
       },
       // 处理鼠标移上事件
       onIconMouseOver: function () {
+        console.log('1111111111111111111 onIconMouseOver')
         let _t = this
         let appInfo = {..._t.info}
         // 转换方法
@@ -523,6 +524,7 @@
       },
       // 处理鼠标移出事件
       onIconMouseOut: function () {
+        console.log('2222222222222222 onIconMouseOut')
         let _t = this
         if (_t.previewImg && _t.targetWindow) {
           _t.previewImg = null
@@ -542,6 +544,7 @@
       },
       // 预览当前窗口 打开
       onPreviewMouseOver: function () {
+        console.log('333333333333333333 onPreviewMouseOver')
         let _t = this
         let appInfo = {..._t.info}
         // 广播事件 触发window事件
@@ -555,6 +558,7 @@
       },
       // 预览当前窗口 关闭
       onPreviewMouseOut: function () {
+        console.log('444444444444444 onPreviewMouseOut')
         let _t = this
         let appInfo = {..._t.info}
         // 广播事件 触发window事件
