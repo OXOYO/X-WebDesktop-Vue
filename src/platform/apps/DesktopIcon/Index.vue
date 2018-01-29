@@ -131,31 +131,16 @@
       openApp: function () {
         let _t = this
         _t.isMouseDown = false
+        // 应用数据
         let appInfo = {..._t.info}
-        /*
-        appInfo.window.status = 'open'
-        // TODO 处理应用打开相关操作
-        _t.$Message.info('打开应用: ' + appInfo.app.title)
-        // 查找备份数据
-        let _appInfo
-        for (let i = 0, len = _t._appData.iconList.length; i < len; i++) {
-          let item = _t._appData.iconList[i]
-          if (item.app.name === appInfo.app.name) {
-            _appInfo = item
+        // 广播事件 触发window事件 open
+        _t.$utils.bus.$emit('platform/window/trigger', {
+          // 通过桌面图标打开
+          action: 'openByDesktopIcon',
+          data: {
+            appInfo: appInfo
           }
-        }
-        let tmpObj = {
-          appInfo: appInfo,
-          actionName: 'open',
-          newSize: _appInfo.window.size,
-          oldSize: '',
-          newStyle: _appInfo.window.style,
-          oldStyle: '',
-          status: 'open'
-        }
-        */
-        // 广播事件
-        _t.$utils.bus.$emit('platform/window/open', appInfo)
+        })
       },
       // 右键菜单
       handlerRightClick: function (event) {
@@ -163,6 +148,7 @@
         let xVal = parseInt(event.clientX)
         let yVal = parseInt(event.clientY)
         let appName = event.target.dataset['name'] || _t.info.app.name || null
+        let appInfo = {..._t.info}
         // 菜单信息
         let contextMenuInfo = {
           isShow: true,
@@ -232,11 +218,21 @@
                 type: '',
                 style: ''
               },
+//              text: appInfo.window.status === 'open' ? '关闭' : '打开',
               text: '打开',
               enable: true,
               action: {
                 type: 'bus',
-                handler: 'platform/app/open'
+                handler: 'platform/window/trigger',
+                params: {
+                  // 通过桌面图标打开
+                  action: 'toggleWindowByContextMenu',
+                  data: {
+                    appInfo: appInfo,
+//                    action: appInfo.window.status === 'open' ? 'close' : 'open'
+                    action: 'open'
+                  }
+                }
               }
             },
             {
