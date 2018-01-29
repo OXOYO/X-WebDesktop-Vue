@@ -241,7 +241,6 @@
       <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" src="./images/StartMenu.png">
       <div class="app-icon-bg"></div>
     </div>
-    <!--<img class="start-menu-icon" src="./images/StartMenu.png">-->
     <div
       class="start-menu-box"
       v-show="isShow"
