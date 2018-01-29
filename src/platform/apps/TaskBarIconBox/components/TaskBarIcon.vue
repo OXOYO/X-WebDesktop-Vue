@@ -191,8 +191,8 @@
     @mousedown.left.stop.prevent="onIconMouseDown"
     @mouseup.left.stop.prevent="onIconMouseUp"
     @contextmenu.stop.prevent="onIconRightClick($event)"
-    @mouseenter="onIconMouseOver"
-    @mouseleave="onIconMouseOut"
+    @mouseenter.stop.prevent="onIconMouseOver"
+    @mouseleave.stop.prevent="onIconMouseOut"
     :title="info.app.title"
     :data-name="info.app.name"
   >
@@ -205,8 +205,8 @@
         @mousedown.left.stop.prevent
         @mouseup.left.stop.prevent="onPreviewMouseUp"
         @contextmenu.stop.prevent
-        @mouseover.stop="onPreviewMouseOver"
-        @mouseout.stop="onPreviewMouseOut"
+        @mouseover.stop.prevent="onPreviewMouseOver"
+        @mouseout.stop.prevent="onPreviewMouseOut"
       >
         <div class="preview-bg" :style="{ 'background-image': 'url('+ previewImg + ')' }"></div>
         <div class="preview-title">{{ info.app.title }}</div>
@@ -286,11 +286,6 @@
             appInfo: appInfo
           }
         })
-        // 清除预览窗口样式
-//        _t.$utils.bus.$emit('platform/window/preview/close/' + appInfo.app.name, appInfo)
-//        _t.$nextTick(function () {
-//          _t.$utils.bus.$emit('platform/window/toggle', appInfo)
-//        })
       },
       // 打开当前窗口
       onPreviewMouseUp: function () {
@@ -309,26 +304,18 @@
             appInfo: appInfo
           }
         })
-        // 关闭预览窗口
-//        console.log('platform/window/preview/current/close 001')
-//        _t.$utils.bus.$emit('platform/window/preview/current/close/' + appInfo.app.name, {
-//          appInfo: appInfo,
-//          needDone: true
-//        })
       },
       // 右键菜单
       onIconRightClick: function (event) {
         let _t = this
-        let appInfo = {..._t.info}
         // 清空预览图
         _t.previewImg = null
         _t.targetWindow = null
-        // 清除预览窗口样式
-        _t.$utils.bus.$emit('platform/window/preview/close/' + appInfo.app.name, appInfo)
         _t.$nextTick(function () {
           let xVal = parseInt(event.clientX) - parseInt(event.offsetX)
           let yVal = parseInt(event.clientY) - parseInt(event.offsetY)
           let appName = event.target.dataset['name'] || _t.info.app.name || null
+          let appInfo = {..._t.info}
           // 菜单信息
           let contextMenuInfo = {
             isShow: true,
@@ -398,11 +385,19 @@
                   type: '',
                   style: ''
                 },
-                text: '打开',
+                text: appInfo.window.status === 'open' ? '关闭' : '打开',
                 enable: true,
                 action: {
                   type: 'bus',
-                  handler: 'platform/app/open'
+                  handler: 'platform/window/trigger',
+                  params: {
+                    // 通过桌面图标打开
+                    action: 'toggleWindowByContextMenu',
+                    data: {
+                      appInfo: appInfo,
+                      action: appInfo.window.status === 'open' ? 'close' : 'open'
+                    }
+                  }
                 }
               },
               {
@@ -511,21 +506,9 @@
             action: 'previewThumbShow',
             data: {
               appInfo: appInfo,
-              callback: {
-                done: () => {}
-              }
+              callback: handler
             }
           })
-//          _t.$utils.bus.$emit('platform/window/preview/open/' + appInfo.app.name, appInfo)
-//          // 监听 window 预览
-//          _t.$utils.bus.$on('platform/window/preview/open/done/' + appInfo.app.name, function (appInfo) {
-//            if (appInfo && appInfo.app.name === _t.info.app.name && _t.targetWindow) {
-//              _t.$nextTick(function () {
-//                // 执行处理函数
-//                handler()
-//              })
-//            }
-//          })
         } else {
           // 执行处理函数
           handler()
@@ -541,17 +524,19 @@
       // 处理鼠标移出事件
       onIconMouseOut: function () {
         let _t = this
-        _t.previewImg = null
-        _t.targetWindow = null
-        let appInfo = {..._t.info}
-        // 广播事件 触发window事件
-        _t.$utils.bus.$emit('platform/window/trigger', {
-          // 预览缩略图关闭
-          action: 'previewThumbHide',
-          data: {
-            appInfo: appInfo
-          }
-        })
+        if (_t.previewImg && _t.targetWindow) {
+          _t.previewImg = null
+          _t.targetWindow = null
+          let appInfo = {..._t.info}
+          // 广播事件 触发window事件
+          _t.$utils.bus.$emit('platform/window/trigger', {
+            // 预览缩略图关闭
+            action: 'previewThumbHide',
+            data: {
+              appInfo: appInfo
+            }
+          })
+        }
         // 取消监听
 //        _t.$utils.bus.$off('platform/window/preview/open/done/' + appInfo.app.name)
       },
@@ -562,12 +547,11 @@
         // 广播事件 触发window事件
         _t.$utils.bus.$emit('platform/window/trigger', {
           // 通过预览缩略图显示窗口
-          action: 'showByPreviewThumb',
+          action: 'showWindowByPreviewThumb',
           data: {
             appInfo: appInfo
           }
         })
-//        _t.$utils.bus.$emit('platform/window/preview/current/open/' + appInfo.app.name, appInfo)
       },
       // 预览当前窗口 关闭
       onPreviewMouseOut: function () {
@@ -581,11 +565,6 @@
             appInfo: appInfo
           }
         })
-//        console.log('platform/window/preview/current/close 002')
-//        _t.$utils.bus.$emit('platform/window/preview/current/close/' + appInfo.app.name, {
-//          appInfo: appInfo,
-//          needDone: false
-//        })
       }
     },
     created: function () {
@@ -595,26 +574,11 @@
         _t.previewImg = null
         _t.targetWindow = null
       })
-      _t.$utils.bus.$on('platform/window/preview/current/close/done/' + _t.info.app.name, function (appInfo) {
-        if (appInfo && appInfo.app.name === _t.info.app.name) {
-          if (_t.info.window.size === 'min') {
-            _t.$nextTick(function () {
-              _t.$utils.bus.$emit('platform/window/open', appInfo)
-            })
-          } else {
-            _t.$nextTick(function () {
-              _t.$utils.bus.$emit('platform/window/zIndex/change', appInfo)
-            })
-          }
-        }
-      })
     },
     beforeDestroy: function () {
       let _t = this
-      let appName = _t.info.app.name
       _t.$utils.bus.$off([
-        'platform/window/preview/clear',
-        'platform/window/preview/current/close/done/' + appName
+        'platform/window/preview/clear'
       ])
     }
   }
