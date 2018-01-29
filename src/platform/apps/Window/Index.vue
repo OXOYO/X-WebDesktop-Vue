@@ -13,7 +13,7 @@
     /*z-index: 2000;*/
     overflow: hidden;
     background: #fff;
-    border: 1px solid #fff;
+    /*border: 1px solid #fff;*/
     box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .1);
     writing-mode: horizontal-tb;
     transition: all .1s ease-out;
@@ -276,10 +276,6 @@
     data () {
       let _t = this
       return {
-        // 预览样式
-        previewStyle: {},
-        // 预览当前窗口样式
-        previewCurrentStyle: {},
         // 拖拽缩放配置
         dragResizeConfig: {
           // 上下文，如需广播事件则必须
@@ -393,32 +389,6 @@
             break
         }
         return tmpClassName
-      },
-      windowStyle: function () {
-        let _t = this
-        let windowStyleBySize = _t.windowStyleBySize[_t.info.window.size] || {}
-        let tmpObj = windowStyleBySize
-        console.log('_t.previewStyle', tmpObj, _t.previewStyle, _t.previewCurrentStyle)
-        if (Object.keys(_t.previewStyle).length) {
-          tmpObj = {
-            ...tmpObj,
-            ..._t.info.window.style,
-            ..._t.previewStyle
-          }
-        } else if (Object.keys(_t.previewCurrentStyle).length) {
-          tmpObj = {
-            ...tmpObj,
-            ..._t.info.window.style,
-            ..._t.previewCurrentStyle
-          }
-        } else {
-          tmpObj = {
-            ...tmpObj,
-            ..._t.info.window.style
-          }
-        }
-        console.log('windowStyle', _t.info.app.name, tmpObj, tmpObj['z-index'])
-        return tmpObj
       }
     },
     methods: {

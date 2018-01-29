@@ -70,7 +70,8 @@
     data () {
       return {
         gridArr: [],
-        iconList: [],
+        // 每个图标宽高80px margin 10px
+        itemWidthHeight: 100,
         directionArr: [
           'top-bottom-left-right',
           'top-bottom-right-left',
@@ -147,10 +148,10 @@
       handlerIconList: function (iconList) {
         let _t = this
         let flag = true
+        let firstGrid = _t.gridArr[0][0]
         for (let item of iconList) {
           let xVal = 0
           let yVal = 0
-          let firstGrid = _t.gridArr[0][0]
           // FIXME 取中心点坐标
           xVal = (firstGrid.rightBottom.x - firstGrid.leftTop.x) / 2 + firstGrid.leftTop.x
           yVal = (firstGrid.rightBottom.y - firstGrid.leftTop.y) / 2 + firstGrid.leftTop.y
@@ -162,6 +163,9 @@
           }
           // 目标Grid，FIXME 【BUG】此处需要考虑从上到下，从左到有的排布规则
           let targetGrid = _t.findGridForAuto(distanceArr, distanceArrBack)
+          if (!targetGrid) {
+            continue
+          }
           // 更新style
           let style = {
             'left': targetGrid.leftTop.x + 'px',
@@ -286,11 +290,11 @@
          * */
         // 1.通过窗口宽高、格子宽高，计算格子坐标
         let gridArr = []
-        // 处理宽高
-        let height = document.body.clientHeight
-        let width = document.body.clientWidth
         // 每个图标宽高80px margin 10px
-        let itemWidthHeight = 100
+        let itemWidthHeight = _t.itemWidthHeight || 100
+        // 处理宽高，保证存在最小宽高
+        let height = document.body.clientHeight || itemWidthHeight
+        let width = document.body.clientWidth || itemWidthHeight
         let xNum = Math.floor(width / itemWidthHeight)
         let yNum = Math.floor(height / itemWidthHeight)
         switch (direction) {
@@ -609,50 +613,6 @@
             iconList: iconList
           })
         })
-      },
-      // 处理窗口层级变化
-      doWindowZIndexChange: function (iconList, appInfo) {
-        // 默认 z-index 为 2000
-        let defZIndex = 2000
-        let tmpArr = []
-        // 先计算打开的窗口的数量
-        let indexArr = []
-        for (let i = 0, len = iconList.length; i < len; i++) {
-          let item = iconList[i]
-          if (item.window.status === 'open') {
-            tmpArr.push(item.app.name)
-            indexArr.push(i)
-          }
-        }
-        // 处理当前窗口
-        for (let j = 0, len = iconList.length; j < len; j++) {
-          let item = iconList[j]
-          let computedZIndex = defZIndex
-          if (item.window.status === 'open') {
-            // FIXME 只需要处理打开的窗口
-            if (item.app.name === appInfo.app.name) {
-              computedZIndex = defZIndex + tmpArr.length - 1
-              // 移除已处理的窗口
-              tmpArr = tmpArr.filter(item => item !== appInfo.app.name)
-            } else {
-              // 重置为默认层级
-              computedZIndex = defZIndex
-            }
-            iconList[j]['window']['style']['z-index'] = computedZIndex
-          }
-        }
-        // 处理其他窗口的层级
-        if (tmpArr.length) {
-          for (let k = 0, len = iconList.length; k < len; k++) {
-            let item = iconList[k]
-            let computedZIndex = defZIndex
-            if (tmpArr.includes(item.app.name)) {
-              computedZIndex = defZIndex + tmpArr.indexOf(item.app.name)
-              iconList[k]['window']['style']['z-index'] = computedZIndex
-            }
-          }
-        }
-        return iconList
       },
       handleWindowTrigger: function (tmpInfo) {
         let _t = this
@@ -1067,9 +1027,7 @@
     beforeDestroy: function () {
       let _t = this
       _t.$utils.bus.$off([
-        'platform/desktopIcon/sort',
-        'platform/window/zIndex/change',
-        'platform/window/style/change'
+        'platform/desktopIcon/sort'
       ])
     }
   }
