@@ -16,7 +16,7 @@
     /*border: 1px solid #fff;*/
     box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .1);
     writing-mode: horizontal-tb;
-    transition: all .1s ease-out;
+    transition: all .3s ease-out;
 
     &.app-window-small {
       /*
