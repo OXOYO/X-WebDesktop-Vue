@@ -160,7 +160,7 @@
       top: 30px;
       bottom: 0;
       z-index: 2000;
-      overflow: auto;
+      /*overflow: auto;*/
       width: 100%;
       /*padding: 10px;*/
       background: #fff;
@@ -196,6 +196,10 @@
     <div
       class="app-window-header"
     >
+      <!--
+      // FIXME 测试header自定义功能
+      v-if="!(info.window.header && !info.window.header.enable)"
+      -->
       <div
         class="window-title"
         @dblclick.stop.prevent="handleWindowSize(info.window.size === 'max' ? 'reset' : 'max')"
