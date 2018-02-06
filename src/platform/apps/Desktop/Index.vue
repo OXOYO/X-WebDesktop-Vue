@@ -674,7 +674,11 @@
           let oldSize = iconList[currentAppIndex]['window']['oldSize']
           if (appInfo.window.status === 'close') {
             iconList[currentAppIndex]['window']['status'] = 'open'
-            iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize[iconList[currentAppIndex]['window']['size']]
+            if (currentSize !== 'custom') {
+              iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize[currentSize]
+            } else {
+              iconList[currentAppIndex]['window']['style'] = currentStyle
+            }
             // 处理窗口层级，将当前窗口层级更新到最大
             iconList = handleOpenedWindowZIndex(iconList, currentAppIndex)
           } else if (appInfo.window.status === 'open') {

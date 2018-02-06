@@ -306,7 +306,7 @@
                 }
               },
               window: {
-                size: 'middle',
+                size: 'custom',
                 status: 'close',
                 zIndex: 600,
                 type: 'modal',
@@ -320,6 +320,8 @@
                   'close'
                 ],
                 style: {
+                  left: '50%',
+                  top: '50%',
                   'width': '1000px',
                   'height': '800px',
                   'margin-left': '-500px',
@@ -758,6 +760,88 @@
                   'close'
                 ],
                 style: {}
+              },
+              taskBar: {
+                isPinned: true
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'SystemSetting06',
+                icon: '/static/app.png',
+                title: '测试窗口header自定义',
+                x: 0,
+                y: 480,
+                index: ''
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              window: {
+                size: 'middle',
+                status: 'close',
+                zIndex: 600,
+                type: 'modal',
+                enableResize: [
+                  'custom',
+                  'small',
+                  'min',
+                  'max',
+                  'middle',
+                  'reset',
+                  'close'
+                ],
+                style: {},
+                header: {
+                  enable: false
+                }
+              },
+              taskBar: {
+                isPinned: false
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'vue-music',
+                icon: '//github.com/Sioxas/GitImage/raw/master/Apple_Music_Blur.png',
+                title: 'vue-music',
+                x: 0,
+                y: 480,
+                index: '',
+                url: 'http://sioxas.github.io/'
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              window: {
+                size: 'custom',
+                status: 'close',
+                zIndex: 600,
+                type: 'iframe',
+                enableResize: [
+                  'custom',
+                  'small',
+                  'min',
+                  'max',
+                  'middle',
+                  'reset',
+                  'close'
+                ],
+                style: {
+                  'width': '360px',
+                  'height': '640px',
+                  'left': 'auto',
+                  'right': '50px',
+                  'top': '50px'
+                }
               },
               taskBar: {
                 isPinned: true
