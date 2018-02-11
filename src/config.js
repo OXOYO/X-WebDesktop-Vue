@@ -5,8 +5,8 @@
 
 // 服务配置
 export const Serv = {
-  development: '//localhost:3000/api',
-  production: '//localhost:3000/api'
+  development: '//localhost:3000/api/v2.0.0',
+  production: '//localhost:3000/api/v2.0.0'
 }
 
 // cookie相关配置
