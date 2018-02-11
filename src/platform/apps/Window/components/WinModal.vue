@@ -12,8 +12,7 @@
 
 <template>
   <div class="app-window-modal">
-    <h1>TODO WinModal</h1>
-    <h1>{{ info.app.title }}</h1>
+    <component :is="appComponent"></component>
   </div>
 </template>
 
@@ -25,6 +24,34 @@
         type: Object,
         required: true
       }
+    },
+    data () {
+      return {
+        appComponent: null
+      }
+    },
+    methods: {
+      // 初始化
+      init: function () {
+        let _t = this
+        // 加载应用
+        _t.loadApp()
+      },
+      // 加载应用
+      loadApp: function () {
+        let _t = this
+        let appName = _t.info.app.name
+        // 动态加载组件
+        require.ensure([], (require) => {
+          let appComponent = require('@/Apps/' + appName + '/Index.vue')
+          _t.appComponent = appComponent
+        })
+      }
+    },
+    created: function () {
+      let _t = this
+      // 初始化窗口
+      _t.init()
     }
   }
 </script>

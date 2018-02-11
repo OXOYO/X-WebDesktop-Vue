@@ -28,6 +28,12 @@ import routers from './routers'
 import platformStore from './store/platform/index'
 import appsStore from './store/apps/index'
 
+// 注册全局组件
+import NoData from './global/components/NoData.vue'
+import Switch from './global/components/Switch.vue'
+Vue.component('NoData', NoData)
+Vue.component('USwitch', Switch)
+
 // Vue 全局配置
 let isDev = process && process.env.NODE_ENV !== 'production'
 Vue.config.debug = isDev
