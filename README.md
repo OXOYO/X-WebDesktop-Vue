@@ -1,5 +1,6 @@
 # X-WebDesktop-Vue
-version 2.0.0 开发中...
+
+Version: 2.0.0 【开发中...】
 
 基于 Vue 的 WebDesktop 系统
 
