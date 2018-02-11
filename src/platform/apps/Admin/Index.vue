@@ -830,9 +830,9 @@
                   'custom',
                   'small',
                   'min',
-                  'max',
+//                  'max',
                   'middle',
-                  'reset',
+//                  'reset',
                   'close'
                 ],
                 style: {
@@ -841,6 +841,17 @@
                   'left': 'auto',
                   'right': '50px',
                   'top': '50px'
+                },
+                // 拖拽缩放配置
+                dragResizeConfig: {
+                  drag: {
+                    // 是否启用拖拽
+                    enable: true
+                  },
+                  resize: {
+                    // 是否启用缩放
+                    enable: false
+                  }
                 }
               },
               taskBar: {

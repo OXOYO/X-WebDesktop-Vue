@@ -185,14 +185,14 @@
     v-x-drag="dragResizeConfig"
   >
     <!-- 拖拽缩放 -->
-    <div class="app-window-resize resize-top-left"></div>
-    <div class="app-window-resize resize-top-right"></div>
-    <div class="app-window-resize resize-bottom-left"></div>
-    <div class="app-window-resize resize-bottom-right"></div>
-    <div class="app-window-resize resize-top-border"></div>
-    <div class="app-window-resize resize-right-border"></div>
-    <div class="app-window-resize resize-bottom-border"></div>
-    <div class="app-window-resize resize-left-border"></div>
+    <div v-if="enableResizeHandler('top-left')" class="app-window-resize resize-top-left"></div>
+    <div v-if="enableResizeHandler('top-right')" class="app-window-resize resize-top-right"></div>
+    <div v-if="enableResizeHandler('bottom-left')" class="app-window-resize resize-bottom-left"></div>
+    <div v-if="enableResizeHandler('bottom-right')" class="app-window-resize resize-bottom-right"></div>
+    <div v-if="enableResizeHandler('top-border')" class="app-window-resize resize-top-border"></div>
+    <div v-if="enableResizeHandler('right-border')" class="app-window-resize resize-right-border"></div>
+    <div v-if="enableResizeHandler('bottom-border')" class="app-window-resize resize-bottom-border"></div>
+    <div v-if="enableResizeHandler('left-border')" class="app-window-resize resize-left-border"></div>
     <div
       class="app-window-header"
     >
@@ -280,8 +280,8 @@
     data () {
       let _t = this
       return {
-        // 拖拽缩放配置
-        dragResizeConfig: {
+        // 拖拽缩放默认配置
+        defDragResizeConfig: {
           // 上下文，如需广播事件则必须
           context: _t,
           // 拖拽配置
@@ -310,6 +310,7 @@
             enable: true,
             // 指定缩放把手元素，支持一个或多个把手
             handler: {
+              // FIXME 支持自定义缩放handler，如果不启用则值给 false，如果启用则值给 具体的class名称
               'top-left': '.resize-top-left',
               'top-right': '.resize-top-right',
               'bottom-left': '.resize-bottom-left',
@@ -393,14 +394,65 @@
             break
         }
         return tmpClassName
+      },
+      // 拖拽缩放配置
+      dragResizeConfig: function () {
+        let _t = this
+        return _t.handleDragResizeConfig()
       }
     },
     methods: {
+      // 处理窗口拖拽缩放配置
+      handleDragResizeConfig: function () {
+        let _t = this
+        // 当前应用的拖拽缩放配置
+        let appDragResizeConfig = _t.info.window.hasOwnProperty('dragResizeConfig') ? _t.info.window.dragResizeConfig : {}
+        // 合并配置，遇到对象则合并，其他覆盖
+        let handler = function (source, target) {
+          let keys = Object.keys(source)
+          // 1.判断源对象是否需要处理
+          if (keys.length) {
+            keys.map(key => {
+              // 源属性
+              let item = source[key]
+              // 1.1.target是否存在该属性，有则做处理，无则跳过
+              let flag = target.hasOwnProperty(key)
+              if (flag) {
+                // 1.1.1.判断类型是否相等，同类型才可以执行覆盖
+                if (typeof item === typeof target[key]) {
+                  // 1.2.不是对象则覆盖、是数组则覆盖
+                  if (typeof item !== 'object' || (typeof item === 'object' && item instanceof Array)) {
+                    source[key] = target[key]
+                    // 1.3.是对象则递归处理
+                  } else if (typeof item === 'object' && typeof target === 'object') {
+                    source[key] = handler(item, target[key])
+                  }
+                }
+              }
+            })
+          }
+          return source
+        }
+        let tmpObj = handler(_t.defDragResizeConfig, appDragResizeConfig)
+        return tmpObj
+      },
+      // 处理缩放handler
+      enableResizeHandler: function (direction) {
+        let _t = this
+        let flag = false
+        if (_t.dragResizeConfig && _t.dragResizeConfig.resize.enable && _t.dragResizeConfig.resize.handler) {
+          flag = !!_t.dragResizeConfig.resize.handler[direction]
+        }
+        return flag
+      },
       // 处理弹窗状态
       handleWindowSize: function (actionName = 'close') {
         let _t = this
-//        let tmpInfo
         let appInfo = {..._t.info}
+        // 如果未启用相应则返回
+        if (!appInfo.window.enableResize.includes(actionName)) {
+          return false
+        }
         let currentSize = appInfo.window.size
         let currentStyle = appInfo.window.style
         let oldSize = appInfo.window.oldSize || 'middle'
