@@ -967,9 +967,8 @@
           })
         }
         switch (action) {
+          case 'openByStartMenuList':
           case 'openByDesktopIcon':
-            handleOpenByTaskBarIcon(data)
-            break
           case 'openByTaskBarIcon':
             handleOpenByTaskBarIcon(data)
             break
