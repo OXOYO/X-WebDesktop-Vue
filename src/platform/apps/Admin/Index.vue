@@ -320,12 +320,13 @@
                   'close'
                 ],
                 style: {
-                  left: '50%',
-                  top: '50%',
+//                  left: '50%',
+//                  top: '50%',
                   'width': '1000px',
-                  'height': '800px',
-                  'margin-left': '-500px',
-                  'margin-top': '-400px'
+                  'height': '800px'
+//                  ,
+//                  'margin-left': '-500px',
+//                  'margin-top': '-400px'
                 }
               },
               taskBar: {
