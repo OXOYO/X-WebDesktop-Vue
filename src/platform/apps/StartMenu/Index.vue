@@ -9,7 +9,7 @@
     display: inline-block;
     width: 60px;
     height: 39px;
-    margin: 0 4px;
+    margin: 0;
     position: relative;
     user-select:none;
 
@@ -90,7 +90,7 @@
       z-index: 5000;
       left: 0;
       bottom: 40px;
-      width: 400px;
+      width: 410px;
       height: 600px;
       padding: 8px;
       /*border: 1px solid #d7dde4;*/
@@ -113,7 +113,7 @@
         overflow: hidden;
       }
       .list-block {
-        width: 60%;
+        width: 250px;
         height: 100%;
         background: rgba(255, 255, 255, .9);
         display: inline-block;
@@ -159,7 +159,7 @@
       }
       .info-block {
         position: relative;
-        width: 39%;
+        width: 140px;
         height: 100%;
         /*background: red;*/
         background: rgba(0, 0, 0, .1);
@@ -180,7 +180,7 @@
           .info-avatar {
             position: absolute;
             left: 50%;
-            top: -20px;
+            top: -28px;
             margin-left: -20px;
             z-index: 5010;
           }
@@ -252,6 +252,7 @@
           class="list-item"
           v-for="item in appData.iconList"
           :key="item.app.id"
+          @click.stop.prevent="openApp(item)"
         >
           <div class="list-item-icon">
             <img v-if="item.app.icon" :src="item.app.icon">
@@ -336,6 +337,19 @@
         // 清空用户登录信息
         _t.$store.commit(_t.$utils.store.getType('userInfo/reset', 'Platform'))
         _t.$router.push({name: 'platform.index'})
+      },
+      openApp: function (info) {
+        let _t = this
+        // 应用数据
+        let appInfo = {...info}
+        // 广播事件 触发window事件 open
+        _t.$utils.bus.$emit('platform/window/trigger', {
+          // 通过开始菜单列表打开
+          action: 'openByStartMenuList',
+          data: {
+            appInfo: appInfo
+          }
+        })
       }
     },
     created: function () {
