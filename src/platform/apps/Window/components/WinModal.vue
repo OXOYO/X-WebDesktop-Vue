@@ -12,7 +12,9 @@
 
 <template>
   <div class="app-window-modal">
-    <component :is="appComponent"></component>
+    <h1 v-if="!appComponent">TODO WinModal</h1>
+    <h1 v-if="!appComponent">{{ info.app.title }}</h1>
+    <component :is="appComponent" v-if="appComponent"></component>
   </div>
 </template>
 
