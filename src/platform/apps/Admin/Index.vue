@@ -738,7 +738,44 @@
                 x: 0,
                 y: 480,
                 index: '',
-                url: 'http://localhost:8899/'
+                url: '//www.baidu.com'
+              },
+              desktopIcon: {
+                style: {
+                  left: '',
+                  top: ''
+                }
+              },
+              window: {
+                size: 'middle',
+                status: 'close',
+                zIndex: 600,
+                type: 'iframe',
+                enableResize: [
+                  'custom',
+                  'small',
+                  'min',
+                  'max',
+                  'middle',
+                  'reset',
+                  'close'
+                ],
+                style: {}
+              },
+              taskBar: {
+                isPinned: true
+              }
+            },
+            {
+              app: {
+                id: '',
+                name: 'X-WebDesktop-Vue',
+                icon: './static/logo.png',
+                title: 'X-WebDesktop-Vue',
+                x: 0,
+                y: 480,
+                index: '',
+                url: '//oxoyo.github.io/X-WebDesktop-Vue/'
               },
               desktopIcon: {
                 style: {
