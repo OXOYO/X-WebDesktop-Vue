@@ -125,7 +125,7 @@ Vue.prototype.$http = axiosInstance
 const routerInstance = new VueRouter({
   // 开启 HTML5 history 模式
   mode: 'history',
-  base: '/platform/',
+  base: '/X-WebDesktop-Vue/',
   routes: routers,
   scrollBehavior: (to, from, savedPosition) => {
     if (savedPosition) {
