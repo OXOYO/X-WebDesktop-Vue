@@ -814,7 +814,7 @@
                 x: 0,
                 y: 480,
                 index: '',
-                url: 'http://sioxas.github.io/'
+                url: '//sioxas.github.io/'
               },
               desktopIcon: {
                 style: {
