@@ -293,7 +293,7 @@
               app: {
                 id: '',
                 name: 'AccountManagement',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '账号管理',
                 x: 0,
                 y: 0,
@@ -337,7 +337,7 @@
               app: {
                 id: '',
                 name: 'ApplicationMarket',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '应用管家',
                 x: 0,
                 y: 80,
@@ -373,7 +373,7 @@
               app: {
                 id: '',
                 name: 'MyApplication',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: 'My Apps',
                 x: 0,
                 y: 160,
@@ -409,7 +409,7 @@
               app: {
                 id: '',
                 name: 'PermissionApply',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '权限申请',
                 x: 0,
                 y: 240,
@@ -445,7 +445,7 @@
               app: {
                 id: '',
                 name: 'PermissionAudit',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '权限审核',
                 x: 0,
                 y: 320,
@@ -481,7 +481,7 @@
               app: {
                 id: '',
                 name: 'PersonalCenter',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '个人中心',
                 x: 0,
                 y: 400,
@@ -517,7 +517,7 @@
               app: {
                 id: '',
                 name: 'SystemSetting',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '系统设置',
                 x: 0,
                 y: 480,
@@ -553,7 +553,7 @@
               app: {
                 id: '',
                 name: 'SystemSetting01',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '系统设置01',
                 x: 0,
                 y: 480,
@@ -589,7 +589,7 @@
               app: {
                 id: '',
                 name: 'SystemSetting02',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '系统设置02',
                 x: 0,
                 y: 480,
@@ -625,7 +625,7 @@
               app: {
                 id: '',
                 name: 'SystemSetting03',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '系统设置03',
                 x: 0,
                 y: 480,
@@ -661,7 +661,7 @@
               app: {
                 id: '',
                 name: 'SystemSetting04',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '系统设置04',
                 x: 0,
                 y: 480,
@@ -697,7 +697,7 @@
               app: {
                 id: '',
                 name: 'SystemSetting05',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '系统设置05',
                 x: 0,
                 y: 480,
@@ -770,7 +770,7 @@
               app: {
                 id: '',
                 name: 'SystemSetting06',
-                icon: '/static/app.png',
+                icon: './static/app.png',
                 title: '测试窗口header自定义',
                 x: 0,
                 y: 480,
