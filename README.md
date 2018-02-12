@@ -14,7 +14,14 @@ Version: 2.0.0 【开发中...】
 
 2.0.0版对应API服务：[X-WebDesktop-Api-Koa 2.0.0](https://github.com/OXOYO/X-WebDesktop-Api-Koa)
 
-## Preview
+## [Preview](https://oxoyo.github.io/X-WebDesktop-Vue/)
+
+地址：https://oxoyo.github.io/X-WebDesktop-Vue/
+
+账号：admin
+
+密码：123456
+
 ![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_admin.gif "preview_admin")
 
 ![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_home.png "preview_home")
