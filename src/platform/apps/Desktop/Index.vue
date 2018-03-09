@@ -1000,7 +1000,11 @@
       let _t = this
       // 处理格子排序
       _t.handlerGridLayout(_t.currentDirection)
-
+      // 初始化渲染
+      _t.$utils.bus.$on('platform/desktopIcon/render', function () {
+        // 处理格子排序
+        _t.handlerGridLayout(_t.currentDirection)
+      })
       // 监听事件
       _t.$utils.bus.$on('platform/desktopIcon/sort', function (direction) {
         if (_t.directionArr.includes(direction)) {

@@ -9,5 +9,10 @@ export default {
   'user/BaseInfo': async ({ commit }, payload) => {
     let res = await Api.user.getBaseInfo(payload)
     return res
+  },
+  // 获取应用列表
+  'user/application/list': async ({ commit }, payload) => {
+    let res = await Api.user.getApplicationListByUserId(payload)
+    return res
   }
 }
