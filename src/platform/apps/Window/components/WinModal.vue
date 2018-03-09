@@ -45,8 +45,12 @@
         let appName = _t.info.app.name
         // 动态加载组件
         require.ensure([], (require) => {
-          let appComponent = require('@/Apps/' + appName + '/Index.vue')
-          _t.appComponent = appComponent
+          try {
+            let appComponent = require('@/Apps/' + appName + '/Index.vue')
+            _t.appComponent = appComponent
+          } catch (err) {
+            console.warn('WARNG:: LOAD', '@/Apps/' + appName + '/Index.vue', 'FAIL!')
+          }
         })
       }
     },
