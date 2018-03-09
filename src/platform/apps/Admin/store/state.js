@@ -3,6 +3,14 @@
  */
 
 export default {
-  appData: {},
-  _appData: {}
+  appData: {
+    list: [],
+    iconList: [],
+    showTitle: true
+  },
+  _appData: {
+    list: [],
+    iconList: [],
+    showTitle: true
+  }
 }
