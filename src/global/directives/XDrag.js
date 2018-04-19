@@ -131,7 +131,8 @@ XDrag.install = function (Vue) {
                   }
                   dragInfo.done = {
                     left: dragInfo.position.left + dis.x + 'px',
-                    top: dragInfo.position.top + dis.y + 'px'
+                    top: dragInfo.position.top + dis.y + 'px',
+                    margin: 0
                   }
                   Object.keys(dragInfo.done).map(function (key) {
                     target.style[key] = dragInfo.done[key]

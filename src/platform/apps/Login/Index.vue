@@ -143,7 +143,8 @@
             ...userInfo,
             isLogin: true
           })
-          _t.$Cookies.set(tokenKey, token)
+          let pathKey = process && process.env.NODE_ENV !== 'production' ? 'development' : 'production'
+          _t.$Cookies.set(tokenKey, token, { path: _t.$Config.Cookie.path[pathKey] })
         } else {
           _t.$Message.error('登录失败，接口返回数据异常！')
         }

@@ -462,15 +462,15 @@
       },
       // 处理鼠标移上事件
       onIconMouseOver: function () {
-        console.log('1111111111111111111 onIconMouseOver')
         let _t = this
         let appInfo = {..._t.info}
         // 转换方法
         let handler = function () {
+          console.log('_t.targetWindow', _t.targetWindow.offsetWidth, _t.targetWindow.offsetHeight)
           html2canvas(_t.targetWindow).then(function (canvas) {
             _t.previewImg = canvas.toDataURL()
           }).catch(function (error) {
-            console.error('html2canvas render error!', error)
+            console.warn('html2canvas render error!', error)
           })
         }
         // 清空预览图
@@ -511,7 +511,6 @@
       },
       // 处理鼠标移出事件
       onIconMouseOut: function () {
-        console.log('2222222222222222 onIconMouseOut')
         let _t = this
         if (_t.previewImg && _t.targetWindow) {
           _t.previewImg = null
@@ -529,7 +528,6 @@
       },
       // 预览当前窗口 打开
       onPreviewMouseOver: function () {
-        console.log('333333333333333333 onPreviewMouseOver')
         let _t = this
         let appInfo = {..._t.info}
         // 广播事件 触发window事件
@@ -543,7 +541,6 @@
       },
       // 预览当前窗口 关闭
       onPreviewMouseOut: function () {
-        console.log('444444444444444 onPreviewMouseOut')
         let _t = this
         let appInfo = {..._t.info}
         // 广播事件 触发window事件
@@ -560,6 +557,7 @@
       let _t = this
       // 监听事件 清除预览
       _t.$utils.bus.$on('platform/window/preview/clear', function () {
+        console.log('created platform/window/preview/clear')
         _t.previewImg = null
         _t.targetWindow = null
       })
