@@ -116,7 +116,8 @@
             width: 0,
             height: 0,
             top: '100%'
-          }
+          },
+          custom: {}
         },
         // 预览样式
         previewStyle: {
@@ -769,6 +770,7 @@
               // 备份旧style/size
               // 还原窗口旧样式
               if (oldSize === 'max') {
+                console.log('xxxxxxxxxxxxxxxx')
                 iconList[currentAppIndex]['window']['style'] = JSON.parse(JSON.stringify(_t._appData.iconList[currentAppIndex]['window']['style'] || {}))
                 iconList[currentAppIndex]['window']['size'] = _t._appData.iconList[currentAppIndex]['window']['size']
                 iconList[currentAppIndex]['window']['style'] = {
@@ -908,6 +910,7 @@
           }
           // 当前操作的窗口索引
           let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          console.log('currentAppIndex', currentAppIndex)
           let currentStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['style'] || {}))
           let currentSize = iconList[currentAppIndex]['window']['size']
           let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['oldStyle'] || {}))
@@ -922,7 +925,11 @@
           } else if (action === 'open') {
             if (appInfo.window.status === 'close') {
               iconList[currentAppIndex]['window']['status'] = 'open'
-              iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize[iconList[currentAppIndex]['window']['size']]
+              if (Object.keys(_t.windowStyleBySize).includes(currentSize)) {
+                iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize[iconList[currentAppIndex]['window']['size']]
+              } else if (currentSize === 'custom') {
+                iconList[currentAppIndex]['window']['style'] = _t._appData.iconList[currentAppIndex]['window']['style']
+              }
               // 处理窗口层级，将当前窗口层级更新到最大
               iconList = handleOpenedWindowZIndex(iconList, currentAppIndex)
             } else if (appInfo.window.status === 'open') {

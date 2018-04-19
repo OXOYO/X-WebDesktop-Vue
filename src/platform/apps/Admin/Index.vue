@@ -44,6 +44,7 @@
       // 鼠标按下
       mouseDownHandle: function () {
         let _t = this
+        console.log('mouseDownHandle platform/window/preview/clear')
         // 广播事件
         _t.$utils.bus.$emit('platform/window/preview/clear')
       },

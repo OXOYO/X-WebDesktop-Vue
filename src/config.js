@@ -20,6 +20,10 @@ export const Cookie = {
   },
   getItem: function (key) {
     return key ? this.prefix + this.keys[key] : ''
+  },
+  path: {
+    development: '/',
+    production: '/X-WebDesktop-Vue'
   }
 }
 

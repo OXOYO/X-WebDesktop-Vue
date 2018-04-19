@@ -33,7 +33,7 @@
       }
       &:hover {
         background: #f0f0f0;
-        border-color: #57a3f3;
+        /*border-color: #57a3f3;*/
         /*box-shadow: 0 0 2px 2px rgba(45, 140, 240, .2);*/
 
         .context-menu-child {
