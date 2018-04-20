@@ -5,5 +5,7 @@
 export default {
   userInfo: {
     isLogin: false
-  }
+  },
+  // 应用默认图标
+  appIcon: './static/app.png'
 }
