@@ -32,9 +32,7 @@ Version: 2.0.0 【开发中...】
 
 ![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_custom_window.png "preview_custom_window")
 
-![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_frosted_001.png "preview_frosted_001")
-
-![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_frosted_002.png "preview_frosted_002")
+![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_frosted.png "preview_frosted_002")
 
 ## Start
 
