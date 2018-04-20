@@ -145,7 +145,10 @@
         }
         .app-icon-bg {
           display: block !important;
-          filter: blur(6px);
+          /*filter: blur(6px);*/
+          .content {
+            filter: blur(10px);
+          }
         }
       }
     }
@@ -174,11 +177,25 @@
       right: 0;
       bottom: 0;
       z-index: -1;
-      filter: blur(50px);
-      background-position: center top;
+      /*filter: blur(50px);*/
+      /*background-position: center top;*/
       transition: all .2s ease-out;
       /*background-size: cover;*/
       /*background-attachment: fixed;*/
+
+      .content {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        filter: blur(50px);
+        background-color: transparent;
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
     }
   }
 </style>
@@ -218,7 +235,10 @@
     <!-- 图标 -->
     <div class="task-bar-icon-main" :class="{ 'app-open': info.window.status === 'open' }" :data-name="info.app.name">
       <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" v-if="info.app.icon" :src="info.app.icon" :data-name="info.app.name">
-      <div class="app-icon-bg" v-show="info.app.icon && info.window.status === 'open'" :style="appIconBg"></div>
+      <!--<div class="app-icon-bg" v-show="info.app.icon && info.window.status === 'open'" :style="appIconBg"></div>-->
+      <div class="app-icon-bg" v-show="info.app.icon && info.window.status === 'open'">
+        <div class="content" :style="appIconBg"></div>
+      </div>
     </div>
   </div>
 </template>

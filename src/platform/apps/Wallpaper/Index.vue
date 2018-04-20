@@ -119,15 +119,22 @@
           // 1.防止该类型下数据为为空的清空
           // 2.随机壁纸资源序号
           let srcIndex = Math.floor(Math.random() * _t.wallpaperList[type].length)
-          // 3.更新当前壁纸数据
-          _t.currentWallpaper = {
-            ..._t.currentWallpaper,
-            type: type,
-            src: _t.wallpaperList[type][srcIndex]
-          }
+          let src = _t.wallpaperList[type][srcIndex]
           // 4.处理样式
           if (type === 'images') {
-            _t.lazyloadImg()
+            _t.lazyLoadImg(src)
+          } else {
+            // 3.更新当前壁纸数据
+            _t.currentWallpaper = {
+              ..._t.currentWallpaper,
+              type: type,
+              src: _t.wallpaperList[type][srcIndex],
+              style: {}
+            }
+            // 分发mutations，更新当前的壁纸信息
+            _t.$store.commit(_t.$utils.store.getType('Wallpaper/currentWallpaper/update', 'Platform'), {
+              ..._t.currentWallpaper
+            })
           }
         } else {
           _t.doSwitchByBing()
@@ -139,14 +146,8 @@
         // 1.获取bing壁纸
         let src = await _t.getBingWallpaper()
         if (src) {
-          // 2.更新当前壁纸数据
-          _t.currentWallpaper = {
-            ..._t.currentWallpaper,
-            type: 'images',
-            src: src
-          }
           // 渐进加载
-          _t.lazyloadImg()
+          _t.lazyLoadImg(src)
         }
       },
       getBingWallpaper: async function () {
@@ -184,16 +185,22 @@
           }
         }
       },
-      lazyloadImg: function () {
+      lazyLoadImg: function (src) {
         let _t = this
         // 渐进加载
         let img = new Image()
-        img.src = _t.currentWallpaper.src
+        img.src = src
         img.onload = function () {
-          // 处理样式
+          _t.currentWallpaper['type'] = 'images'
+          _t.currentWallpaper['src'] = src
+            // 处理样式
           _t.currentWallpaper['style'] = {
-            background: 'url(' + img.src + ') center center / cover no-repeat fixed'
+            background: 'url(' + src + ') center center / cover no-repeat fixed'
           }
+          // 分发mutations，更新当前的壁纸信息
+          _t.$store.commit(_t.$utils.store.getType('Wallpaper/currentWallpaper/update', 'Platform'), {
+            ..._t.currentWallpaper
+          })
         }
       }
     },

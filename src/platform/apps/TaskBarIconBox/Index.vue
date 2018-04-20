@@ -13,7 +13,7 @@
     height: 100%;
     display: inline-block;
     // #0E2E49
-    border-top: 1px solid rgba(14, 46, 73, .3);
+    /*border-top: 1px solid rgba(14, 46, 73, .3);*/
     box-sizing: content-box;
   }
 </style>
