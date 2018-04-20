@@ -38,8 +38,10 @@
           bottom: 0;
         }
         .app-icon-bg {
-          display: block !important;
-          filter: blur(6px);
+          .content {
+            background: url("./images/StartMenu.png");
+            filter: blur(10px);
+          }
         }
       }
 
@@ -68,11 +70,25 @@
         right: 0;
         bottom: 0;
         z-index: -1;
-        filter: blur(50px);
-        background-position: center top;
+        /*filter: blur(50px);*/
+        /*background-position: center top;*/
         transition: all .2s ease-out;
         /*background-size: cover;*/
         /*background-attachment: fixed;*/
+
+        .content {
+          position: absolute;
+          display: block;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          filter: blur(50px);
+          background-color: transparent;
+          background-position: center center;
+          background-size: cover;
+          background-repeat: no-repeat;
+        }
       }
     }
 
@@ -93,24 +109,38 @@
       width: 410px;
       height: 600px;
       padding: 8px;
-      /*border: 1px solid #d7dde4;*/
       border: 1px solid rgba(14, 46, 73, 0.3);
       box-shadow: 5px -5px 5px 0px rgba(0, 0, 0, 0.1);
-      /*overflow: hidden;*/
+
       .start-menu-bg {
         position: absolute;
-        bottom: 0;
-        z-index: -1;
+        top: 0;
         right: 0;
+        bottom: 0;
         left: 0;
-        height: 100%;
         display: inline-block;
-        /*border-top: 1px solid #FFF;*/
-        /*background: #2A5AAD;*/
-        background: #323E54;
-        opacity: .5;
-        filter: blur(20px);
         overflow: hidden;
+
+        .wallpaper-image {
+          position: absolute;
+          top: -30px;
+          right: -30px;
+          bottom: -30px;
+          left: -30px;
+          z-index: -1;
+          display: inline-block;
+          background: #323E54;
+          filter: blur(20px);
+          overflow: hidden;
+        }
+      }
+
+      .start-menu-body {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        bottom: 8px;
+        left: 8px;
       }
       .list-block {
         width: 250px;
@@ -162,7 +192,7 @@
         width: 140px;
         height: 100%;
         /*background: red;*/
-        background: rgba(0, 0, 0, .1);
+        /*background: rgba(0, 0, 0, .1);*/
         display: inline-block;
         padding: 0 10px;
         color: #ffffff;
@@ -239,54 +269,66 @@
       @mouseup.left.stop="handleMouseUp"
     >
       <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" src="./images/StartMenu.png">
-      <div class="app-icon-bg"></div>
+      <div class="app-icon-bg">
+        <div class="content"></div>
+      </div>
     </div>
     <div
       class="start-menu-box"
       v-show="isShow"
       @contextmenu.stop.prevent
     >
-      <div class="start-menu-bg"></div>
-      <div class="list-block">
+      <div
+        class="start-menu-bg"
+      >
         <div
-          class="list-item"
-          v-for="item in appData.iconList"
-          :key="item.app.id"
-          @click.stop.prevent="openApp(item)"
+          class="wallpaper-image"
+          :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
         >
-          <div class="list-item-icon">
-            <img v-if="item.app.icon" :src="item.app.icon">
-          </div>
-          <div class="list-item-title">
-            {{ item.app.title }}
-          </div>
         </div>
       </div>
-      <div class="info-block">
-        <div class="info-link">
-          <Avatar class="info-avatar" shape="square" icon="person" size="large" />
-          <div class="info-action-group">
-            <div class="info-action-item">
-              <h2>{{ userInfo.name }}</h2>
+      <div class="start-menu-body">
+        <div class="list-block">
+          <div
+            class="list-item"
+            v-for="item in appData.iconList"
+            :key="item.app.id"
+            @click.stop.prevent="openApp(item)"
+          >
+            <div class="list-item-icon">
+              <img v-if="item.app.icon" :src="item.app.icon">
             </div>
-            <div class="info-action-item">
-              个人中心
-            </div>
-            <div class="info-action-item">
-              My Apps
-            </div>
-          </div>
-          <div class="info-action-group">
-            <div class="info-action-item">
-              系统设置
+            <div class="list-item-title">
+              {{ item.app.title }}
             </div>
           </div>
         </div>
-        <div class="info-btn">
-          <Button class="info-btn-item" type="ghost" long @click="doLogout">退出</Button>
-        </div>
-        <div class="info-version" v-if="$Config.System.version">
-          Version：{{ $Config.System.version }}
+        <div class="info-block">
+          <div class="info-link">
+            <Avatar class="info-avatar" shape="square" icon="person" size="large" />
+            <div class="info-action-group">
+              <div class="info-action-item">
+                <h2>{{ userInfo.name }}</h2>
+              </div>
+              <div class="info-action-item">
+                个人中心
+              </div>
+              <div class="info-action-item">
+                My Apps
+              </div>
+            </div>
+            <div class="info-action-group">
+              <div class="info-action-item">
+                系统设置
+              </div>
+            </div>
+          </div>
+          <div class="info-btn">
+            <Button class="info-btn-item" type="ghost" long @click="doLogout">退出</Button>
+          </div>
+          <div class="info-version" v-if="$Config.System.version">
+            Version：{{ $Config.System.version }}
+          </div>
         </div>
       </div>
     </div>
@@ -311,6 +353,9 @@
     computed: {
       ...mapState('Platform/Admin', {
         appData: state => state.appData
+      }),
+      ...mapState('Platform/Wallpaper', {
+        currentWallpaper: state => state.currentWallpaper
       })
     },
     methods: {
