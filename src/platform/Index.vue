@@ -17,10 +17,10 @@
 <template>
   <div
     class="layout-platform"
-    @drop.stop.prevent="handlerDrop"
+    @drop.stop.prevent="handleDrop"
     @dragover.stop.prevent
-    @click="handlerLeftClick($event)"
-    @contextmenu.stop.prevent="handlerRightClick($event)"
+    @click="handleLeftClick($event)"
+    @contextmenu.stop.prevent="handleRightClick($event)"
   >
     <!-- 前台 -->
     <component :is="components.Home" v-if="!userInfo.isLogin">
@@ -75,7 +75,7 @@
       })
     },
     methods: {
-      handlerComponents: async function () {
+      handleComponents: async function () {
         let _t = this
         // 动态导入组件
         let components = {}
@@ -122,7 +122,7 @@
         _t.components = components
       },
       // 节点drop
-      handlerDrop: function (event) {
+      handleDrop: function (event) {
         let _t = this
         // 获取拖拽对象数据
         let targetInfo = JSON.parse(event.dataTransfer.getData('Text'))
@@ -130,13 +130,13 @@
         if (targetInfo && targetInfo.type) {
           switch (targetInfo.type) {
             case 'Window':
-              _t.handlerWindowDrag(targetInfo, event, 'drop')
+              _t.handleWindowDrag(targetInfo, event, 'drop')
               break
           }
         }
       },
       // 各种处理方法
-      handlerWindowDrag: function (targetInfo, event, type) {
+      handleWindowDrag: function (targetInfo, event, type) {
         let _t = this
         let data = targetInfo.data || {}
         // 健壮，防止空数据
@@ -163,14 +163,14 @@
         _t.$utils.bus.$emit('platform/desktop/right/click', tmpInfo)
       },
       // 桌面左键点击
-      handlerLeftClick: function () {
+      handleLeftClick: function () {
         let _t = this
         // 广播事件
         _t.$utils.bus.$emit('platform/startMenu/hide')
         _t.$utils.bus.$emit('platform/contextMenu/hide')
       },
       // 桌面右键点击
-      handlerRightClick: function (event) {
+      handleRightClick: function (event) {
         let _t = this
         let xVal = parseInt(event.clientX)
         let yVal = parseInt(event.clientY)
@@ -241,7 +241,7 @@
     },
     created: function () {
       let _t = this
-      _t.handlerComponents()
+      _t.handleComponents()
       // 监听事件
       _t.$utils.bus.$on('platform/refresh', function () {
         _t.$router.go(0)

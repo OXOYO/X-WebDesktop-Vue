@@ -19,8 +19,8 @@
   <div
     class="app-admin"
     @mousedown.left="mouseDownHandle"
-    @click.stop="handlerLeftClick($event)"
-    @contextmenu.stop.prevent="handlerRightClick($event)"
+    @click.stop="handleLeftClick($event)"
+    @contextmenu.stop.prevent="handleRightClick($event)"
   >
     <slot></slot>
   </div>
@@ -49,14 +49,14 @@
         _t.$utils.bus.$emit('platform/window/preview/clear')
       },
       // 桌面左键点击
-      handlerLeftClick: function () {
+      handleLeftClick: function () {
         let _t = this
         // 广播事件
         _t.$utils.bus.$emit('platform/startMenu/hide')
         _t.$utils.bus.$emit('platform/contextMenu/hide')
       },
       // 桌面右键点击
-      handlerRightClick: function (event) {
+      handleRightClick: function (event) {
         let _t = this
         let xVal = parseInt(event.clientX)
         let yVal = parseInt(event.clientY)

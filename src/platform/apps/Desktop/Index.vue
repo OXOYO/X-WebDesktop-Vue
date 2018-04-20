@@ -32,7 +32,7 @@
   <div class="app-desktop">
     <div
       class="app-desktop-box"
-      @drop.stop.prevent="handlerDrop"
+      @drop.stop.prevent="handleDrop"
       @dragover.stop.prevent
     >
       <component
@@ -146,7 +146,7 @@
     },
     methods: {
       // 处理iconList
-      handlerIconList: function (iconList) {
+      handleIconList: function (iconList) {
         let _t = this
         let flag = true
         let firstGrid = _t.gridArr[0][0]
@@ -157,7 +157,7 @@
           xVal = (firstGrid.rightBottom.x - firstGrid.leftTop.x) / 2 + firstGrid.leftTop.x
           yVal = (firstGrid.rightBottom.y - firstGrid.leftTop.y) / 2 + firstGrid.leftTop.y
 
-          let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
+          let distanceArr = _t.handleDistanceToGrid(xVal, yVal)
           let distanceArrBack = [...distanceArr]
           if (flag) {
             flag = false
@@ -188,22 +188,22 @@
         return iconList
       },
       // 节点drop
-      handlerDrop: function (event) {
+      handleDrop: function (event) {
         let _t = this
         // 获取拖拽对象数据
         let targetInfo = JSON.parse(event.dataTransfer.getData('Text'))
         // TODO 判断target，根据target分别处理
         switch (targetInfo.target) {
           case 'DesktopIcon':
-            _t.handlerDesktopIconDrop(targetInfo, event)
+            _t.handleDesktopIconDrop(targetInfo, event)
             break
           case 'Window':
-            _t.handlerWindowDrop(targetInfo, event)
+            _t.handleWindowDrop(targetInfo, event)
             break
         }
       },
       // 处理桌面图标drop
-      handlerDesktopIconDrop: function (targetInfo) {
+      handleDesktopIconDrop: function (targetInfo) {
         let _t = this
         let targetData = targetInfo.data || {}
         // 健壮，防止空数据
@@ -215,7 +215,7 @@
         let yVal = event.clientY - targetData.offsetY
         // 2.查找 icon drop 时所处的grid
         // 2.1.遍历gridArr，计算与每个grid的leftTop、rightBottom点的距离
-        let distanceArr = _t.handlerDistanceToGrid(xVal, yVal)
+        let distanceArr = _t.handleDistanceToGrid(xVal, yVal)
         let distanceArrBack = [...distanceArr]
         // 目标Grid
         let appInfo = targetData.appInfo
@@ -239,7 +239,7 @@
         })
       },
       // 处理窗口drop
-      handlerWindowDrop: function (targetInfo) {
+      handleWindowDrop: function (targetInfo) {
         let _t = this
         let targetData = targetInfo.data || {}
         // 健壮，防止空数据
@@ -274,7 +274,7 @@
         _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), appData)
       },
       // 计算格子数据
-      handlerGrids: function (direction) {
+      handleGrids: function (direction) {
         let _t = this
         direction = direction || 'top-bottom-left-right'
         // 默认从上往下，从左往右
@@ -571,7 +571,7 @@
         return targetGrid
       },
       // 计算与各个grid的距离
-      handlerDistanceToGrid: function (xVal, yVal) {
+      handleDistanceToGrid: function (xVal, yVal) {
         let _t = this
         let distanceArr = []
         for (let childArr of _t.gridArr) {
@@ -585,7 +585,7 @@
         }
         return distanceArr
       },
-      handlerGridLayout: function (direction) {
+      handleGridLayout: function (direction) {
         let _t = this
         /*
          * 1.从上往下，从左往右 top-bottom-left-right
@@ -604,10 +604,10 @@
         // 更新当前激活的排序方向
         _t.currentDirection = direction
         // 计算格子数据
-        _t.handlerGrids(direction)
+        _t.handleGrids(direction)
         _t.$nextTick(function () {
           // 处理iconList
-          let iconList = _t.handlerIconList([..._t.appData.iconList])
+          let iconList = _t.handleIconList([..._t.appData.iconList])
           // 分发mutations，更新用户应用数据
           _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
             ..._t.appData,
@@ -1006,17 +1006,17 @@
     created: function () {
       let _t = this
       // 处理格子排序
-      _t.handlerGridLayout(_t.currentDirection)
+      _t.handleGridLayout(_t.currentDirection)
       // 初始化渲染
       _t.$utils.bus.$on('platform/desktopIcon/render', function () {
         // 处理格子排序
-        _t.handlerGridLayout(_t.currentDirection)
+        _t.handleGridLayout(_t.currentDirection)
       })
       // 监听事件
       _t.$utils.bus.$on('platform/desktopIcon/sort', function (direction) {
         if (_t.directionArr.includes(direction)) {
           // 处理格子排序
-          _t.handlerGridLayout(direction)
+          _t.handleGridLayout(direction)
         }
       })
       // 监听 window 操作
@@ -1033,7 +1033,7 @@
           resizeTimer = setTimeout(function () {
             console.log('window resize!')
             // 处理格子排序
-            _t.handlerGridLayout(_t.currentDirection)
+            _t.handleGridLayout(_t.currentDirection)
           }, 500)
         })()
       }
