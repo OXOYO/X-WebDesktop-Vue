@@ -67,13 +67,14 @@
     class="desktop-icon"
     @mousedown.left="mouseDownHandle"
     @dblclick="openApp"
-    @contextmenu.stop.prevent="handlerRightClick($event)"
+    @contextmenu.stop.prevent="handleRightClick($event)"
     draggable="true"
-    @dragstart="handlerDragStart"
+    @dragstart="handleDragStart"
     :title="info.app.title"
     :data-name="info.app.name"
   >
-    <img :class="{ 'desktop-icon-down': isMouseDown}" v-if="info.app.icon" :src="info.app.icon" :data-name="info.app.name">
+    <img :class="{ 'desktop-icon-down': isMouseDown}" v-if="info.app.icon" :src="info.app.icon || appIcon" :data-name="info.app.name">
+    <!--<img :class="{ 'desktop-icon-down': isMouseDown}" v-if="info.app.icon" src="../../../apps/ApplicationMarket/assets/logo.png" :data-name="info.app.name">-->
     <span v-if="showTitle" :data-name="info.app.name">{{ info.app.title }}</span>
   </div>
 </template>
@@ -119,6 +120,9 @@
     computed: {
       ...mapState('Platform/Admin', {
         _appData: state => state._appData
+      }),
+      ...mapState('Platform', {
+        appIcon: state => state.appIcon
       })
     },
     methods: {
@@ -143,7 +147,7 @@
         })
       },
       // 右键菜单
-      handlerRightClick: function (event) {
+      handleRightClick: function (event) {
         let _t = this
         let xVal = parseInt(event.clientX)
         let yVal = parseInt(event.clientY)
@@ -267,7 +271,7 @@
         _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
       },
       // FIXME 拖拽处理，可以考虑实现选区拖拽
-      handlerDragStart: function (event) {
+      handleDragStart: function (event) {
         let _t = this
         // 广播事件，关闭菜单
         _t.$utils.bus.$emit('platform/contextMenu/hide')

@@ -47,17 +47,17 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-left: -15px;
-        margin-top: -15px;
-        width: 30px;
-        height: 30px;
+        margin-left: -20px;
+        margin-top: -20px;
+        width: 40px;
+        height: 40px;
         /*filter: drop-shadow(0 0 10px #ccc);*/
         /*background: hsla(0,0%,100%,.25) border-box;*/
         /*box-shadow: 0 0 0 1px hsla(0,0%,100%,.3) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);*/
       }
       .app-icon-down {
-        margin-left: -14px;
-        margin-top: -14px;
+        margin-left: -19px;
+        margin-top: -19px;
       }
       .app-icon-bg {
         position: absolute;
@@ -235,8 +235,8 @@
     <div
       class="start-menu-icon-main"
       @click.stop.prevent
-      @mousedown.left.stop="handlerMouseDown"
-      @mouseup.left.stop="handlerMouseUp"
+      @mousedown.left.stop="handleMouseDown"
+      @mouseup.left.stop="handleMouseUp"
     >
       <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" src="./images/StartMenu.png">
       <div class="app-icon-bg"></div>
@@ -315,12 +315,12 @@
     },
     methods: {
       // 鼠标按下
-      handlerMouseDown: function () {
+      handleMouseDown: function () {
         let _t = this
         _t.isMouseDown = true
       },
       // 鼠标抬起
-      handlerMouseUp: function () {
+      handleMouseUp: function () {
         let _t = this
         _t.isMouseDown = false
         _t.isShow = !_t.isShow
