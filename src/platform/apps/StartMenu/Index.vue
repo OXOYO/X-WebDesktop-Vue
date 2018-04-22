@@ -143,7 +143,8 @@
         left: 8px;
       }
       .list-block {
-        width: 250px;
+        width: 61%;
+        max-width: 250px;
         height: 100%;
         background: rgba(255, 255, 255, .9);
         display: inline-block;
@@ -167,7 +168,8 @@
             transition: all .2s;
           }
           &:hover {
-            background: #f3f3f3;
+            /*background: #f3f3f3;*/
+            background: #cfe3fd;
             &:before {
               background: #2A5AAD;
             }
@@ -189,7 +191,8 @@
       }
       .info-block {
         position: relative;
-        width: 140px;
+        width: 34%;
+        max-width: 140px;
         height: 100%;
         /*background: red;*/
         /*background: rgba(0, 0, 0, .1);*/
@@ -275,6 +278,7 @@
     </div>
     <div
       class="start-menu-box"
+      :style="menuBoxStyle"
       v-show="isShow"
       @contextmenu.stop.prevent
     >
@@ -347,7 +351,9 @@
           name: 'admin',
           text: 'admin'
         },
-        isMouseDown: false
+        isMouseDown: false,
+        // 开始菜单窗口样式
+        menuBoxStyle: {}
       }
     },
     computed: {
@@ -395,6 +401,19 @@
             appInfo: appInfo
           }
         })
+      },
+      // 处理窗口大小
+      handleMenuBoxStyle: function () {
+        let _t = this
+        console.log('Width', document.body.offsetWidth, document.body.offsetHeight)
+        let bodyHeight = document.body.offsetHeight
+        let height = Math.ceil(bodyHeight * 0.8)
+        height = height < 500 ? 500 : height
+        let width = Math.ceil(height * 0.7)
+        _t.menuBoxStyle = {
+          height: height + 'px',
+          width: width + 'px'
+        }
       }
     },
     created: function () {
@@ -403,6 +422,8 @@
       _t.$utils.bus.$on('platform/startMenu/hide', function () {
         _t.isShow = false
       })
+      // 处理窗口大小
+      _t.handleMenuBoxStyle()
     },
     beforeDestroy: function () {
       let _t = this

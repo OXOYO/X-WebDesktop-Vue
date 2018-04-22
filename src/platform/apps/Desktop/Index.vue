@@ -673,6 +673,8 @@
           let currentSize = iconList[currentAppIndex]['window']['size']
           let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['oldStyle'] || {}))
           let oldSize = iconList[currentAppIndex]['window']['oldSize']
+          currentStyle = handleWindowMaxWidthHeight(currentStyle)
+          oldStyle = handleWindowMaxWidthHeight(oldStyle)
           if (appInfo.window.status === 'close') {
             iconList[currentAppIndex]['window']['status'] = 'open'
             if (currentSize !== 'custom') {
@@ -915,6 +917,8 @@
           let currentSize = iconList[currentAppIndex]['window']['size']
           let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['oldStyle'] || {}))
           let oldSize = iconList[currentAppIndex]['window']['oldSize']
+          currentStyle = handleWindowMaxWidthHeight(currentStyle)
+          oldStyle = handleWindowMaxWidthHeight(oldStyle)
           if (action === 'close') {
             iconList[currentAppIndex]['window']['status'] = 'close'
             // 初始化size/style
@@ -925,10 +929,10 @@
           } else if (action === 'open') {
             if (appInfo.window.status === 'close') {
               iconList[currentAppIndex]['window']['status'] = 'open'
-              if (Object.keys(_t.windowStyleBySize).includes(currentSize)) {
-                iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize[iconList[currentAppIndex]['window']['size']]
-              } else if (currentSize === 'custom') {
-                iconList[currentAppIndex]['window']['style'] = _t._appData.iconList[currentAppIndex]['window']['style']
+              if (currentSize !== 'custom') {
+                iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize[currentSize]
+              } else {
+                iconList[currentAppIndex]['window']['style'] = currentStyle
               }
               // 处理窗口层级，将当前窗口层级更新到最大
               iconList = handleOpenedWindowZIndex(iconList, currentAppIndex)
@@ -961,7 +965,21 @@
                 let maxZIndex = Math.max(...zIndexArr)
                 // 最大层级对应索引
                 let maxZIndexIndex = zIndexArr.indexOf(maxZIndex)
-                if (currentAppIndex !== openedWindowIndexArr[maxZIndexIndex]) {
+                if (currentAppIndex === openedWindowIndexArr[maxZIndexIndex]) {
+                  // 将当前窗口最小化
+                  iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize['min']
+                  iconList[currentAppIndex]['window']['size'] = 'min'
+                  // 处理left值
+                  let taskBarList = findAllIndex(iconList, (item) => item.window.status === 'open' || item.taskBar.isPinned)
+                  if (taskBarList.length) {
+                    let taskBarIndex = taskBarList.indexOf(currentAppIndex)
+                    // FIXME 每个任务栏图标实际宽度 68px
+                    iconList[currentAppIndex]['window']['style'] = {
+                      ...iconList[currentAppIndex]['window']['style'],
+                      left: 68 * (taskBarIndex + 1) + 'px'
+                    }
+                  }
+                } else {
                   // 处理窗口层级，将当前窗口层级更新到最大
                   iconList = handleOpenedWindowZIndex(iconList, currentAppIndex)
                 }
@@ -972,6 +990,24 @@
             ..._t.appData,
             iconList: iconList
           })
+        }
+        // 处理窗口max-widht && max-height
+        let handleWindowMaxWidthHeight = function (style) {
+          let bodyHeight = document.body.offsetHeight
+          let bodyWidth = document.body.offsetWidth
+          let maxHeight = Math.ceil(bodyHeight * 0.8)
+          let top = Math.ceil(maxHeight / 2)
+          let maxWidth = Math.ceil(bodyWidth * 0.8)
+          let left = Math.ceil(maxWidth / 2)
+          if (style.hasOwnProperty('height') && parseInt(style['height']) > maxHeight) {
+            style.height = maxHeight + 'px'
+            style.top = 'calc(50% - ' + top + 'px)'
+          }
+          if (style.hasOwnProperty('width') && parseInt(style.width) > maxWidth) {
+            style.width = maxWidth + 'px'
+            style.left = 'calc(50% - ' + left + 'px)'
+          }
+          return style
         }
         switch (action) {
           case 'openByStartMenuList':
