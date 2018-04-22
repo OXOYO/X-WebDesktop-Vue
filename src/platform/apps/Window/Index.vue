@@ -224,6 +224,7 @@
       -->
       <div
         class="window-title"
+        @mousedown.stop="onWindowMouseDown"
         @dblclick.stop.prevent="handleWindowSize(info.window.size === 'max' ? 'reset' : 'max')"
       >
         {{ info.app.title }}
@@ -553,7 +554,7 @@
       },
       onWindowMouseDown: function () {
         let _t = this
-//        console.log('change Window zIndex', _t.info.window.zIndex)
+        console.log('change Window zIndex', _t.info.window.zIndex)
         // 广播事件 触发window事件
         let appInfo = {..._t.info}
         _t.$utils.bus.$emit('platform/window/trigger', {
