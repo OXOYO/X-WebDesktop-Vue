@@ -408,7 +408,7 @@
         console.log('Width', document.body.offsetWidth, document.body.offsetHeight)
         let bodyHeight = document.body.offsetHeight
         let height = Math.ceil(bodyHeight * 0.8)
-        height = height < 500 ? 500 : height
+        height = height < 500 ? 500 : height > 600 ? 600 : height
         let width = Math.ceil(height * 0.7)
         _t.menuBoxStyle = {
           height: height + 'px',
