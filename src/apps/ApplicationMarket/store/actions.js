@@ -6,7 +6,13 @@
 import Api from '../api'
 
 export default {
-  // 获取账号列表
+  // 获取应用分类列表
+  'category/list': async ({ commit }, payload) => {
+    // 调接口
+    let res = await Api.getCategoryList(payload)
+    return res
+  },
+  // 获取应用列表
   'application/list': async ({ commit }, payload) => {
     // 调接口
     let res = await Api.getApplicationList(payload)
