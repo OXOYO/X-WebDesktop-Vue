@@ -1,6 +1,7 @@
 /**
-* Created by OXOYO on 2018/4/20.
+* Created by OXOYO on 2017/12/24.
 *
+* 入口文件
 */
 
 <style scoped lang="less" rel="stylesheet/less">
@@ -22,7 +23,7 @@
   import Store from './store'
 
   export default {
-    name: 'ApplicationMarket',
+    name: 'Weather',
     components: {
       MainPage
     },
@@ -38,4 +39,3 @@
     }
   }
 </script>
-

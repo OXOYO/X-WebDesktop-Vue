@@ -431,6 +431,7 @@
       // 处理窗口拖拽缩放配置
       handleDragResizeConfig: function () {
         let _t = this
+        console.log('_t.info', _t.info)
         // 当前应用的拖拽缩放配置
         let appDragResizeConfig = _t.info.window.hasOwnProperty('dragResizeConfig') ? _t.info.window.dragResizeConfig : {}
         // 合并配置，遇到对象则合并，其他覆盖

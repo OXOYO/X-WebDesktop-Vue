@@ -1,7 +1,6 @@
 /**
-* Created by OXOYO on 2017/12/24.
+* Created by OXOYO on 2018/4/23.
 *
-* 入口文件
 */
 
 <style scoped lang="less" rel="stylesheet/less">
@@ -14,6 +13,6 @@
 
 <script>
   export default {
-    name: 'DemoApp001'
+    name: 'MainPage'
   }
 </script>

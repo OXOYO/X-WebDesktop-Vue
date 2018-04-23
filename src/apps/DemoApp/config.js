@@ -6,5 +6,5 @@
 
 export default {
   type: 'user',
-  name: 'DemoApp001'
+  name: 'DemoApp'
 }

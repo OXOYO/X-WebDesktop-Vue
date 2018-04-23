@@ -1,6 +1,7 @@
 /**
-* Created by OXOYO on 2018/4/20.
+* Created by OXOYO on 2017/12/24.
 *
+* 入口文件
 */
 
 <style scoped lang="less" rel="stylesheet/less">
@@ -13,19 +14,15 @@
 
 <template>
   <div class="app-main">
-    <MainPage></MainPage>
+    <h1>TODO DemoApp</h1>
   </div>
 </template>
 
 <script>
-  import MainPage from './pages/MainPage.vue'
   import Store from './store'
 
   export default {
-    name: 'ApplicationMarket',
-    components: {
-      MainPage
-    },
+    name: 'DemoApp',
     created: function () {
       let _t = this
       // 将store注册到apps下
@@ -38,4 +35,3 @@
     }
   }
 </script>
-
