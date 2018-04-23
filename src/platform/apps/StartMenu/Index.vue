@@ -405,7 +405,6 @@
       // 处理窗口大小
       handleMenuBoxStyle: function () {
         let _t = this
-        console.log('Width', document.body.offsetWidth, document.body.offsetHeight)
         let bodyHeight = document.body.offsetHeight
         let height = Math.ceil(bodyHeight * 0.8)
         height = height < 500 ? 500 : height > 600 ? 600 : height
