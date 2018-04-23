@@ -160,7 +160,7 @@
           </div>
           <div class="item-content">
             <div class="item-title">{{ item.title }}</div>
-            <div class="item-install" @click="handleApplicationInstall(item)">安装</div>
+            <div class="item-install" @click.stop.prevent="handleApplicationInstall(item)">安装</div>
           </div>
         </div>
         <NoData :show="!applicationList.length">该分类下暂无应用！</NoData>
@@ -258,7 +258,13 @@
       },
       // 处理应用安装
       handleApplicationInstall: function (item) {
+        let _t = this
         console.log('handleApplicationInstall', item)
+        // 1.判断当前用户是否已安装过该应用
+        // 2.查找应用目录，执行install
+        // 测试install
+        let install = require('@/Apps/Weather/install').default
+        console.log('install', install.init(_t))
       }
     },
     created: function () {

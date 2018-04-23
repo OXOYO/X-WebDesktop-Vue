@@ -26,17 +26,8 @@
     components: {
       MainPage
     },
-    data () {
-      return {
-        isLoading: true
-      }
-    },
     created: function () {
       let _t = this
-
-      setTimeout(function () {
-        _t.isLoading = false
-      }, 200)
       // 将store注册到apps下
       _t.$store.registerModule(['Apps', Store.moduleName], Store.store)
     },
