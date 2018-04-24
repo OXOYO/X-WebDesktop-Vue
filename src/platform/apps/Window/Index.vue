@@ -484,69 +484,6 @@
         if (!appInfo.window.enableResize.includes(actionName)) {
           return false
         }
-        let currentSize = appInfo.window.size
-        let currentStyle = appInfo.window.style
-        let oldSize = appInfo.window.oldSize || 'middle'
-        let oldStyle = appInfo.window.oldStyle || {}
-        // 查找备份数据
-        let _appData = JSON.parse(JSON.stringify(_t._appData))
-        let _appInfo
-        for (let i = 0, len = _appData.iconList.length; i < len; i++) {
-          let item = _appData.iconList[i]
-          if (item.app.name === appInfo.app.name) {
-            _appInfo = item
-          }
-        }
-        // 备份
-//        appInfo.window.oldSize = currentSize
-//        appInfo.window.oldStyle = currentStyle
-        let tmpObj = {
-          appInfo: appInfo,
-          actionName: actionName,
-          newSize: '',
-          oldSize: '',
-          newStyle: '',
-          oldStyle: '',
-          status: ''
-        }
-        // 备份
-        tmpObj['oldSize'] = currentSize
-        tmpObj['oldStyle'] = currentStyle
-        switch (actionName) {
-          case 'min':
-//            appInfo.window.size = 'min'
-//            appInfo.window.style = {}
-            tmpObj['newSize'] = 'min'
-            tmpObj['newStyle'] = {}
-            tmpObj['status'] = 'open'
-            break
-          case 'reset':
-//            appInfo.window.size = oldSize
-//            appInfo.window.style = oldStyle
-            tmpObj['newSize'] = oldSize
-            tmpObj['newStyle'] = oldStyle
-            tmpObj['status'] = 'open'
-            break
-          case 'max':
-//            appInfo.window.size = 'max'
-//            appInfo.window.style = {}
-            tmpObj['newSize'] = 'max'
-            tmpObj['newStyle'] = {}
-            tmpObj['status'] = 'open'
-            break
-          case 'close':
-//            appInfo.window.status = 'close'
-            tmpObj['oldSize'] = ''
-            tmpObj['oldStyle'] = {}
-            tmpObj['newSize'] = _appInfo ? _appInfo.window.size : ''
-            tmpObj['newStyle'] = _appInfo ? _appInfo.window.style : {}
-            tmpObj['status'] = 'close'
-            break
-        }
-//        console.log('appInfo.window.size', appInfo.window.size, _t.info.window.size)
-//        if (!tmpInfo) {
-//          return
-//        }
         // 广播事件 触发window事件
         _t.$utils.bus.$emit('platform/window/trigger', {
           // 通过窗口控制按钮缩放窗口

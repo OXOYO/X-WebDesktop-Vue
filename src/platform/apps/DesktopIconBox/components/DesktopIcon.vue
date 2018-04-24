@@ -234,8 +234,10 @@
               text: '卸载',
               enable: true,
               action: {
-                type: 'bus',
-                handler: 'platform/app/uninstall'
+                type: 'callback',
+                handler: () => {
+                  _t.$utils.uninstall(_t, _t.info)
+                }
               }
             }
           ]
