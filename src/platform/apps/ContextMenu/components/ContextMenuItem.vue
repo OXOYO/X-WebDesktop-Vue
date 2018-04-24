@@ -57,6 +57,11 @@
               console.log('_t.info.action.handler', _t.info.action.handler)
               _t.$utils.bus.$emit(_t.info.action.handler, _t.info.action.params)
               break
+            case 'callback':
+              if (typeof _t.info.action.handler === 'function') {
+                _t.info.action.handler(_t.info.action.params)
+              }
+              break
           }
         }
         // 广播事件，关闭菜单
