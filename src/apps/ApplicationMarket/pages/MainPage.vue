@@ -262,11 +262,8 @@
       handleApplicationInstall: function (item) {
         let _t = this
         console.log('handleApplicationInstall', item)
-        // 1.判断当前用户是否已安装过该应用
-        // 2.查找应用目录，执行install
-        // 测试install
-        let install = require('@/Apps/Weather/install').default
-        install.init(_t, item)
+        // 调用安装工具，打开安装界面
+        _t.$utils.install(_t, item)
       }
     },
     created: function () {
