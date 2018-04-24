@@ -4,11 +4,16 @@
 */
 
 <style scoped lang="less" rel="stylesheet/less">
-
+  .main-page {
+    width: 100%;
+    display: inline-block;
+  }
 </style>
 
 <template>
-
+  <div class="main-page">
+    <h1>TODO Weather</h1>
+  </div>
 </template>
 
 <script>

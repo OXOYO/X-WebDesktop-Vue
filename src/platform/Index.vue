@@ -237,6 +237,17 @@
         }
         // 广播事件
         _t.$utils.bus.$emit('platform/contextMenu/show', contextMenuInfo)
+      },
+      // 处理系统刷新
+      handlePlatformRefresh: function () {
+        let _t = this
+        // 判断用户是否登录
+        if (_t.userInfo.isLogin) {
+          // 刷新用户应用数据
+          _t.$utils.bus.$emit('Admin/appData/refresh')
+        } else {
+          _t.$router.go(0)
+        }
       }
     },
     created: function () {
@@ -244,7 +255,7 @@
       _t.handleComponents()
       // 监听事件
       _t.$utils.bus.$on('platform/refresh', function () {
-        _t.$router.go(0)
+        _t.handlePlatformRefresh()
       })
       _t.$utils.bus.$on('platform/fullScreen/open', function () {
         // 全屏

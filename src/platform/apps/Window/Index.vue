@@ -227,6 +227,7 @@
         @mousedown.stop="onWindowMouseDown"
         @dblclick.stop.prevent="handleWindowSize(info.window.size === 'max' ? 'reset' : 'max')"
       >
+        {{ info.hasOwnProperty('action') ? (info.action === 'install' ? '安装：' : (info.action === 'uninstall' ? '卸载：' : '')) : '' }}
         {{ info.app.title }}
       </div>
       <div class="window-bar">
@@ -394,7 +395,10 @@
     },
     computed: {
       ...mapState('Platform/Admin', {
-        _appData: state => state._appData
+        _appData: state => {
+          console.log('state', mapState, state)
+          return state._appData
+        }
       }),
       ...mapState('Platform/Wallpaper', {
         currentWallpaper: state => state.currentWallpaper
@@ -534,8 +538,8 @@
 //            appInfo.window.status = 'close'
             tmpObj['oldSize'] = ''
             tmpObj['oldStyle'] = {}
-            tmpObj['newSize'] = _appInfo.window.size
-            tmpObj['newStyle'] = _appInfo.window.style
+            tmpObj['newSize'] = _appInfo ? _appInfo.window.size : ''
+            tmpObj['newStyle'] = _appInfo ? _appInfo.window.style : {}
             tmpObj['status'] = 'close'
             break
         }
@@ -555,7 +559,6 @@
       },
       onWindowMouseDown: function () {
         let _t = this
-        console.log('change Window zIndex', _t.info.window.zIndex)
         // 广播事件 触发window事件
         let appInfo = {..._t.info}
         _t.$utils.bus.$emit('platform/window/trigger', {
