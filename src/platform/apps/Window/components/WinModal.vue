@@ -8,14 +8,19 @@
     width: 100%;
     height: 100%;
     background: #ffffff;
+
+    .load-fail {
+      display: inline-block;
+      margin: 20px;
+      font-size: 20px;
+    }
   }
 </style>
 
 <template>
   <div class="app-window-modal">
-    <h1 v-if="!appComponent">TODO WinModal</h1>
-    <h1 v-if="!appComponent">{{ info.app.title }}</h1>
-    <component :is="appComponent" v-if="appComponent"></component>
+    <NoData :show="!appComponent" class="load-fail">未能正确加载应用：{{ info.app.title }}</NoData>
+    <component :is="appComponent" v-if="appComponent" :info="info"></component>
   </div>
 </template>
 
@@ -44,15 +49,49 @@
       loadApp: function () {
         let _t = this
         let appName = _t.info.app.name
-        // 动态加载组件
-        require.ensure([], (require) => {
-          try {
-            let appComponent = require('@/Apps/' + appName + '/Index.vue')
-            _t.appComponent = appComponent
-          } catch (err) {
-            console.warn('WARNG:: LOAD', '@/Apps/' + appName + '/Index.vue', 'FAIL!')
+        let path = ''
+        // TODO 判断当前操作是install || uninstall || openApp
+        // 常规打开
+        let handler = function (path) {
+          // 动态加载组件
+          require.ensure([], (require) => {
+            let isSuccess = false
+            try {
+              let appComponent = require('@/Apps/' + path + '/Index.vue')
+              _t.appComponent = appComponent
+              isSuccess = true
+            } catch (err) {
+              isSuccess = false
+              console.warn('WARNG:: LOAD', '@/Apps/' + path + '/Index.vue', 'FAIL!')
+            }
+            if (!isSuccess && _t.info.hasOwnProperty('action')) {
+              if (_t.info.action === 'install') {
+                path = 'Install'
+              } else if (_t.info.action === 'uninstall') {
+                path = 'Uninstall'
+              }
+              try {
+                let appComponent = require('@/global/components/' + path + '.vue')
+                _t.appComponent = appComponent
+              } catch (err) {
+                console.warn('WARNG:: LOAD', '@/global/components/' + path + '.vue', 'FAIL!')
+              }
+            }
+          })
+        }
+        console.log('loadApp _t.info', _t.info)
+        if (_t.info.hasOwnProperty('action')) {
+          if (_t.info.action === 'install') {
+            path = appName + '/install'
+          } else if (_t.info.action === 'uninstall') {
+            path = appName + '/uninstall'
+          } else {
+            path = appName
           }
-        })
+        } else {
+          path = appName
+        }
+        handler(path)
       }
     },
     created: function () {

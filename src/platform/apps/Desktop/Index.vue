@@ -38,6 +38,7 @@
       <component
         :is="childComponents.DesktopIcon"
         v-for="item in appData.iconList"
+        v-if="!['install', 'uninstall'].includes(item.action)"
         :key="item.app.name"
         :info="item"
         :showTitle="appData.showTitle"
@@ -615,10 +616,10 @@
           })
         })
       },
-      handleWindowTrigger: function (tmpInfo) {
+      handleWindowTrigger: function (tmpInfo, iconList) {
         let _t = this
         let {action, data} = tmpInfo
-        let iconList = [..._t.appData.iconList]
+        iconList = iconList || [..._t.appData.iconList]
         console.log('handleWindowTrigger', 'action:', action, 'data:', data)
         // 查找单个索引
         let findAppIndex = function (iconList, condition) {
@@ -801,8 +802,8 @@
             case 'close':
               iconList[currentAppIndex]['window']['status'] = 'close'
               // 初始化size/style
-              iconList[currentAppIndex]['window']['style'] = _t._appData.iconList[currentAppIndex]['window']['style']
-              iconList[currentAppIndex]['window']['size'] = _t._appData.iconList[currentAppIndex]['window']['size']
+              iconList[currentAppIndex]['window']['style'] = _t._appData.iconList[currentAppIndex] ? _t._appData.iconList[currentAppIndex]['window']['style'] : {}
+              iconList[currentAppIndex]['window']['size'] = _t._appData.iconList[currentAppIndex] ? _t._appData.iconList[currentAppIndex]['window']['size'] : ''
               iconList[currentAppIndex]['window']['oldStyle'] = {}
               iconList[currentAppIndex]['window']['oldSize'] = ''
               break
@@ -1013,6 +1014,7 @@
           case 'openByStartMenuList':
           case 'openByDesktopIcon':
           case 'openByTaskBarIcon':
+          case 'openByInstall':
             handleOpenByTaskBarIcon(data)
             break
           case 'resizeByWindowBar':
@@ -1037,6 +1039,69 @@
             handleToggleWindowByContextMenu(data)
             break
         }
+      },
+      // 处理应用安装/卸载
+      handleApplicationInstall: function (tmpInfo) {
+        let _t = this
+        let appInfo = tmpInfo.data.appInfo
+        // 打开安装/卸载界面
+        let openWindow = function () {
+          let iconList = [..._t.appData.iconList]
+          // 查找单个索引
+          let findAppIndex = function (iconList, condition) {
+            return iconList.findIndex((item) => {
+              return condition(item)
+            })
+          }
+          let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          if (currentAppIndex < 0) {
+            iconList.push(appInfo)
+          }
+          _t.handleWindowTrigger(tmpInfo, iconList)
+        }
+        console.log('tmpInfo.action', tmpInfo.action)
+        // 根据当前操作执行不同逻辑
+        switch (tmpInfo.action) {
+          // 打开安装/卸载界面
+          case 'openByInstall':
+          case 'openByUninstall':
+            openWindow()
+            break
+          // 执行安装
+          case 'doInstall':
+            _t.doApplicationInstall(appInfo, tmpInfo.data.callback)
+            break
+          // 执行卸载
+          case 'doUninstall':
+            _t.doApplicationUninstall(appInfo, tmpInfo.data.callback)
+            break
+        }
+      },
+      // 执行安装操作
+      doApplicationInstall: async function (appInfo, callback) {
+        let _t = this
+        // /ApplicationMarket/install
+        // 分发action，调接口
+        let res = await _t.$store.dispatch('Platform/Desktop/application/install', {
+          id: appInfo.id
+        })
+        console.log('doApplicationInstall', res)
+        if (!res) {
+          _t.$Message.error('安装失败！')
+          callback && callback(false)
+          return
+        } else if (res.status !== 200) {
+          callback && callback(false)
+          return
+        }
+        _t.$Message.info(res.msg || '安装成功！')
+        callback && callback(true)
+        // 刷新用户应用列表 FIXME 此处刷新用户应用数据会导致窗口关闭
+        // _t.$utils.bus.$emit('Admin/appData/refresh')
+      },
+      // 执行卸载操作
+      doApplicationUninstall: function (appInfo) {
+
       }
     },
     created: function () {
@@ -1058,6 +1123,14 @@
       // 监听 window 操作
       _t.$utils.bus.$on('platform/window/trigger', function (tmpInfo) {
         _t.handleWindowTrigger(tmpInfo)
+      })
+      // 监听应用安装
+      _t.$utils.bus.$on('platform/application/install', function (tmpInfo) {
+        _t.handleApplicationInstall(tmpInfo)
+      })
+      // 监听应用卸载
+      _t.$utils.bus.$on('platform/application/uninstall', function (tmpInfo) {
+        _t.handleApplicationInstall(tmpInfo)
       })
       let resizeTimer = null
       // 监听窗口大小调整

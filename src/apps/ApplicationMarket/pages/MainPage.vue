@@ -246,6 +246,8 @@
         let applicationList = res.data.list || []
         _t.applicationList = applicationList.map(item => {
           item.config = JSON.parse(item.config)
+          item.install = item.install ? JSON.parse(item.install) : {}
+          item.uninstall = item.uninstall ? JSON.parse(item.uninstall) : {}
           return item
         })
       },
@@ -264,7 +266,7 @@
         // 2.查找应用目录，执行install
         // 测试install
         let install = require('@/Apps/Weather/install').default
-        console.log('install', install.init(_t))
+        install.init(_t, item)
       }
     },
     created: function () {

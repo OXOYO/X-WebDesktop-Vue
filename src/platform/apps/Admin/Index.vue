@@ -304,7 +304,10 @@
           // 处理iconList
           appData.list.map(item => {
             let config = JSON.parse(item.config)
-            appData.iconList.push(config)
+            appData.iconList.push({
+              id: item.id,
+              ...config
+            })
           })
         } else {
           _t.$Message.info('暂无数据！')
@@ -327,6 +330,10 @@
         _t.getBaseInfo()
         // FIXME 获取用户应用数据
         _t.getUserAppData()
+        // 监听事件，刷新用户应用数据
+        _t.$utils.bus.$on('Admin/appData/refresh', function () {
+          _t.getUserAppData()
+        })
       }
     }
   }

@@ -35,7 +35,7 @@ Vue.component('NoData', NoData)
 Vue.component('USwitch', Switch)
 
 // 导入 全局插件
-import plugin from './global/plugin'
+// import plugin from './global/plugin'
 
 // Vue 全局配置
 let isDev = process && process.env.NODE_ENV !== 'production'
@@ -57,7 +57,7 @@ Vue.prototype.$utils = utils
 // 注册全局 config
 Vue.prototype.$Config = Config
 // 注册全局 plugin
-Vue.prototype.$plugin = plugin
+// Vue.prototype.$plugin = plugin
 
 // 注册组件模板内 filters
 for (let key in utils.filters) {
