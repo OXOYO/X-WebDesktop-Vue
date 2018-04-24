@@ -63,15 +63,15 @@
       .list-body {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: flex-start;
         align-content: flex-start;
         width: 100%;
         height: 100%;
 
         .list-item {
-          flex: 1 1 auto;
+          flex: 0 0 auto;
           /*height: 120px;*/
-          margin: 10px;
+          margin: 5px 0;
           padding: 10px;
 
           &:hover {
