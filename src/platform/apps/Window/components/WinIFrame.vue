@@ -14,7 +14,7 @@
 <template>
   <iframe
     class="app-window-iframe"
-    :src="info.app.url"
+    :src="info.config.app.url"
     frameborder="0"
   >
   </iframe>

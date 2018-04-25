@@ -38,17 +38,17 @@
       <component
         :is="childComponents.DesktopIcon"
         v-for="item in appData.iconList"
-        v-if="!['install', 'uninstall'].includes(item.action)"
-        :key="item.app.name"
+        v-if="!['install'].includes(item.action)"
+        :key="item.app_name || item.config.app.name"
         :info="item"
         :showTitle="appData.showTitle"
-        :style="item.desktopIcon.style"
+        :style="item.config.desktopIcon.style"
       ></component>
       <component :is="childComponents.DesktopWidget"></component>
       <component
         :is="childComponents.Window"
         v-for="item in openedWindowList"
-        :key="item.app.name"
+        :key="item.app_name || item.config.app.name"
         :info="item"
       ></component>
       <component :is="childComponents.Wallpaper" :style="{ 'z-index': 1000 }"></component>
@@ -139,10 +139,13 @@
         appData: state => state.appData,
         _appData: state => state._appData
       }),
+      ...mapState('Platform', {
+        userInfo: state => state.userInfo
+      }),
       openedWindowList: function () {
         let _t = this
-        let tmpArr = _t.appData.iconList.filter(item => item.window.status !== 'close')
-        return tmpArr
+        let windowArr = _t.appData.iconList.filter(item => item.config.window.status !== 'close')
+        return windowArr
       }
     },
     methods: {
@@ -174,8 +177,8 @@
             'top': targetGrid.leftTop.y + 'px'
           }
           for (let i = 0, len = iconList.length; i < len; i++) {
-            if (iconList[i].app.name === item.app.name) {
-              iconList[i]['desktopIcon']['style'] = style
+            if (iconList[i].config.app.name === item.config.app.name) {
+              iconList[i].config.desktopIcon.style = style
             }
           }
         }
@@ -228,8 +231,8 @@
         }
         let iconList = [..._t.appData.iconList]
         for (let i = 0, len = iconList.length; i < len; i++) {
-          if (iconList[i].app.name === targetData.name) {
-            iconList[i]['desktopIcon']['style'] = style
+          if (iconList[i].config.app.name === targetData.name) {
+            iconList[i].config.desktopIcon.style = style
           }
         }
         // TODO 分发action，更新用户应用数据
@@ -259,9 +262,9 @@
         let iconList = [..._t.appData.iconList]
         for (let i = 0, len = iconList.length; i < len; i++) {
           let item = iconList[i]
-          if (item.app.name === targetData.name) {
-            iconList[i]['window']['style'] = {
-              ...iconList[i]['window']['style'],
+          if (item.config.app.name === targetData.name) {
+            iconList[i].config.window.style = {
+              ...iconList[i].config.window.style,
               ...style
             }
             break
@@ -554,8 +557,8 @@
             // 标记targetGrid占用
             _t.gridArr[childIndex][childItemIndex]['isOccupied'] = true
             // 解除之前的grid占用
-            let leftVal = parseFloat(appInfo.desktopIcon.style.left)
-            let topVal = parseFloat(appInfo.desktopIcon.style.top)
+            let leftVal = parseFloat(appInfo.config.desktopIcon.style.left)
+            let topVal = parseFloat(appInfo.config.desktopIcon.style.top)
             for (let childIndex in _t.gridArr) {
               let childArr = _t.gridArr[childIndex]
               for (let childItemIndex in childArr) {
@@ -642,21 +645,21 @@
         let handleOpenedWindowZIndex = function (iconList, currentAppIndex) {
           let defZIndex = 2000
           // 查找已打开的window的index
-          let openedWindowIndexArr = findAllIndex(iconList, (item) => item.window.status === 'open' && item.window.size !== 'min')
+          let openedWindowIndexArr = findAllIndex(iconList, (item) => item.config.window.status === 'open' && item.config.window.size !== 'min')
           // 处理z-index
           let len = openedWindowIndexArr.length
           if (len) {
             if (len === 1) {
-              iconList[currentAppIndex]['window']['style']['z-index'] = defZIndex
+              iconList[currentAppIndex].config['window']['style']['z-index'] = defZIndex
             } else {
               // 1.先处理当前打开的window，放到最大
-              iconList[currentAppIndex]['window']['style']['z-index'] = defZIndex + len - 1
+              iconList[currentAppIndex].config['window']['style']['z-index'] = defZIndex + len - 1
               // 2.移除当前打开的window
               openedWindowIndexArr = openedWindowIndexArr.filter((_appIndex) => _appIndex !== currentAppIndex)
               // 3.再处理其他已打开的window
               for (let i = 0, len = openedWindowIndexArr.length, index; i < len; i++) {
                 index = openedWindowIndexArr[i]
-                iconList[index]['window']['style']['z-index'] = defZIndex + i
+                iconList[index].config['window']['style']['z-index'] = defZIndex + i
               }
             }
           }
@@ -665,35 +668,35 @@
         let handleOpenByTaskBarIcon = function (data) {
           // let timeNow = new Date().getTime()
           let appInfo = data.appInfo || {}
-          if (!Object.keys(appInfo).length || !appInfo.window) {
+          if (!Object.keys(appInfo).length || !appInfo.config.window) {
             return
           }
           // 当前操作的窗口索引
-          let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
           if (currentAppIndex < 0) {
             return
           }
-          let currentStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['style'] || {}))
-          let currentSize = iconList[currentAppIndex]['window']['size']
-          let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['oldStyle'] || {}))
-          let oldSize = iconList[currentAppIndex]['window']['oldSize']
+          let currentStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex].config['window']['style'] || {}))
+          let currentSize = iconList[currentAppIndex].config['window']['size']
+          let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex].config['window']['oldStyle'] || {}))
+          let oldSize = iconList[currentAppIndex].config['window']['oldSize']
           currentStyle = handleWindowMaxWidthHeight(currentStyle)
           oldStyle = handleWindowMaxWidthHeight(oldStyle)
-          if (appInfo.window.status === 'close') {
-            iconList[currentAppIndex]['window']['status'] = 'open'
+          if (appInfo.config.window.status === 'close') {
+            iconList[currentAppIndex].config['window']['status'] = 'open'
             if (currentSize !== 'custom') {
-              iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize[currentSize]
+              iconList[currentAppIndex].config['window']['style'] = _t.windowStyleBySize[currentSize]
             } else {
-              iconList[currentAppIndex]['window']['style'] = currentStyle
+              iconList[currentAppIndex].config['window']['style'] = currentStyle
             }
             // 处理窗口层级，将当前窗口层级更新到最大
             iconList = handleOpenedWindowZIndex(iconList, currentAppIndex)
-          } else if (appInfo.window.status === 'open') {
+          } else if (appInfo.config.window.status === 'open') {
             // 判断当前操作的窗口是否是最小化状态
-            if (appInfo.window.size === 'min') {
+            if (appInfo.config.window.size === 'min') {
               // 还原窗口
-              iconList[currentAppIndex]['window']['size'] = oldSize
-              iconList[currentAppIndex]['window']['style'] = {
+              iconList[currentAppIndex].config['window']['size'] = oldSize
+              iconList[currentAppIndex].config['window']['style'] = {
                 ...oldStyle
                 // ,
                 // ..._t.windowStyleBySize[iconList[currentAppIndex]['window']['size']]
@@ -702,16 +705,16 @@
               iconList = handleOpenedWindowZIndex(iconList, currentAppIndex)
             } else {
               // 备份旧style/size
-              iconList[currentAppIndex]['window']['oldStyle'] = currentStyle
-              iconList[currentAppIndex]['window']['oldSize'] = currentSize
+              iconList[currentAppIndex].config['window']['oldStyle'] = currentStyle
+              iconList[currentAppIndex].config['window']['oldSize'] = currentSize
               // 判断当前窗口层级是否最大，不是最大则切换到最大，是就最小化
               // 查找已打开的window的index
-              let openedWindowIndexArr = findAllIndex(iconList, (item) => item.window.status === 'open' && item.window.size !== 'min')
+              let openedWindowIndexArr = findAllIndex(iconList, (item) => item.config.window.status === 'open' && item.config.window.size !== 'min')
               // 查找层级
               let zIndexArr = []
               for (let i = 0, len = openedWindowIndexArr.length, appIndex; i < len; i++) {
                 appIndex = openedWindowIndexArr[i]
-                zIndexArr.push(iconList[appIndex]['window']['style']['z-index'])
+                zIndexArr.push(iconList[appIndex].config['window']['style']['z-index'])
               }
               // 最大层级
               let maxZIndex = Math.max(...zIndexArr)
@@ -719,15 +722,15 @@
               let maxZIndexIndex = zIndexArr.indexOf(maxZIndex)
               if (currentAppIndex === openedWindowIndexArr[maxZIndexIndex]) {
                 // 将当前窗口最小化
-                iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize['min']
-                iconList[currentAppIndex]['window']['size'] = 'min'
+                iconList[currentAppIndex].config['window']['style'] = _t.windowStyleBySize['min']
+                iconList[currentAppIndex].config['window']['size'] = 'min'
                 // 处理left值
-                let taskBarList = findAllIndex(iconList, (item) => item.window.status === 'open' || item.taskBar.isPinned)
+                let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
                 if (taskBarList.length) {
                   let taskBarIndex = taskBarList.indexOf(currentAppIndex)
                   // FIXME 每个任务栏图标实际宽度 68px
-                  iconList[currentAppIndex]['window']['style'] = {
-                    ...iconList[currentAppIndex]['window']['style'],
+                  iconList[currentAppIndex].config['window']['style'] = {
+                    ...iconList[currentAppIndex].config['window']['style'],
                     left: 68 * (taskBarIndex + 1) + 'px'
                   }
                 }
@@ -744,33 +747,33 @@
         }
         let handleResizeByWindowBar = function (data) {
           let {appInfo, action} = data
-          if (!Object.keys(appInfo).length || !appInfo.window) {
+          if (!Object.keys(appInfo).length || !appInfo.config.window) {
             return
           }
           // 当前操作的窗口索引
-          let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
           if (currentAppIndex < 0) {
             return
           }
-          let currentStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['style'] || {}))
-          let currentSize = iconList[currentAppIndex]['window']['size']
-          let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['oldStyle'] || {}))
-          let oldSize = iconList[currentAppIndex]['window']['oldSize']
+          let currentStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex].config['window']['style'] || {}))
+          let currentSize = iconList[currentAppIndex].config['window']['size']
+          let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex].config['window']['oldStyle'] || {}))
+          let oldSize = iconList[currentAppIndex].config['window']['oldSize']
           switch (action) {
             case 'min':
               // 备份旧style/size
-              iconList[currentAppIndex]['window']['oldStyle'] = currentStyle
-              iconList[currentAppIndex]['window']['oldSize'] = currentSize
+              iconList[currentAppIndex].config['window']['oldStyle'] = currentStyle
+              iconList[currentAppIndex].config['window']['oldSize'] = currentSize
               // 将当前窗口最小化
-              iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize['min']
-              iconList[currentAppIndex]['window']['size'] = 'min'
+              iconList[currentAppIndex].config['window']['style'] = _t.windowStyleBySize['min']
+              iconList[currentAppIndex].config['window']['size'] = 'min'
               // 处理left值
-              let taskBarList = findAllIndex(iconList, (item) => item.window.status === 'open' || item.taskBar.isPinned)
+              let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
               if (taskBarList.length) {
                 let taskBarIndex = taskBarList.indexOf(currentAppIndex)
                 // FIXME 每个任务栏图标实际宽度 68px
-                iconList[currentAppIndex]['window']['style'] = {
-                  ...iconList[currentAppIndex]['window']['style'],
+                iconList[currentAppIndex].config['window']['style'] = {
+                  ...iconList[currentAppIndex].config['window']['style'],
                   left: 68 * (taskBarIndex + 1) + 'px'
                 }
               }
@@ -779,43 +782,42 @@
               // 备份旧style/size
               // 还原窗口旧样式
               if (oldSize === 'max') {
-                console.log('xxxxxxxxxxxxxxxx')
-                iconList[currentAppIndex]['window']['style'] = JSON.parse(JSON.stringify(_t._appData.iconList[currentAppIndex]['window']['style'] || {}))
-                iconList[currentAppIndex]['window']['size'] = _t._appData.iconList[currentAppIndex]['window']['size']
-                iconList[currentAppIndex]['window']['style'] = {
-                  ...JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['style'])),
-                  ..._t.windowStyleBySize[iconList[currentAppIndex]['window']['size']]
+                iconList[currentAppIndex].config['window']['style'] = JSON.parse(JSON.stringify(_t._appData.iconList[currentAppIndex].config['window']['style'] || {}))
+                iconList[currentAppIndex].config['window']['size'] = _t._appData.iconList[currentAppIndex].config['window']['size']
+                iconList[currentAppIndex].config['window']['style'] = {
+                  ...JSON.parse(JSON.stringify(iconList[currentAppIndex].config['window']['style'])),
+                  ..._t.windowStyleBySize[iconList[currentAppIndex].config['window']['size']]
                 }
               } else {
-                iconList[currentAppIndex]['window']['style'] = oldStyle
-                iconList[currentAppIndex]['window']['size'] = oldSize
+                iconList[currentAppIndex].config['window']['style'] = oldStyle
+                iconList[currentAppIndex].config['window']['size'] = oldSize
               }
               // 备份旧style/size
-              iconList[currentAppIndex]['window']['oldStyle'] = currentStyle
-              iconList[currentAppIndex]['window']['oldSize'] = currentSize
+              iconList[currentAppIndex].config['window']['oldStyle'] = currentStyle
+              iconList[currentAppIndex].config['window']['oldSize'] = currentSize
               break
             case 'max':
               // 备份旧style/size
-              iconList[currentAppIndex]['window']['oldStyle'] = currentStyle
-              iconList[currentAppIndex]['window']['oldSize'] = currentSize
+              iconList[currentAppIndex].config['window']['oldStyle'] = currentStyle
+              iconList[currentAppIndex].config['window']['oldSize'] = currentSize
               // 将当前窗口最大化
-              iconList[currentAppIndex]['window']['style'] = {
+              iconList[currentAppIndex].config['window']['style'] = {
                 ...currentStyle,
                 ..._t.windowStyleBySize['max']
               }
-              iconList[currentAppIndex]['window']['size'] = 'max'
+              iconList[currentAppIndex].config['window']['size'] = 'max'
               break
             case 'close':
               // 如果是安装/卸载窗口的关闭操作则从iconList中移除
               if (appInfo.hasOwnProperty('action') && ['install', 'uninstall'].includes(appInfo.action)) {
-                iconList = iconList.filter(item => item.app.name !== appInfo.app.name)
+                iconList = iconList.filter(item => item.config.app.name !== appInfo.config.app.name)
               } else {
-                iconList[currentAppIndex]['window']['status'] = 'close'
+                iconList[currentAppIndex].config['window']['status'] = 'close'
                 // 初始化size/style
-                iconList[currentAppIndex]['window']['style'] = _t._appData.iconList[currentAppIndex] ? _t._appData.iconList[currentAppIndex]['window']['style'] : {}
-                iconList[currentAppIndex]['window']['size'] = _t._appData.iconList[currentAppIndex] ? _t._appData.iconList[currentAppIndex]['window']['size'] : ''
-                iconList[currentAppIndex]['window']['oldStyle'] = {}
-                iconList[currentAppIndex]['window']['oldSize'] = ''
+                iconList[currentAppIndex].config['window']['style'] = _t._appData.iconList[currentAppIndex] ? _t._appData.iconList[currentAppIndex].config['window']['style'] : {}
+                iconList[currentAppIndex].config['window']['size'] = _t._appData.iconList[currentAppIndex] ? _t._appData.iconList[currentAppIndex].config['window']['size'] : ''
+                iconList[currentAppIndex].config['window']['oldStyle'] = {}
+                iconList[currentAppIndex].config['window']['oldSize'] = ''
               }
               break
           }
@@ -826,11 +828,11 @@
         }
         let handleZIndexChangeByWindow = function (data) {
           let appInfo = data.appInfo || {}
-          if (!Object.keys(appInfo).length || !appInfo.window) {
+          if (!Object.keys(appInfo).length || !appInfo.config.window) {
             return
           }
           // 当前操作的窗口索引
-          let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
           if (currentAppIndex < 0) {
             return
           }
@@ -843,17 +845,17 @@
         }
         let handleDragResize = function (data) {
           let appInfo = data.appInfo || {}
-          if (!Object.keys(appInfo).length || !appInfo.window) {
+          if (!Object.keys(appInfo).length || !appInfo.config.window) {
             return
           }
           // 当前操作的窗口索引
-          let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
           if (currentAppIndex < 0) {
             return
           }
-          iconList[currentAppIndex]['window']['style'] = {
-            ...iconList[currentAppIndex]['window']['style'],
-            ...appInfo['window']['style']
+          iconList[currentAppIndex].config['window']['style'] = {
+            ...iconList[currentAppIndex].config['window']['style'],
+            ...appInfo.config['window']['style']
           }
           _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
             ..._t.appData,
@@ -862,16 +864,16 @@
         }
         let handlePreviewThumbShow = function (data) {
           let {appInfo, callback} = data
-          if (!Object.keys(appInfo).length || !appInfo.window) {
+          if (!Object.keys(appInfo).length || !appInfo.config.window) {
             return
           }
           // 当前操作的窗口索引
-          let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
           if (currentAppIndex < 0) {
             return
           }
-          iconList[currentAppIndex]['window']['style'] = {
-            ...iconList[currentAppIndex]['window']['style'],
+          iconList[currentAppIndex].config['window']['style'] = {
+            ...iconList[currentAppIndex].config['window']['style'],
             ..._t.previewStyle
           }
           _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
@@ -886,24 +888,24 @@
         }
         let handlePreviewThumbHide = function (data) {
           let {appInfo} = data
-          if (!Object.keys(appInfo).length || !appInfo.window) {
+          if (!Object.keys(appInfo).length || !appInfo.config.window) {
             return
           }
           // 当前操作的窗口索引
-          let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
           if (currentAppIndex < 0) {
             return
           }
           // 将当前窗口最小化
-          iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize['min']
-          iconList[currentAppIndex]['window']['size'] = 'min'
+          iconList[currentAppIndex].config['window']['style'] = _t.windowStyleBySize['min']
+          iconList[currentAppIndex].config['window']['size'] = 'min'
           // 处理left值
-          let taskBarList = findAllIndex(iconList, (item) => item.window.status === 'open' || item.taskBar.isPinned)
+          let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
           if (taskBarList.length) {
             let taskBarIndex = taskBarList.indexOf(currentAppIndex)
             // FIXME 每个任务栏图标实际宽度 68px
-            iconList[currentAppIndex]['window']['style'] = {
-              ...iconList[currentAppIndex]['window']['style'],
+            iconList[currentAppIndex].config['window']['style'] = {
+              ...iconList[currentAppIndex].config['window']['style'],
               left: 68 * (taskBarIndex + 1) + 'px'
             }
           }
@@ -914,19 +916,19 @@
         }
         let handleShowWindowByPreviewThumb = function (data) {
           let {appInfo} = data
-          if (!Object.keys(appInfo).length || !appInfo.window) {
+          if (!Object.keys(appInfo).length || !appInfo.config.window) {
             return
           }
           // 当前操作的窗口索引
-          let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
           if (currentAppIndex < 0) {
             return
           }
           // 还原当前窗口
-          let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['oldStyle'] || {}))
-          let oldSize = iconList[currentAppIndex]['window']['oldSize']
-          iconList[currentAppIndex]['window']['style'] = oldStyle
-          iconList[currentAppIndex]['window']['size'] = oldSize
+          let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex].config['window']['oldStyle'] || {}))
+          let oldSize = iconList[currentAppIndex].config['window']['oldSize']
+          iconList[currentAppIndex].config['window']['style'] = oldStyle
+          iconList[currentAppIndex].config['window']['size'] = oldSize
           _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
             ..._t.appData,
             iconList: iconList
@@ -934,44 +936,44 @@
         }
         let handleToggleWindowByContextMenu = function (data) {
           let {appInfo, action} = data
-          if (!Object.keys(appInfo).length || !appInfo.window) {
+          if (!Object.keys(appInfo).length || !appInfo.config.window) {
             return
           }
           // 当前操作的窗口索引
-          let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
           if (currentAppIndex < 0) {
             return
           }
           console.log('currentAppIndex', currentAppIndex)
-          let currentStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['style'] || {}))
-          let currentSize = iconList[currentAppIndex]['window']['size']
-          let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex]['window']['oldStyle'] || {}))
-          let oldSize = iconList[currentAppIndex]['window']['oldSize']
+          let currentStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex].config['window']['style'] || {}))
+          let currentSize = iconList[currentAppIndex].config['window']['size']
+          let oldStyle = JSON.parse(JSON.stringify(iconList[currentAppIndex].config['window']['oldStyle'] || {}))
+          let oldSize = iconList[currentAppIndex].config['window']['oldSize']
           currentStyle = handleWindowMaxWidthHeight(currentStyle)
           oldStyle = handleWindowMaxWidthHeight(oldStyle)
           if (action === 'close') {
-            iconList[currentAppIndex]['window']['status'] = 'close'
+            iconList[currentAppIndex].config['window']['status'] = 'close'
             // 初始化size/style
-            iconList[currentAppIndex]['window']['style'] = _t._appData.iconList[currentAppIndex]['window']['style']
-            iconList[currentAppIndex]['window']['size'] = _t._appData.iconList[currentAppIndex]['window']['size']
-            iconList[currentAppIndex]['window']['oldStyle'] = {}
-            iconList[currentAppIndex]['window']['oldSize'] = ''
+            iconList[currentAppIndex].config['window']['style'] = _t._appData.iconList[currentAppIndex].config['window']['style']
+            iconList[currentAppIndex].config['window']['size'] = _t._appData.iconList[currentAppIndex].config['window']['size']
+            iconList[currentAppIndex].config['window']['oldStyle'] = {}
+            iconList[currentAppIndex].config['window']['oldSize'] = ''
           } else if (action === 'open') {
-            if (appInfo.window.status === 'close') {
-              iconList[currentAppIndex]['window']['status'] = 'open'
+            if (appInfo.config.window.status === 'close') {
+              iconList[currentAppIndex].config['window']['status'] = 'open'
               if (currentSize !== 'custom') {
-                iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize[currentSize]
+                iconList[currentAppIndex].config['window']['style'] = _t.windowStyleBySize[currentSize]
               } else {
-                iconList[currentAppIndex]['window']['style'] = currentStyle
+                iconList[currentAppIndex].config['window']['style'] = currentStyle
               }
               // 处理窗口层级，将当前窗口层级更新到最大
               iconList = handleOpenedWindowZIndex(iconList, currentAppIndex)
-            } else if (appInfo.window.status === 'open') {
+            } else if (appInfo.config.window.status === 'open') {
               // 判断当前操作的窗口是否是最小化状态
-              if (appInfo.window.size === 'min') {
+              if (appInfo.config.window.size === 'min') {
                 // 还原窗口
-                iconList[currentAppIndex]['window']['size'] = oldSize
-                iconList[currentAppIndex]['window']['style'] = {
+                iconList[currentAppIndex].config['window']['size'] = oldSize
+                iconList[currentAppIndex].config['window']['style'] = {
                   ...oldStyle
                   // ,
                   // ..._t.windowStyleBySize[iconList[currentAppIndex]['window']['size']]
@@ -980,16 +982,16 @@
                 iconList = handleOpenedWindowZIndex(iconList, currentAppIndex)
               } else {
                 // 备份旧style/size
-                iconList[currentAppIndex]['window']['oldStyle'] = currentStyle
-                iconList[currentAppIndex]['window']['oldSize'] = currentSize
+                iconList[currentAppIndex].config['window']['oldStyle'] = currentStyle
+                iconList[currentAppIndex].config['window']['oldSize'] = currentSize
                 // 判断当前窗口层级是否最大，不是最大则切换到最大，是就最小化
                 // 查找已打开的window的index
-                let openedWindowIndexArr = findAllIndex(iconList, (item) => item.window.status === 'open' && item.window.size !== 'min')
+                let openedWindowIndexArr = findAllIndex(iconList, (item) => item.config.window.status === 'open' && item.config.window.size !== 'min')
                 // 查找层级
                 let zIndexArr = []
                 for (let i = 0, len = openedWindowIndexArr.length, appIndex; i < len; i++) {
                   appIndex = openedWindowIndexArr[i]
-                  zIndexArr.push(iconList[appIndex]['window']['style']['z-index'])
+                  zIndexArr.push(iconList[appIndex].config['window']['style']['z-index'])
                 }
                 // 最大层级
                 let maxZIndex = Math.max(...zIndexArr)
@@ -997,15 +999,15 @@
                 let maxZIndexIndex = zIndexArr.indexOf(maxZIndex)
                 if (currentAppIndex === openedWindowIndexArr[maxZIndexIndex]) {
                   // 将当前窗口最小化
-                  iconList[currentAppIndex]['window']['style'] = _t.windowStyleBySize['min']
-                  iconList[currentAppIndex]['window']['size'] = 'min'
+                  iconList[currentAppIndex].config['window']['style'] = _t.windowStyleBySize['min']
+                  iconList[currentAppIndex].config['window']['size'] = 'min'
                   // 处理left值
-                  let taskBarList = findAllIndex(iconList, (item) => item.window.status === 'open' || item.taskBar.isPinned)
+                  let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
                   if (taskBarList.length) {
                     let taskBarIndex = taskBarList.indexOf(currentAppIndex)
                     // FIXME 每个任务栏图标实际宽度 68px
-                    iconList[currentAppIndex]['window']['style'] = {
-                      ...iconList[currentAppIndex]['window']['style'],
+                    iconList[currentAppIndex].config['window']['style'] = {
+                      ...iconList[currentAppIndex].config['window']['style'],
                       left: 68 * (taskBarIndex + 1) + 'px'
                     }
                   }
@@ -1044,6 +1046,7 @@
           case 'openByDesktopIcon':
           case 'openByTaskBarIcon':
           case 'openByInstall':
+          case 'openByUninstall':
             handleOpenByTaskBarIcon(data)
             break
           case 'resizeByWindowBar':
@@ -1083,9 +1086,11 @@
               return condition(item)
             })
           }
-          let currentAppIndex = findAppIndex(iconList, (item) => item.app.name === appInfo.app.name)
+          let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
           if (currentAppIndex < 0) {
             iconList.push(appInfo)
+          } else {
+            iconList[currentAppIndex] = appInfo
           }
           _t.handleWindowTrigger(tmpInfo, iconList)
         }
@@ -1110,17 +1115,13 @@
       // 执行安装操作
       doApplicationInstall: async function (appInfo, callback) {
         let _t = this
-        // /ApplicationMarket/install
         // 分发action，调接口
         let res = await _t.$store.dispatch('Platform/Desktop/application/install', {
           id: appInfo.id
         })
         console.log('doApplicationInstall', res)
-        if (!res) {
-          _t.$Message.error('安装失败！')
-          callback && callback(false)
-          return
-        } else if (res.status !== 200) {
+        if (!res || res.status !== 200) {
+          // _t.$Message.error('安装失败！')
           callback && callback(false)
           return
         }
@@ -1130,8 +1131,25 @@
         // _t.$utils.bus.$emit('Admin/appData/refresh')
       },
       // 执行卸载操作
-      doApplicationUninstall: function (appInfo) {
-
+      doApplicationUninstall: async function (appInfo, callback) {
+        let _t = this
+        console.log('appInfo', appInfo)
+        // 分发action，调接口
+        let res = await _t.$store.dispatch('Platform/Desktop/application/uninstall', {
+          id: appInfo.id,
+          app_id: appInfo.app_id,
+          user_id: _t.userInfo.id
+        })
+        console.log('doApplicationUninstall', res)
+        if (!res || res.status !== 200) {
+          // _t.$Message.error('卸载失败！')
+          callback && callback(false)
+          return
+        }
+        _t.$Message.info(res.msg || '安装成功！')
+        callback && callback(true)
+        // 刷新用户应用列表 FIXME 此处刷新用户应用数据会导致窗口关闭
+        // _t.$utils.bus.$emit('Admin/appData/refresh')
       }
     },
     created: function () {

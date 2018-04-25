@@ -246,8 +246,6 @@
         let applicationList = res.data.list || []
         _t.applicationList = applicationList.map(item => {
           item.config = JSON.parse(item.config)
-          item.install = item.install ? JSON.parse(item.install) : {}
-          item.uninstall = item.uninstall ? JSON.parse(item.uninstall) : {}
           return item
         })
       },
@@ -263,7 +261,17 @@
         let _t = this
         console.log('handleApplicationInstall', item)
         // 调用安装工具，打开安装界面
-        _t.$utils.install(_t, item)
+        _t.$utils.install(_t, {
+          // 解构应用基础配置
+          ...item,
+          config: {
+            ...item.config,
+            // 解构应用安装配置
+            ...item.config.install
+          },
+          // 赋值当前操作为 install
+          action: 'install'
+        })
       }
     },
     created: function () {

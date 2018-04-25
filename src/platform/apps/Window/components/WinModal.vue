@@ -19,7 +19,7 @@
 
 <template>
   <div class="app-window-modal">
-    <NoData :show="!appComponent" class="load-fail">未能正确加载应用：{{ info.app.title }}</NoData>
+    <NoData :show="!appComponent" class="load-fail">未能正确加载应用：{{ info.app_title || info.config.app.title }}</NoData>
     <component :is="appComponent" v-if="appComponent" :info="info"></component>
   </div>
 </template>
@@ -48,7 +48,7 @@
       // 加载应用
       loadApp: function () {
         let _t = this
-        let appName = _t.info.app.name
+        let appName = _t.info.app_name || _t.info.config.app.name
         let path = ''
         // TODO 判断当前操作是install || uninstall || openApp
         // 常规打开

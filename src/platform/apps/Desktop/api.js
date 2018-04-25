@@ -9,5 +9,9 @@ export default {
   doInstall: async (data) => {
     let res = await Vue.prototype.$http.post('/Platform/user/application/install', data)
     return res
+  },
+  doUninstall: async (data) => {
+    let res = await Vue.prototype.$http.post('/Platform/user/application/uninstall', data)
+    return res
   }
 }

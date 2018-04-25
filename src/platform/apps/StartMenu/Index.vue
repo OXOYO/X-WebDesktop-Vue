@@ -296,14 +296,14 @@
           <div
             class="list-item"
             v-for="item in appData.iconList"
-            :key="item.app.id"
+            :key="item.id"
             @click.stop.prevent="openApp(item)"
           >
             <div class="list-item-icon">
-              <img v-if="item.app.icon" :src="item.app.icon">
+              <img v-if="item.config.app.icon" :src="item.config.app.icon">
             </div>
             <div class="list-item-title">
-              {{ item.app.title }}
+              {{ item.config.app.title }}
             </div>
           </div>
         </div>
