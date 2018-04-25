@@ -236,7 +236,17 @@
               action: {
                 type: 'callback',
                 handler: () => {
-                  _t.$utils.uninstall(_t, _t.info)
+                  _t.$utils.uninstall(_t, {
+                    // 解构应用基础配置
+                    ..._t.info,
+                    config: {
+                      ..._t.info.config,
+                      // 解构应用卸载配置
+                      ..._t.info.config.uninstall
+                    },
+                    // 赋值当前操作为 uninstall
+                    action: 'uninstall'
+                  })
                 }
               }
             }

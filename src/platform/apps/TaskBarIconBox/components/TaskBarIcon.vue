@@ -202,16 +202,16 @@
 
 <template>
   <div
-    v-if="info.window.status === 'open' || info.taskBar.isPinned"
+    v-if="info.config.window.status === 'open' || info.config.taskBar.isPinned"
     class="task-bar-icon"
-    :class="{ 'task-bar-icon-pinned': info.taskBar.isPinned }"
+    :class="{ 'task-bar-icon-pinned': info.config.taskBar.isPinned }"
     @mousedown.left.stop.prevent="onIconMouseDown"
     @mouseup.left.stop.prevent="onIconMouseUp"
     @contextmenu.stop.prevent="onIconRightClick($event)"
     @mouseenter.stop.prevent="onIconMouseOver"
     @mouseleave.stop.prevent="onIconMouseOut"
-    :title="info.app.title"
-    :data-name="info.app.name"
+    :title="info.app_title || info.config.app.title"
+    :data-name="info.app_name || info.config.app.name"
   >
     <!-- 预览图 -->
     <div class="task-bar-preview"
@@ -226,17 +226,16 @@
         @mouseout.stop.prevent="onPreviewMouseOut"
       >
         <div class="preview-bg" :style="{ 'background-image': 'url('+ previewImg + ')' }"></div>
-        <div class="preview-title">{{ info.app.title }}</div>
+        <div class="preview-title">{{ info.app_title || info.config.app.title }}</div>
         <div class="preview-img">
-          <img :src="previewImg" alt="info.app.name">
+          <img :src="previewImg">
         </div>
       </div>
     </div>
     <!-- 图标 -->
-    <div class="task-bar-icon-main" :class="{ 'app-open': info.window.status === 'open' }" :data-name="info.app.name">
-      <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" v-if="info.app.icon" :src="info.app.icon" :data-name="info.app.name">
-      <!--<div class="app-icon-bg" v-show="info.app.icon && info.window.status === 'open'" :style="appIconBg"></div>-->
-      <div class="app-icon-bg" v-show="info.app.icon && info.window.status === 'open'">
+    <div class="task-bar-icon-main" :class="{ 'app-open': info.config.window.status === 'open' }" :data-name="info.app_name || info.config.app.name">
+      <img class="app-icon" :class="{ 'app-icon-down': isMouseDown}" v-if="info.config.app.icon" :src="info.config.app.icon" :data-name="info.app_name || info.config.app.name">
+      <div class="app-icon-bg" v-show="info.config.app.icon && info.config.window.status === 'open'">
         <div class="content" :style="appIconBg"></div>
       </div>
     </div>
@@ -271,12 +270,10 @@
     computed: {
       appIconBg: function () {
         let _t = this
-        let icon = _t.info.app.hasOwnProperty('icon') && _t.info.app.icon ? _t.info.app.icon : null
+        let icon = _t.info.config.app.hasOwnProperty('icon') && _t.info.config.app.icon ? _t.info.config.app.icon : null
         if (!icon) {
           return {}
         }
-//        console.log('icon', icon)
-//        let img = require(icon)
         let img = icon
         return {
           backgroundImage: 'url(' + img + ')'
@@ -334,7 +331,7 @@
         _t.$nextTick(function () {
           let xVal = parseInt(event.clientX) - parseInt(event.offsetX)
           let yVal = parseInt(event.clientY) - parseInt(event.offsetY)
-          let appName = event.target.dataset['name'] || _t.info.app.name || null
+          let appName = event.target.dataset['name'] || _t.info.app_name || _t.info.config.app.name || null
           let appInfo = {..._t.info}
           // 菜单信息
           let contextMenuInfo = {
@@ -405,7 +402,7 @@
                   type: '',
                   style: ''
                 },
-                text: appInfo.window.status === 'open' ? '关闭' : '打开',
+                text: appInfo.config.window.status === 'open' ? '关闭' : '打开',
                 enable: true,
                 action: {
                   type: 'bus',
@@ -415,7 +412,7 @@
                     action: 'toggleWindowByContextMenu',
                     data: {
                       appInfo: appInfo,
-                      action: appInfo.window.status === 'open' ? 'close' : 'open'
+                      action: appInfo.config.window.status === 'open' ? 'close' : 'open'
                     }
                   }
                 }
@@ -427,7 +424,7 @@
                   style: ''
                 },
                 text: '在新标签页中打开',
-                enable: _t.info.window.type === 'iframe' && _t.info.app.url,
+                enable: _t.info.config.window.type === 'iframe' && _t.info.config.app.url,
                 action: {
                   type: 'bus',
                   handler: 'platform/app/openInNewBrowserTab'
@@ -444,7 +441,17 @@
                 action: {
                   type: 'callback',
                   handler: () => {
-                    _t.$utils.uninstall(_t, _t.info)
+                    _t.$utils.uninstall(_t, {
+                      // 解构应用基础配置
+                      ..._t.info,
+                      config: {
+                        ..._t.info.config,
+                        // 解构应用卸载配置
+                        ..._t.info.config.uninstall
+                      },
+                      // 赋值当前操作为 uninstall
+                      action: 'uninstall'
+                    })
                   }
                 }
               },
@@ -457,7 +464,7 @@
                   }
                 },
                 text: '将此程序锁定到任务栏',
-                enable: !_t.info.taskBar.isPinned,
+                enable: !_t.info.config.taskBar.isPinned,
                 action: {
                   type: 'bus',
                   handler: 'platform/taskBar/pin'
@@ -470,7 +477,7 @@
                   style: ''
                 },
                 text: '将此程序从任务栏解锁',
-                enable: _t.info.taskBar.isPinned,
+                enable: _t.info.config.taskBar.isPinned,
                 action: {
                   type: 'bus',
                   handler: 'platform/taskBar/unpin'
@@ -498,18 +505,19 @@
         // 清空预览图
         _t.previewImg = null
           // 判断应用是否打开
-        if (appInfo.window.status !== 'open') {
+        if (appInfo.config.window.status !== 'open') {
           return
         }
         let targetWindow
         // if (appInfo.window.type === 'iframe') {
         // targetWindow = document.querySelector('[window-name=' + appInfo.app.name + '] iframe body')
         // } else if (appInfo.window.type === 'modal') {
-        targetWindow = document.querySelector('[window-name=' + appInfo.app.name + ']')
+        let appName = appInfo.app_name || appInfo.config.app.name
+        targetWindow = document.querySelector('[window-name=' + appName + ']')
         // }
         _t.targetWindow = targetWindow
         // 判断应用size，当size 为min时无法截图，需将窗口显示在浏览器窗口范围内
-        if (appInfo.window.size === 'min') {
+        if (appInfo.config.window.size === 'min') {
           // 广播事件 触发window事件
           _t.$utils.bus.$emit('platform/window/trigger', {
             // 预览缩略图显示

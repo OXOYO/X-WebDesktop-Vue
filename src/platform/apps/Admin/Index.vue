@@ -305,8 +305,8 @@
           appData.list.map(item => {
             let config = JSON.parse(item.config)
             appData.iconList.push({
-              id: item.id,
-              ...config
+              ...item,
+              config: config
             })
           })
         } else {

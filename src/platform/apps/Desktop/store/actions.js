@@ -9,5 +9,10 @@ export default {
   'application/install': async ({ commit }, payload) => {
     let res = await Api.doInstall(payload)
     return res
+  },
+  // 执行应用卸载
+  'application/uninstall': async ({ commit }, payload) => {
+    let res = await Api.doUninstall(payload)
+    return res
   }
 }

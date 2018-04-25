@@ -197,8 +197,8 @@
     class="app-window"
     :class="windowSizeClass"
     @mousedown.stop="onWindowMouseDown"
-    :window-name="info.app.name"
-    :style="info.window.style"
+    :window-name="info.app_name || info.config.app.name"
+    :style="info.config.window.style"
     v-x-drag="dragResizeConfig"
   >
     <!-- 拖拽缩放 -->
@@ -220,20 +220,20 @@
     >
       <!--
       // FIXME 测试header自定义功能
-      v-if="!(info.window.header && !info.window.header.enable)"
+      v-if="!(info.config.window.header && !info.config.window.header.enable)"
       -->
       <div
         class="window-title"
         @mousedown.stop="onWindowMouseDown"
-        @dblclick.stop.prevent="handleWindowSize(info.window.size === 'max' ? 'reset' : 'max')"
+        @dblclick.stop.prevent="handleWindowSize(info.config.window.size === 'max' ? 'reset' : 'max')"
       >
         {{ info.hasOwnProperty('action') ? (info.action === 'install' ? '安装：' : (info.action === 'uninstall' ? '卸载：' : '')) : '' }}
-        {{ info.app.title }}
+        {{ info.app_title || info.config.app.title }}
       </div>
       <div class="window-bar">
         <!-- 最小化 -->
         <div
-          v-if="info.window.enableResize.includes('min')"
+          v-if="info.config.window.enableResize.includes('min')"
           class="window-bar-item"
           @mousedown.stop
           @mousemove.stop
@@ -244,7 +244,7 @@
         </div>
         <!-- 最大化 -->
         <div
-          v-if="info.window.enableResize.includes('max') && info.window.size !== 'max'"
+          v-if="info.config.window.enableResize.includes('max') && info.config.window.size !== 'max'"
           class="window-bar-item"
           @mousedown.stop
           @mousemove.stop
@@ -255,7 +255,7 @@
         </div>
         <!-- 还原 -->
         <div
-          v-if="info.window.enableResize.includes('reset') && info.window.size === 'max'"
+          v-if="info.config.window.enableResize.includes('reset') && info.config.window.size === 'max'"
           class="window-bar-item"
           @mousedown.stop
           @mousemove.stop
@@ -266,7 +266,7 @@
         </div>
         <!-- 关闭 -->
         <div
-          v-if="info.window.enableResize.includes('close')"
+          v-if="info.config.window.enableResize.includes('close')"
           class="window-bar-item"
           @mousedown.stop
           @mousemove.stop
@@ -278,8 +278,8 @@
       </div>
     </div>
     <div class="app-window-body">
-      <WinModal v-if="info.window.type && info.window.type === 'modal'" :info="info"></WinModal>
-      <WinIFrame v-if="info.window.type && info.window.type === 'iframe'" :info="info"></WinIFrame>
+      <WinModal v-if="info.config.window.type && info.config.window.type === 'modal'" :info="info"></WinModal>
+      <WinIFrame v-if="info.config.window.type && info.config.window.type === 'iframe'" :info="info"></WinIFrame>
     </div>
   </div>
 </template>
@@ -406,7 +406,7 @@
       windowSizeClass: function () {
         let _t = this
         let tmpClassName = ''
-        switch (_t.info.window.size) {
+        switch (_t.info.config.window.size) {
           case 'custom':
             tmpClassName = 'app-window-custom'
             break
@@ -437,7 +437,7 @@
         let _t = this
         console.log('_t.info', _t.info)
         // 当前应用的拖拽缩放配置
-        let appDragResizeConfig = _t.info.window.hasOwnProperty('dragResizeConfig') ? _t.info.window.dragResizeConfig : {}
+        let appDragResizeConfig = _t.info.config.window.hasOwnProperty('dragResizeConfig') ? _t.info.config.window.dragResizeConfig : {}
         // 合并配置，遇到对象则合并，其他覆盖
         let handler = function (source, target) {
           let keys = Object.keys(source)
@@ -481,7 +481,7 @@
         let _t = this
         let appInfo = {..._t.info}
         // 如果未启用相应则返回
-        if (!appInfo.window.enableResize.includes(actionName)) {
+        if (!appInfo.config.window.enableResize.includes(actionName)) {
           return false
         }
         // 广播事件 触发window事件
@@ -512,8 +512,8 @@
 //        console.log('drag resize style', style)
         // 分发mutations，更新窗口样式
         let appInfo = {..._t.info}
-        appInfo['window']['style'] = {
-          ...appInfo['window']['style'],
+        appInfo.config['window']['style'] = {
+          ...appInfo.config['window']['style'],
           ...style
         }
         // 广播事件 触发window事件

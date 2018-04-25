@@ -60,11 +60,11 @@
 <template>
   <div class="app-block">
     <div class="block-header">
-        <div class="title">{{ info.app.title }}</div>
+        <div class="title">{{ info.app_title || info.config.app.title }}</div>
     </div>
     <div class="block-body">
       <div class="logo">
-        <img :src="info.app.icon" :alt="info.app.title">
+        <img :src="info.config.app.icon" :alt="info.app_title || info.config.app.title">
       </div>
       <div class="loading" v-show="isLoading">
         <Spin fix>

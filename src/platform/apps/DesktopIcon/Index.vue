@@ -70,12 +70,12 @@
     @contextmenu.stop.prevent="handleRightClick($event)"
     draggable="true"
     @dragstart="handleDragStart"
-    :title="info.app.title"
-    :data-name="info.app.name"
+    :title="info.app_title || info.config.app.title"
+    :data-name="info.app_name || info.config.app.name"
   >
-    <img :class="{ 'desktop-icon-down': isMouseDown}" v-if="info.app.icon" :src="info.app.icon || appIcon" :data-name="info.app.name">
+    <img :class="{ 'desktop-icon-down': isMouseDown}" v-if="info.config.app.icon" :src="info.config.app.icon || appIcon" :data-name="info.app_name || info.config.app.name">
     <!--<img :class="{ 'desktop-icon-down': isMouseDown}" v-if="info.app.icon" src="../../../apps/ApplicationMarket/assets/logo.png" :data-name="info.app.name">-->
-    <span v-if="showTitle" :data-name="info.app.name">{{ info.app.title }}</span>
+    <span v-if="showTitle" :data-name="info.app_name || info.config.app.name">{{ info.app_title || info.config.app.title }}</span>
   </div>
 </template>
 
@@ -151,7 +151,7 @@
         let _t = this
         let xVal = parseInt(event.clientX)
         let yVal = parseInt(event.clientY)
-        let appName = event.target.dataset['name'] || _t.info.app.name || null
+        let appName = event.target.dataset['name'] || _t.info.app_name || _t.info.config.app.name || null
         let appInfo = {..._t.info}
         // 菜单信息
         let contextMenuInfo = {
@@ -246,7 +246,7 @@
                 style: ''
               },
               text: '在新标签页中打开',
-              enable: _t.info.window.type === 'iframe' && _t.info.app.url,
+              enable: _t.info.config.window.type === 'iframe' && _t.info.config.app.url,
               action: {
                 type: 'bus',
                 handler: 'platform/app/openInNewBrowserTab'
@@ -263,7 +263,17 @@
               action: {
                 type: 'callback',
                 handler: () => {
-                  _t.$utils.uninstall(_t, _t.info)
+                  _t.$utils.uninstall(_t, {
+                    // 解构应用基础配置
+                    ..._t.info,
+                    config: {
+                      ..._t.info.config,
+                      // 解构应用卸载配置
+                      ..._t.info.config.uninstall
+                    },
+                    // 赋值当前操作为 uninstall
+                    action: 'uninstall'
+                  })
                 }
               }
             }
@@ -285,9 +295,9 @@
         let targetInfo = {
           target: 'DesktopIcon',
           data: {
-            id: appInfo.app.id,
-            title: appInfo.app.title,
-            name: appInfo.app.name,
+            id: appInfo.config.app.id,
+            title: appInfo.config.app.title,
+            name: appInfo.config.app.name,
             offsetX: offsetX,
             offsetY: offsetY,
             appInfo: appInfo

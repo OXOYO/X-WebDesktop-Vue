@@ -22,7 +22,7 @@
   <div class="app-task-bar-icon-box">
     <TaskBarIcon
       v-for="item in appData.iconList"
-      :key="item.app.id"
+      :key="item.id"
       :info="item"
       type="app"
     ></TaskBarIcon>
