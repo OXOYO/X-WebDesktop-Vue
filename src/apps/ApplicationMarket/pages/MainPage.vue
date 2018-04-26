@@ -70,8 +70,8 @@
 
         .list-item {
           flex: 0 0 auto;
-          /*height: 120px;*/
-          margin: 5px 0;
+          height: 68px;
+          margin: 5px;
           padding: 10px;
 
           &:hover {
@@ -187,13 +187,16 @@
     computed: {
       ...mapState('Platform', {
         appIcon: state => state.appIcon
+      }),
+      ...mapState('Platform/Admin', {
+        appData: state => state.appData
       })
     },
     methods: {
-      init: function () {
+      init: async function () {
         let _t = this
         // 获取应用分类列表
-        _t.getCategoryList()
+        await _t.getCategoryList()
         // 依据当前激活的分类获取应用列表
         _t.getApplicationList()
       },
@@ -257,21 +260,55 @@
         _t.getApplicationList()
       },
       // 处理应用安装
-      handleApplicationInstall: function (item) {
+      handleApplicationInstall: function (appInfo) {
         let _t = this
-        console.log('handleApplicationInstall', item)
+        // 安装信息
+        let installInfo = {}
+        console.log('handleApplicationInstall', appInfo)
+        let iconList = [..._t.appData.iconList]
+        // 查找单个索引
+        let findAppIndex = function (iconList, condition) {
+          return iconList.findIndex((item) => {
+            return condition(item)
+          })
+        }
+        let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
+        if (currentAppIndex < 0) {
+          installInfo = {
+            // 解构应用基础配置
+            ...appInfo,
+            config: {
+              ...appInfo.config,
+              // 解构应用安装配置
+              ...appInfo.config.install
+            },
+            // 应用ID
+            appID: appInfo.id,
+            // 赋值当前操作为 install
+            action: 'install',
+            // 是否已安装过
+            installed: false
+          }
+        } else {
+          let currentApp = iconList[currentAppIndex]
+          installInfo = {
+            // 解构应用基础配置
+            ...currentApp,
+            config: {
+              ...currentApp.config,
+              // 解构应用安装配置
+              ...appInfo.config.install
+            },
+            // 应用ID
+            appID: appInfo.id,
+            // 赋值当前操作为 install
+            action: 'install',
+            // 是否已安装过
+            installed: true
+          }
+        }
         // 调用安装工具，打开安装界面
-        _t.$utils.install(_t, {
-          // 解构应用基础配置
-          ...item,
-          config: {
-            ...item.config,
-            // 解构应用安装配置
-            ...item.config.install
-          },
-          // 赋值当前操作为 install
-          action: 'install'
-        })
+        _t.$utils.install(_t, installInfo)
       }
     },
     created: function () {
