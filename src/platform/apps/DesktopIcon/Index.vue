@@ -272,7 +272,9 @@
                       ..._t.info.config.uninstall
                     },
                     // 赋值当前操作为 uninstall
-                    action: 'uninstall'
+                    action: 'uninstall',
+                    // 是否已安装过
+                    installed: true
                   })
                 }
               }

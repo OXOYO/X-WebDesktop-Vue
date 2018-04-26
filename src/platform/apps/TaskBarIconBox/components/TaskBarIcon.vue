@@ -430,59 +430,71 @@
                   handler: 'platform/app/openInNewBrowserTab'
                 }
               },
-              {
-                name: 'uninstallApp',
-                icon: {
-                  type: '',
-                  style: ''
-                },
-                text: '卸载',
-                enable: true,
-                action: {
-                  type: 'callback',
-                  handler: () => {
-                    _t.$utils.uninstall(_t, {
-                      // 解构应用基础配置
-                      ..._t.info,
-                      config: {
-                        ..._t.info.config,
-                        // 解构应用卸载配置
-                        ..._t.info.config.uninstall
-                      },
-                      // 赋值当前操作为 uninstall
-                      action: 'uninstall'
-                    })
+              (() => {
+                if (!['install', 'uninstall'].includes(_t.info.action)) {
+                  return {
+                    name: 'uninstallApp',
+                    icon: {
+                      type: '',
+                      style: ''
+                    },
+                    text: '卸载',
+                    enable: true,
+                    action: {
+                      type: 'callback',
+                      handler: () => {
+                        _t.$utils.uninstall(_t, {
+                          // 解构应用基础配置
+                          ..._t.info,
+                          config: {
+                            ..._t.info.config,
+                            // 解构应用卸载配置
+                            ..._t.info.config.uninstall
+                          },
+                          // 赋值当前操作为 uninstall
+                          action: 'uninstall',
+                          // 是否已安装过
+                          installed: true
+                        })
+                      }
+                    }
                   }
                 }
-              },
-              {
-                name: 'pinToTaskBar',
-                icon: {
-                  type: '',
-                  style: {
-                    transform: 'rotate(90deg)'
+                return {}
+              })(),
+              (() => {
+                if (_t.info.config.taskBar.isPinned) {
+                  return {
+                    name: 'unpinToTaskBar',
+                    icon: {
+                      type: '',
+                      style: ''
+                    },
+                    text: '将此程序从任务栏解锁',
+                    enable: _t.info.config.taskBar.isPinned,
+                    action: {
+                      type: 'bus',
+                      handler: 'platform/taskBar/unpin'
+                    }
                   }
-                },
-                text: '将此程序锁定到任务栏',
-                enable: !_t.info.config.taskBar.isPinned,
-                action: {
-                  type: 'bus',
-                  handler: 'platform/taskBar/pin'
+                } else {
+                  return {
+                    name: 'pinToTaskBar',
+                    icon: {
+                      type: '',
+                      style: {
+                        transform: 'rotate(90deg)'
+                      }
+                    },
+                    text: '将此程序锁定到任务栏',
+                    enable: !_t.info.config.taskBar.isPinned,
+                    action: {
+                      type: 'bus',
+                      handler: 'platform/taskBar/pin'
+                    }
+                  }
                 }
-              },
-              {
-                name: 'unpinToTaskBar',
-                icon: {
-                  type: '',
-                  style: ''
-                },
-                text: '将此程序从任务栏解锁',
-                enable: _t.info.config.taskBar.isPinned,
-                action: {
-                  type: 'bus',
-                  handler: 'platform/taskBar/unpin'
-                }
-              }
+              })()
             ]
           }
           // 广播事件

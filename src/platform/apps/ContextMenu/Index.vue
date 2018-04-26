@@ -93,7 +93,7 @@
       v-if="contextMenuInfo.list && contextMenuInfo.list.length"
       v-for="item in contextMenuInfo.list"
     >
-      <ContextMenuItem :info="item">
+      <ContextMenuItem :info="item" v-if="Object.keys(item).length">
         <div
           v-if="item.children && item.children.length"
           class="context-menu-child"
