@@ -9,17 +9,42 @@
     height: 100%;
     background: #ffffff;
 
-    .load-fail {
+    .load-complete {
       display: inline-block;
-      margin: 20px;
+      width: 100%;
+      text-align: center;
+      height: 30px;
+      line-height: 30px;
       font-size: 20px;
+      margin: 20px 0;
+
+      &.load-success {
+        color: #19be6b;
+      }
+      &.load-fail {
+        color: #ed3f14;
+      }
+      .load-text {
+        display: inline-block;
+      }
+      .load-text-strong {
+        color: #000000;
+      }
     }
   }
 </style>
 
 <template>
   <div class="app-window-modal">
-    <NoData :show="!appComponent" class="load-fail">未能正确加载应用：{{ info.app_title || info.config.app.title }}</NoData>
+    <div
+      :class="{ 'load-complete': true, 'load-fail': !appComponent }"
+      v-show="!appComponent"
+    >
+      <Icon type="close-circled"></Icon>
+      <div class="load-text">加载应用程序</div>
+      <div class="load-text load-text-strong">{{ info.app_title || info.config.app.title }}</div>
+      <div class="load-text">失败！</div>
+    </div>
     <component :is="appComponent" v-if="appComponent" :info="info"></component>
   </div>
 </template>
