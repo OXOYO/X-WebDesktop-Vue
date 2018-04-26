@@ -48,10 +48,19 @@
         display: inline-block;
         width: 100%;
         text-align: center;
-        margin-top: 10px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 20px;
+
+        &.complete-success {
+          color: #19be6b;
+        }
+        &.complete-fail {
+          color: #ed3f14;
+        }
       }
       .button {
-        margin-top: 80px;
+        margin-top: 50px;
       }
     }
   }
@@ -72,8 +81,14 @@
           <div class="loading-text">安装中...</div>
         </Spin>
       </div>
-      <div class="complete" v-show="isComplete">{{ isSuccess ? '安装成功！' : '安装失败！' }}</div>
-      <Button class="button" type="primary" v-show="!isLoading" @click="handleInstall">立即安装</Button>
+      <div
+        :class="{ 'complete': true, 'complete-success': isSuccess, 'complete-fail': !isSuccess }"
+        v-show="isComplete"
+      >
+        <Icon :type="isSuccess ? 'checkmark-circled' : 'close-circled'"></Icon>
+        {{ completeMsg }}
+      </div>
+      <Button class="button" type="primary" :disabled="isSuccess" v-show="!isLoading" @click="handleInstall">立即安装</Button>
     </div>
   </div>
 </template>
@@ -93,7 +108,9 @@
         // 是否完成
         isComplete: false,
         // 是否成功
-        isSuccess: false
+        isSuccess: false,
+        // 完成提示信息
+        completeMsg: ''
       }
     },
     methods: {
@@ -106,10 +123,11 @@
           action: 'doInstall',
           data: {
             appInfo: _t.info,
-            callback: (isSuccess) => {
+            callback: (isSuccess, msg) => {
               _t.isLoading = false
               _t.isComplete = true
               _t.isSuccess = isSuccess
+              _t.completeMsg = msg || (isSuccess ? '安装成功！' : '安装失败！')
             }
           }
         })
