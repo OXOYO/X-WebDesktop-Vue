@@ -1,5 +1,5 @@
 /**
-* Created by yangfan9244 on 2018/4/26.
+* Created by OXOYO on 2018/4/26.
 *
 * 自定义卸载界面
 */
