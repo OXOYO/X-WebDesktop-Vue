@@ -7,12 +7,29 @@
   .main-page {
     width: 100%;
     display: inline-block;
+    text-align: center;
+    overflow: hidden;
+
+    .weather_inc {
+      margin: 0 auto;
+    }
   }
 </style>
 
 <template>
   <div class="main-page">
-    <h1>TODO Weather</h1>
+    <iframe
+      class="weather_inc"
+      name="weather_inc"
+      src="http://i.tianqi.com/index.php?c=code&id=55"
+      width="255"
+      height="294"
+      frameborder="0"
+      marginwidth="0"
+      marginheight="0"
+      scrolling="no"
+    >
+    </iframe>
   </div>
 </template>
 
