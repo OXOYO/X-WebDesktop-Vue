@@ -179,7 +179,7 @@
       z-index: 2000;
       /*overflow: auto;*/
       width: 100%;
-      padding: 0 8px 8px;
+      padding: 0 10px 10px;
       /*background: #fff;*/
     }
   }

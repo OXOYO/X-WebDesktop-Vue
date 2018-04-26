@@ -38,7 +38,7 @@
       <component
         :is="childComponents.DesktopIcon"
         v-for="item in appData.iconList"
-        v-if="!['install'].includes(item.action)"
+        v-if="item.action !== 'install' || (item.action === 'install' && item.installed)"
         :key="item.app_name || item.config.app.name"
         :info="item"
         :showTitle="appData.showTitle"
@@ -750,6 +750,8 @@
           if (!Object.keys(appInfo).length || !appInfo.config.window) {
             return
           }
+          // 回调操作
+          let callback = null
           // 当前操作的窗口索引
           let currentAppIndex = findAppIndex(iconList, (item) => item.config.app.name === appInfo.config.app.name)
           if (currentAppIndex < 0) {
@@ -810,7 +812,31 @@
             case 'close':
               // 如果是安装/卸载窗口的关闭操作则从iconList中移除
               if (appInfo.hasOwnProperty('action') && ['install', 'uninstall'].includes(appInfo.action)) {
-                iconList = iconList.filter(item => item.config.app.name !== appInfo.config.app.name)
+                if (appInfo.hasOwnProperty('installed') && appInfo.installed) {
+                  iconList = iconList.map(item => {
+                    if (item.config.app.name === appInfo.config.app.name) {
+                      delete item.action
+                      delete item.installed
+                      let _itemIndex = findAppIndex(_t._appData.iconList, (item) => item.config.app.name === appInfo.config.app.name)
+                      console.log('_itemIndex', _itemIndex)
+                      let _item = _t._appData.iconList[_itemIndex]
+                      item.config.window = {
+                        ..._item.config.window
+                      }
+                    }
+                    return item
+                  })
+                } else {
+                  iconList = iconList.filter(item => item.config.app.name !== appInfo.config.app.name)
+                }
+                /*
+                callback = () => {
+                  _t.$nextTick(function () {
+                    // 刷新用户应用列表
+                    _t.$utils.bus.$emit('Admin/appData/refresh')
+                  })
+                }
+                */
               } else {
                 iconList[currentAppIndex].config['window']['status'] = 'close'
                 // 初始化size/style
@@ -825,6 +851,7 @@
             ..._t.appData,
             iconList: iconList
           })
+          callback && callback()
         }
         let handleZIndexChangeByWindow = function (data) {
           let appInfo = data.appInfo || {}
@@ -1117,7 +1144,7 @@
         let _t = this
         // 分发action，调接口
         let res = await _t.$store.dispatch('Platform/Desktop/application/install', {
-          id: appInfo.id
+          id: appInfo.appID
         })
         console.log('doApplicationInstall', res)
         if (!res || res.status !== 200) {
@@ -1126,9 +1153,13 @@
           return
         }
         _t.$Message.info(res.msg || '安装成功！')
-        callback && callback(true)
-        // 刷新用户应用列表 FIXME 此处刷新用户应用数据会导致窗口关闭
-        // _t.$utils.bus.$emit('Admin/appData/refresh')
+        callback && callback(true, res.msg)
+        /*
+        _t.$nextTick(function () {
+          // 刷新用户应用列表
+          _t.$utils.bus.$emit('Admin/appData/refresh')
+        })
+        */
       },
       // 执行卸载操作
       doApplicationUninstall: async function (appInfo, callback) {
@@ -1136,8 +1167,11 @@
         console.log('appInfo', appInfo)
         // 分发action，调接口
         let res = await _t.$store.dispatch('Platform/Desktop/application/uninstall', {
+          // 用户应用列表索引ID
           id: appInfo.id,
+          // 应用ID
           app_id: appInfo.app_id,
+          // 用户ID
           user_id: _t.userInfo.id
         })
         console.log('doApplicationUninstall', res)
@@ -1147,9 +1181,11 @@
           return
         }
         _t.$Message.info(res.msg || '安装成功！')
-        callback && callback(true)
-        // 刷新用户应用列表 FIXME 此处刷新用户应用数据会导致窗口关闭
-        // _t.$utils.bus.$emit('Admin/appData/refresh')
+        callback && callback(true, res.msg)
+        _t.$nextTick(function () {
+          // 刷新用户应用列表
+          _t.$utils.bus.$emit('Admin/appData/refresh')
+        })
       }
     },
     created: function () {

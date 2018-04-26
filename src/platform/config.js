@@ -32,7 +32,8 @@ export default {
       component: 'Index.vue',
       store: 'store/index.js'
     },
-    // 桌面图标容器
+    /*
+    // 桌面图标容器 FIXME 【废弃】
     DesktopIconBox: {
       name: 'DesktopIconBox',
       parent: './apps',
@@ -40,6 +41,7 @@ export default {
       component: 'Index.vue',
       store: 'store/index.js'
     },
+    */
     // 桌面图标
     DesktopIcon: {
       name: 'DesktopIcon',
