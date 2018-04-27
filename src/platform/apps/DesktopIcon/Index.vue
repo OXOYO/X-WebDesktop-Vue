@@ -44,6 +44,7 @@
       display: block;
       width: 48px;
       height: 48px;
+      border-radius: 5px;
       margin: 0 auto;
     }
     .desktop-icon-down {
