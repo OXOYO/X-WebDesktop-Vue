@@ -8,9 +8,9 @@
   .app-login {
     position: relative;
     vertical-align: middle;
-    max-width: 300px;
     margin: 0 auto;
     background: transparent;
+    border-radius: 5px;
     padding: 15px;
     margin-top: 100px;
     box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, .1);
@@ -24,7 +24,7 @@
       bottom: 0;
       left: 0;
       background: rgba(255, 255, 255, .1);
-      filter: blur(20px);
+      filter: blur(10px);
       margin: -30px;
       z-index: -1;
     }
@@ -48,6 +48,8 @@
       }
     }
     .login-modal-body {
+      margin-top: 20px;
+
       .login-form {
       }
     }
