@@ -44,6 +44,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: 'Wallpaper',
     data () {
@@ -72,6 +74,11 @@
         // 切换方式: default || bing || all
         switchType: 'bing'
       }
+    },
+    computed: {
+      ...mapState('Platform/Wallpaper', {
+        wallpaperInfo: state => state.currentWallpaper
+      })
     },
     watch: {
       'switch': function (val) {
@@ -206,8 +213,18 @@
     },
     created: function () {
       let _t = this
-      // 初始化
-      _t.init()
+      // 判断是否组件创建时是否已存在壁纸信息，有则覆盖，无则初始化
+      if (_t.wallpaperInfo && _t.wallpaperInfo.type && _t.wallpaperInfo.src) {
+        _t.currentWallpaper = {
+          ..._t.wallpaperInfo
+        }
+      } else {
+        // 初始化
+        _t.init()
+      }
+    },
+    mounted: function () {
+      let _t = this
       // 监听事件
       _t.$utils.bus.$on('platform/wallpaper/switch', function () {
         _t.doSwitch()
