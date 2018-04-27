@@ -9,6 +9,20 @@
     height: 100%;
     background: #ffffff;
 
+    .loading {
+      display: inline-block;
+      margin-top: 10px;
+
+      .loading-icon{
+        animation: loading-spin 1s linear infinite;
+      }
+      @keyframes loading-spin {
+        from { transform: rotate(0deg);}
+        50%  { transform: rotate(180deg);}
+        to   { transform: rotate(360deg);}
+      }
+    }
+
     .load-complete {
       display: inline-block;
       width: 100%;
@@ -36,9 +50,15 @@
 
 <template>
   <div class="app-window-modal">
+    <div class="loading" v-show="loadStatus === 'loading'">
+      <Spin fix>
+        <Icon class="loading-icon" type="load-c" size=18></Icon>
+        <div class="loading-text">加载中...</div>
+      </Spin>
+    </div>
     <div
-      :class="{ 'load-complete': true, 'load-fail': !appComponent }"
-      v-show="!appComponent"
+      v-show="loadStatus === 'fail'"
+      :class="{ 'load-complete': true, 'load-fail': loadStatus === 'fail' }"
     >
       <Icon type="close-circled"></Icon>
       <div class="load-text">加载应用程序</div>
@@ -60,7 +80,9 @@
     },
     data () {
       return {
-        appComponent: null
+        appComponent: null,
+        // 加载状态 loading：加载中 fail：加载失败 success：加载成功
+        loadStatus: ''
       }
     },
     methods: {
@@ -73,6 +95,7 @@
       // 加载应用
       loadApp: function () {
         let _t = this
+        _t.loadStatus = 'loading'
         let appName = _t.info.app_name || _t.info.config.app.name
         let path = ''
         // TODO 判断当前操作是install || uninstall || openApp
@@ -98,10 +121,14 @@
               try {
                 let appComponent = require('@/global/components/' + path + '.vue')
                 _t.appComponent = appComponent
+                isSuccess = true
               } catch (err) {
+                isSuccess = false
                 console.warn('WARNG:: LOAD', '@/global/components/' + path + '.vue', 'FAIL!')
               }
             }
+            // 更新加载状态
+            _t.loadStatus = isSuccess ? 'success' : 'fail'
           })
         }
         console.log('loadApp _t.info', _t.info)
