@@ -235,18 +235,10 @@
             }
           }
         }
-        .info-version {
-          position: absolute;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          padding: 0 5px;
-          text-align: right;
-        }
         .info-btn {
           position: absolute;
           right: 0;
-          bottom: 20px;
+          bottom: 40px;
           left: 0;
           height: 45px;
           line-height: 45px;
@@ -257,6 +249,31 @@
           .info-btn-item {
             color: #ffffff;
           }
+        }
+        .info-author {
+          position: absolute;
+          right: 0;
+          bottom: 20px;
+          left: 0;
+          padding: 0 5px;
+          text-align: right;
+
+          .info-author-link {
+            display: inline-block;
+            color: #ffffff;
+
+            &:hover {
+              color: #2d8cf0;
+            }
+          }
+        }
+        .info-version {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          padding: 0 5px;
+          text-align: right;
         }
       }
     }
@@ -329,6 +346,11 @@
           </div>
           <div class="info-btn">
             <Button class="info-btn-item" type="ghost" long @click="doLogout">退出</Button>
+          </div>
+          <div class="info-author" v-if="$Config.System.author">
+            Author：
+            <a class="info-author-link" v-if="$Config.System.repository.url" :href="$Config.System.repository.url" target="_blank">{{ $Config.System.author }}</a>
+            <div class="info-author-link" v-else>{{ $Config.System.author }}</div>
           </div>
           <div class="info-version" v-if="$Config.System.version">
             Version：{{ $Config.System.version }}

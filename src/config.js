@@ -29,6 +29,11 @@ export const Cookie = {
 
 // 系统配置
 export const System = {
+  author: 'OXOYO',
+  repository: {
+    type: 'github',
+    url: 'https://github.com/OXOYO/X-WebDesktop-Vue'
+  },
   version: '2.0.0',
   name: 'X-WebDesktop-Vue',
   title: 'X-WebDesktop-Vue',
