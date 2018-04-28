@@ -4,7 +4,7 @@
 * 入口文件
 */
 
-<style scoped lang="less" rel="stylesheet/less">
+<style lang="less" rel="stylesheet/less">
   .app-login {
     position: relative;
     vertical-align: middle;
@@ -51,6 +51,13 @@
       margin-top: 20px;
 
       .login-form {
+
+        input {
+          // 解决chrome下表单自动填充导致的input框黄底问题
+          &:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+          }
+        }
       }
     }
   }
