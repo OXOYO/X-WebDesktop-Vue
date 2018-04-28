@@ -45,6 +45,11 @@
         color: #000000;
       }
     }
+    .iframe-box {
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+    }
   }
 </style>
 
@@ -66,10 +71,15 @@
       <div class="load-text">失败！</div>
     </div>
     <iframe
+      class="iframe-box"
+      name="iframe-box"
       :src="appPath"
       :width="appWidth"
       :height="appHeight"
       frameborder="0"
+      marginwidth="0"
+      marginheight="0"
+      scrolling="no"
     >
     </iframe>
   </div>
@@ -114,21 +124,19 @@
       loadApp: function () {
         let _t = this
         _t.loadStatus = 'loading'
-        setTimeout(function () {
+        _t.$nextTick(function () {
+          _t.appWidth = parseInt(_t.$el.offsetWidth)
+          _t.appHeight = parseInt(_t.$el.offsetHeight)
           _t.appPath = _t.info.config.app.url
-          // FIXME 此处计算宽高存在bug，不能与窗口缩放同步
-          _t.appWidth = parseInt(_t.info.config.window.style.width) - 20
-          _t.appHeight = parseInt(_t.info.config.window.style.height) - 40
           _t.loadStatus = _t.appPath ? 'success' : 'fail'
-        }, 5000)
-        document.body.onbeforeunload = function (event) {
-          let rel = 'asdfawfewf'
-          if (!window.event) {
-            event.returnValue = rel
-          } else {
-            window.event.returnValue = rel
+          document.body.onbeforeunload = function (event) {
+            if (!window.event) {
+              event.returnValue = false
+            } else {
+              window.event.returnValue = false
+            }
           }
-        }
+        })
       }
     },
     created: function () {
