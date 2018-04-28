@@ -89,6 +89,9 @@
       let _t = this
       // 初始化窗口
       _t.init()
+    },
+    beforeDestroy: function () {
+      document.body.onbeforeunload = null
     }
   }
 </script>
