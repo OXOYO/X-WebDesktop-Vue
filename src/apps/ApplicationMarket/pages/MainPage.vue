@@ -264,7 +264,6 @@
         let _t = this
         // 安装信息
         let installInfo = {}
-        console.log('handleApplicationInstall', appInfo)
         let iconList = [..._t.appData.iconList]
         // 查找单个索引
         let findAppIndex = function (iconList, condition) {

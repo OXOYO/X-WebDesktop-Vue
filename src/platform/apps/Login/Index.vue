@@ -12,7 +12,7 @@
     background: transparent;
     border-radius: 5px;
     padding: 15px;
-    margin-top: 100px;
+    top: 100px;
     box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, .1);
     overflow: hidden;
 
@@ -57,10 +57,11 @@
 </style>
 
 <template>
-  <Row>
+  <Row style="height: 100%">
     <Col
+      style="height: 100%"
       :xs="{ span: 20, offset: 2 }"
-      :sm="{ span: 10, offset: 7 }"
+      :sm="{ span: 12, offset: 6 }"
       :md="{ span: 8, offset: 8 }"
       :lg="{ span: 6, offset: 9 }"
     >
