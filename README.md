@@ -4,35 +4,17 @@ Version: 2.0.0 【开发中...】
 
 基于 Vue 的 WebDesktop 系统
 
-基础版本：[X-Desktop-Vue](https://github.com/OXOYO/X-Desktop-Vue)
+# Version
 
-1.0.1版本：[X-WebDesktop-Vue 1.0.1](https://github.com/OXOYO/X-WebDesktop-Vue/tree/1.0.1)
+| FrontEnd | API |
+| :-------- | :-------- |
+| [2.0.0](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master) | [2.0.0](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/master) |
+| [1.0.1](https://github.com/OXOYO/X-WebDesktop-Vue/tree/1.0.1) | [1.0.1](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/1.0.1) |
+| [1.0.0](https://github.com/OXOYO/X-Desktop-Vue/tree/master) | - |
 
-1.0.1版本对应API服务：[X-WebDesktop-Api-Koa 1.0.1](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/1.0.1)
+## Documentation
 
-2.0.0版本：[X-Desktop-Vue 2.0.0](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master)
-
-2.0.0版对应API服务：[X-WebDesktop-Api-Koa 2.0.0](https://github.com/OXOYO/X-WebDesktop-Api-Koa)
-
-## [Preview](https://oxoyo.github.io/X-WebDesktop-Vue/)
-
-地址：https://oxoyo.github.io/X-WebDesktop-Vue/
-
-账号：admin
-
-密码：123456
-
-![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_admin.gif "preview_admin")
-
-![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_home.png "preview_home")
-
-![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_admin.png "preview_admin")
-
-![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_drag_resize.gif "preview_drag_resize")
-
-![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_custom_window.png "preview_custom_window")
-
-![](https://raw.githubusercontent.com/OXOYO/X-WebDesktop-Vue/master/docs/preview_frosted.png "preview_frosted_002")
+[中文文档 (2.0.0)](./document/md/guide_cn_v2.0.0.md)
 
 ## Start
 
@@ -47,6 +29,39 @@ Version: 2.0.0 【开发中...】
 ```bash
   npm run build
 ```
+
+## Preview
+
+  **Url**：[https://oxoyo.github.io/X-WebDesktop-Vue/](https://oxoyo.github.io/X-WebDesktop-Vue/)
+
+  **Account**：`admin`
+
+  **Password**：`123456`
+
+## Screenshot
+
+### PC
+
+![](./document/screenshot/preview_pc_home.png "preview_home")
+
+![](./document/screenshot/preview_pc_admin_002.png "preview_pc_admin_002")
+
+![](./document/screenshot/preview_pc_admin_003.png "preview_pc_admin_003")
+
+![](./document/screenshot/preview_pc_admin_004.png "preview_pc_admin_004")
+
+![](./document/screenshot/preview_pc_admin.gif "preview_admin")
+
+### Mobile
+
+![](./document/screenshot/preview_mobile_home_portrait_001.jpg "preview_mobile_home_portrait_001")
+![](./document/screenshot/preview_mobile_home_portrait_002.jpg "preview_mobile_home_portrait_002")
+![](./document/screenshot/preview_mobile_admin_portrait_001.jpg "preview_mobile_admin_portrait_001")
+![](./document/screenshot/preview_mobile_admin_portrait_002.jpg "preview_mobile_admin_portrait_002")
+![](./document/screenshot/preview_mobile_admin_portrait_003.jpg "preview_mobile_admin_portrait_003")
+![](./document/screenshot/preview_mobile_admin_portrait_004.jpg "preview_mobile_admin_portrait_004")
+![](./document/screenshot/preview_mobile_admin_landscape_001.jpg "preview_mobile_admin_landscape_001")
+![](./document/screenshot/preview_mobile_admin_landscape_002.jpg "preview_mobile_admin_landscape_002")
 
 ## 目录结构
 ```bash
@@ -95,3 +110,5 @@ Version: 2.0.0 【开发中...】
 
 ## TODO
 1.架构调整，需重构，应用设计更合理。
+2.优化系统性能。
+3.编写开发指南。
