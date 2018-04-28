@@ -99,7 +99,6 @@
     methods: {
       handleInstall: function () {
         let _t = this
-        console.log('handleInstall')
         _t.isLoading = true
         // 广播事件 触发window事件 open
         _t.$utils.bus.$emit('platform/application/install', {

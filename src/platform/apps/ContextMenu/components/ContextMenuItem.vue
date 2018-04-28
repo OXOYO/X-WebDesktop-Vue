@@ -45,7 +45,7 @@
       }
     },
     methods: {
-      // 触发菜单
+      // 触发菜单 FIXME 可以考虑点击时判断是否有子菜单，有子菜单则打开子菜单
       triggerMenuItem: function () {
         let _t = this
         console.log('triggerMenuItem', _t.info.text, _t.info.name)

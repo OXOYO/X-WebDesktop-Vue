@@ -10,7 +10,7 @@
     text-align: center;
     overflow: hidden;
 
-    .weather_inc {
+    .iframe-box {
       margin: 0 auto;
     }
   }
@@ -19,9 +19,9 @@
 <template>
   <div class="main-page">
     <iframe
-      class="weather_inc"
-      name="weather_inc"
-      src="http://i.tianqi.com/index.php?c=code&id=55"
+      class="iframe-box"
+      name="iframe-box"
+      src="//i.tianqi.com/index.php?c=code&id=55"
       width="255"
       height="294"
       frameborder="0"
