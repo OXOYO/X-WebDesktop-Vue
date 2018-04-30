@@ -4,7 +4,4 @@
  * 配置信息
  */
 
-export default {
-  type: 'user',
-  name: 'Weixin'
-}
+export default {}
