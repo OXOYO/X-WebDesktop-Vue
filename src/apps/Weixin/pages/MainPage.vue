@@ -41,6 +41,7 @@
     name: 'MainPage',
     data () {
       return {
+        appUrl: '//wx.qq.com',
         appPath: null,
         appWidth: 0,
         appHeight: 0
@@ -74,7 +75,7 @@
         _t.$nextTick(function () {
           _t.appWidth = parseInt(_t.$el.offsetWidth)
           _t.appHeight = parseInt(_t.$el.offsetHeight)
-          _t.appPath = '//wx.qq.com'
+          _t.appPath = _t.appUrl
           document.body.onbeforeunload = function (event) {
             if (!window.event) {
               event.returnValue = false
