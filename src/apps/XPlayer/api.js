@@ -1,7 +1,7 @@
 /**
  * Created by OXOYO on 2017/12/24.
  *
- * 配置信息
+ * 接口
  */
 
 export default {}

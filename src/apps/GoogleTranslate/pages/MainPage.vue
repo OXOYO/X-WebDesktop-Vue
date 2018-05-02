@@ -31,6 +31,7 @@
       marginwidth="0"
       marginheight="0"
       scrolling="no"
+      target="_top"
     >
     </iframe>
   </div>
@@ -41,7 +42,7 @@
     name: 'MainPage',
     data () {
       return {
-        appUrl: '//wx.qq.com',
+        appUrl: '//translate.google.cn/m/translate',
         appPath: null,
         appWidth: 0,
         appHeight: 0
