@@ -15,7 +15,9 @@ export default {
     },
     // 获取用户应用列表
     getApplicationListByUserId: async (data) => {
-      let res = await Vue.prototype.$http.get('/Platform/user/application/list')
+      let res = await Vue.prototype.$http.get('/Platform/user/application/list', {
+        params: data
+      })
       return res
     }
   }
