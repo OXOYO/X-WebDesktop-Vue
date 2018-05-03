@@ -158,71 +158,49 @@ jsonwebtoken      JsonWebToken
 log4js            日志输出
 mysql2            数据库
 sequelize         数据库ORM
+
+gulp              工程化
+pm2               进程管理
 ```
 
 #### 项目结构
 
 ```bash
-  \_ build                      // webpack配置
-  \_ config                     // webpack配置
-  \_ dist                       // 打包输出目录
-  \_ docs                       // gh_pages文件目录
-  \_ document                   // 文档
-  \_ src                        // 源码
-    \_ apps                     // 【自开发应用】
-      \_ DemoApp                // 【DemoApp】应用
-        \_ components           // 组件
-        \_ containers           // 容器
-        \_ pages                // 页面
-        \_ install              // 自定义应用安装界面
-          \_ Index.vue          // 自定义应用安装界面入口
-        \_ uninstall            // 自定义应用卸载界面
-          \_ Index.vue          // 自定义应用卸载界面入口
-        \_ store                // Store
-          \_ index.js           // Store入口
-          \_ actions.js         // action定义
-          \_ mutations.js       // mutation定义
-          \_ state.js           // state定义
-        \_ api.js               // 接口
-        \_ config.js            // 配置文件
-        \_ Index.vue            // 应用入口文件
-        \_ openApi.js           // 对外接口【暂无意义】
-        \_ contextMenu.js       // 右键菜单配置【暂无意义】
-    \_ global                   // 【全局公用】目录
-      \_ components             // 公用组件
-      \_ directives             // 公用指令
-      \_ plugin                 // 公用插件
-      \_ utils                  // 公用工具
-    \_ platform                 // 【平台】
-      \_ apps                   // 平台默认应用
-        \_ Admin                // 后台容器
-          \_ components         // 组件
-          \_ containers         // 容器
-          \_ pages              // 页面
-          \_ store              // Store
-          \_ api.js             // 接口
-          \_ config.js          // 配置文件
-          \_ Index.vue          // 入口组件
-          \_ openApi.js         // 对外接口
-          \_ contextMenu.js     // 右键菜单配置
-        \_ ContextMenu          // 右键菜单
-        \_ Desktop              // 桌面
-        \_ DesktopIcon          // 桌面图标
-        \_ DekstopWidget        // 桌面控件
-        \_ Home                 // 前台容器
-        \_ Login                // 前台登录
-        \_ StartMenu            // 开始菜单
-        \_ TaskBar              // 任务栏
-        \_ TaskBarIcon          // 任务栏图标
-        \_ TaskBarWidget        // 任务栏控件
-        \_ Window               // 应用窗口
-      \_ store                  // 平台Store
-      \_ config.js              // 平台配置
-      \_ Index.vue              // 平台入口文件
-    \_ App.vue                  // 根入口组件
-    \_ config.js                // 根配置信息
-    \_ main.js                  // 根入口js
-    \_ routers.js               // 根路由js
-  \_ static                     // 静态文件目录
-  \_ index.html                 // 根入口html
+  \_ assets                   // 静态文件目录
+  \_ build                    // 打包脚本
+  \_ dist                     // 打包输出目录
+  \_ logs                     // 日志输出目录
+  \_ src                      // 源码
+    \_ apps                   // 【应用】对应接口目录
+      \_ AccountManagement    // 【账号管理】应用
+        \_ Ctrl.js            // 控制器
+        \_ Model.js           // 模型
+        \_ Routers.js         // 路由
+      \_ ApplicationMarket    // 【应用市场】应用
+        \_ Ctrl.js            // 控制器
+        \_ Model.js           // 模型
+        \_ Routers.js         // 路由
+      \_ MyApplication        // 【我的应用】应用
+        \_ Ctrl.js            // 控制器
+        \_ Model.js           // 模型
+        \_ Routers.js         // 路由
+      \_ PersonalCenter       // 【个人中心】应用
+        \_ Ctrl.js            // 控制器
+        \_ Model.js           // 模型
+        \_ Routers.js         // 路由
+    \_ middleware             // 中间件
+    \_ schema                 // 数据库模型
+    \_ platform               // 【平台】基础接口目录
+      \_ Ctrl.js              // 控制器
+      \_ Model.js             // 模型
+      \_ Routers.js           // 路由
+    \_ sql                    // 备份SQL文件
+    \_ utils                  // 全局工具
+    \_ api.js                 // 封装提供给前端的API
+    \_ auth.js                // 鉴权
+    \_ config.js              // 全局配置
+    \_ db.js                  // 数据库实例
+    \_ routers.js             // 封装应用路由表
+  \_ ecosystem.config.js      // PM2配置
+  \_ gulpfile.js              // gulp任务脚本
 ```
