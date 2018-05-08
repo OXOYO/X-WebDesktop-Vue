@@ -6,89 +6,99 @@
 
 <style lang="less" rel="stylesheet/less">
   .app-login {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 400px;
-    height: 300px;
-    margin-left: -200px;
-    margin-top: -150px;
+    position: relative;
+    vertical-align: middle;
+    margin: 0 auto;
+    background: transparent;
+    border-radius: 5px;
+    padding: 15px;
+    top: 100px;
+    box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, .1);
+    overflow: hidden;
 
-    .login-header {
+    .wallpaper-image {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: rgba(255, 255, 255, .1);
+      filter: blur(10px);
+      margin: -30px;
+      z-index: -1;
+    }
+
+    .login-modal-header {
+      height: auto;
       text-align: center;
-
-      .avatar-block {
-        display: inline-block;
-        width: 120px;
-        height: 120px;
+      .login-logo {
+        display: block;
+        width: auto;
         margin: 0 auto;
-        box-shadow: 0 0 5px 5px rgba(0, 0, 0, .1);
-        background: #ffffff;
-        border-radius: 50%;
-        overflow: hidden;
-
-        .avatar {
-          display: inline-block;
-          width: 100%;
-          height: 100%;
-          margin: 0;
-          padding: 0;
-        }
+      }
+      .login-title {
+        display: inline-block;
+        cursor: default;
+        width: 100%;
+        padding-top: 10px;
+        font-size: 26px;
+        font-weight: bolder;
+        color: rgb(52, 117, 207);
       }
     }
-    .login-body {
+    .login-modal-body {
       margin-top: 20px;
-      text-align: center;
 
       .login-form {
-        width: 200px;
-        margin: 0 auto;
-        text-align: left;
+
+        input {
+          // 解决chrome下表单自动填充导致的input框黄底问题
+          &:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+          }
+        }
       }
-    }
-
-    input {
-      /*background: transparent;*/
-      border: none;
-      border-radius: 0;
-
-      /*&:focus {
-        background: transparent;
-      }*/
-      // 解决chrome下表单自动填充导致的input框黄底问题
-      &:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
-      }
-    }
-
-    .ivu-input-group-append {
-      background: #ffffff;
-      border: none;
-      border-radius: 0;
     }
   }
 </style>
 
 <template>
-  <div class="app-login">
-    <div class="login-header">
-      <div class="avatar-block">
-        <img class="avatar" :src="$Config.System.logo" alt="">
+  <Row style="height: 100%">
+    <Col
+      style="height: 100%"
+      :xs="{ span: 20, offset: 2 }"
+      :sm="{ span: 12, offset: 6 }"
+      :md="{ span: 8, offset: 8 }"
+      :lg="{ span: 6, offset: 9 }"
+    >
+      <div class="app-login">
+        <div
+          class="wallpaper-image"
+          :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
+        >
+        </div>
+        <div class="login-modal-header">
+          <img class="login-logo" :src="$Config.System.logo" :alt="$Config.System.title">
+        </div>
+        <div class="login-modal-body">
+          <Form class="login-form" ref="signInForm" :model="formData" :rules="signInFormRules">
+            <Form-item prop="account">
+              <Input type="text" v-model="formData.account" placeholder="请输入用户名">
+              <Icon type="ios-person-outline" slot="prepend" style="font-size: 16px;"></Icon>
+              </Input>
+            </Form-item>
+            <Form-item prop="password">
+              <Input :type="passwordInputType" v-model="formData.password" placeholder="请输入密码" @on-enter="handleSignIn">
+              <Icon type="ios-locked-outline" slot="prepend" style="font-size: 16px;"></Icon>
+              <Button slot="append" :icon="passwordInputType === 'password' ? 'eye-disabled' : 'eye'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
+              </Input>
+            </Form-item>
+          </Form>
+        </div>
       </div>
-    </div>
-    <div class="login-body">
-      <Form class="login-form" ref="signInForm" :model="formData" :rules="signInFormRules">
-        <Form-item prop="account">
-          <Input type="text" v-model="formData.account" placeholder="用户名" autocomplete="off"></Input>
-        </Form-item>
-        <Form-item prop="password">
-          <Input :type="passwordInputType" v-model="formData.password" placeholder="密码" autocomplete="off" @on-enter="handleSignIn">
-          <Button slot="append" :icon="passwordInputType === 'password' ? 'eye-disabled' : 'eye'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
-          </Input>
-        </Form-item>
-      </Form>
-    </div>
-  </div>
+    </Col>
+  </Row>
 </template>
 
 <script>
