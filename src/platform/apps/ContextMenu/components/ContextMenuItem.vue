@@ -49,8 +49,7 @@
       triggerMenuItem: function () {
         let _t = this
         console.log('triggerMenuItem', _t.info.text, _t.info.name)
-        // TODO 执行菜单相应操作
-        _t.$Message.info('触发菜单: ' + _t.info.name)
+        // _t.$Message.info('触发菜单: ' + _t.info.name)
         if (_t.info && _t.info.action && _t.info.action.type) {
           switch (_t.info.action.type) {
             case 'bus':
