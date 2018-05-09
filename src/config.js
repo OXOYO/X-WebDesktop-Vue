@@ -39,5 +39,5 @@ export const System = {
   title: 'X-WebDesktop-Vue',
   subtitle: 'X-WebDesktop-Vue',
   logo: './static/logo.png',
-  copyright: '© 2017'
+  copyright: '© 2017 - 2018 OXOYO'
 }

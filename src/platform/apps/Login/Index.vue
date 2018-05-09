@@ -7,12 +7,33 @@
 <style lang="less" rel="stylesheet/less">
   .app-login {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 400px;
-    height: 300px;
-    margin-left: -200px;
-    margin-top: -150px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    .wallpaper-image {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: rgba(255, 255, 255, .1);
+      filter: blur(10px);
+      margin: -30px;
+      z-index: -1;
+    }
+
+    .main-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      height: 250px;
+      margin-left: -200px;
+      margin-top: -125px;
+      box-shadow: 0 0 5px 5px rgba(0, 0, 0, .1);
+    }
 
     .login-header {
       text-align: center;
@@ -22,9 +43,6 @@
         width: 120px;
         height: 120px;
         margin: 0 auto;
-        box-shadow: 0 0 5px 5px rgba(0, 0, 0, .1);
-        background: #ffffff;
-        border-radius: 50%;
         overflow: hidden;
 
         .avatar {
@@ -37,56 +55,59 @@
       }
     }
     .login-body {
-      margin-top: 20px;
       text-align: center;
 
       .login-form {
-        width: 200px;
+        width: 250px;
         margin: 0 auto;
         text-align: left;
       }
     }
 
     input {
-      /*background: transparent;*/
-      border: none;
-      border-radius: 0;
-
-      /*&:focus {
-        background: transparent;
-      }*/
       // 解决chrome下表单自动填充导致的input框黄底问题
       &:-webkit-autofill {
         -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
       }
-    }
-
-    .ivu-input-group-append {
-      background: #ffffff;
-      border: none;
-      border-radius: 0;
     }
   }
 </style>
 
 <template>
   <div class="app-login">
-    <div class="login-header">
-      <div class="avatar-block">
-        <img class="avatar" :src="$Config.System.logo" alt="">
-      </div>
+    <div
+      class="wallpaper-image"
+      :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
+    >
     </div>
-    <div class="login-body">
-      <Form class="login-form" ref="signInForm" :model="formData" :rules="signInFormRules">
-        <Form-item prop="account">
-          <Input type="text" v-model="formData.account" placeholder="用户名" autocomplete="off"></Input>
-        </Form-item>
-        <Form-item prop="password">
-          <Input :type="passwordInputType" v-model="formData.password" placeholder="密码" autocomplete="off" @on-enter="handleSignIn">
-          <Button slot="append" :icon="passwordInputType === 'password' ? 'eye-disabled' : 'eye'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
-          </Input>
-        </Form-item>
-      </Form>
+    <div class="main-box">
+      <a :href="$Config.System.repository.url" target="_blank">
+        <img
+          style="position: absolute; top: 0; right: 0; border: 0; z-index: 5000"
+          src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"
+          alt="Fork me on GitHub"
+        >
+      </a>
+      <div class="login-header">
+        <div class="avatar-block">
+          <img class="avatar" :src="$Config.System.logo" alt="">
+        </div>
+      </div>
+      <div class="login-body">
+        <Form class="login-form" ref="signInForm" :model="formData" :rules="signInFormRules">
+          <Form-item prop="account">
+            <Input type="text" v-model="formData.account" placeholder="请输入用户名">
+            <Icon type="ios-person-outline" slot="prepend" style="font-size: 16px;"></Icon>
+            </Input>
+          </Form-item>
+          <Form-item prop="password">
+            <Input :type="passwordInputType" v-model="formData.password" placeholder="请输入密码" @on-enter="handleSignIn">
+            <Icon type="ios-locked-outline" slot="prepend" style="font-size: 16px;"></Icon>
+            <Button slot="append" :icon="passwordInputType === 'password' ? 'eye-disabled' : 'eye'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
+            </Input>
+          </Form-item>
+        </Form>
+      </div>
     </div>
   </div>
 </template>
