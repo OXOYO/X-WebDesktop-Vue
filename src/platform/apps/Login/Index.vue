@@ -33,6 +33,12 @@
       margin-left: -200px;
       margin-top: -125px;
       box-shadow: 0 0 5px 5px rgba(0, 0, 0, .1);
+      background: rgba(255, 255, 255, .1);
+
+      &:hover,
+      &:focus {
+        box-shadow: 0 0 2px 2px rgba(0, 0, 0, .2);
+      }
     }
 
     .login-header {
@@ -83,7 +89,7 @@
     <div class="main-box">
       <a :href="$Config.System.repository.url" target="_blank">
         <img
-          style="position: absolute; top: 0; right: 0; border: 0; z-index: 5000"
+          style="position: absolute; top: -2px; right: -2px; border: 0; z-index: 5000"
           src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"
           alt="Fork me on GitHub"
         >
