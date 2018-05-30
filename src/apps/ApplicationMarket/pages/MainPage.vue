@@ -184,7 +184,7 @@
             v-for="item in categoryList"
             :class="{ 'list-item': true, 'active': currentCategory.id === item.id }"
             :key="item.name"
-            @click="handleCategoryTrigger(item)"
+            @click.stop.prevent="handleCategoryTrigger(item)"
           >
             <Icon class="item-icon" :type="item.icon"></Icon>
             <div class="item-title">{{ item.title }}</div>
@@ -200,7 +200,7 @@
             v-for="item in boardList"
             :class="{ 'board-item': true, 'active': currentBoard.name === item.name }"
             :key="item.name"
-            @click="handleBoardTrigger(item)"
+            @click.stop.prevent="handleBoardTrigger(item)"
           >
             <Icon v-if="item.icon" class="item-icon" :type="item.icon"></Icon>
             <div class="item-title">{{ item.title }}</div>
@@ -411,8 +411,8 @@
         }
         // 处理卸载
         let handleUninstall = function () {
-          // 调用安装工具，打开安装界面
-          _t.$utils.install(_t, {
+          // 调用卸载工具，打开卸载界面
+          _t.$utils.uninstall(_t, {
             // 解构应用基础配置
             ...appInfo,
             config: {
