@@ -16,19 +16,6 @@
     box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, .1);
     overflow: hidden;
 
-    .wallpaper-image {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: rgba(255, 255, 255, .1);
-      filter: blur(10px);
-      margin: -30px;
-      z-index: -1;
-    }
-
     .login-modal-header {
       height: auto;
       text-align: center;
@@ -73,11 +60,7 @@
       :lg="{ span: 6, offset: 9 }"
     >
       <div class="app-login">
-        <div
-          class="wallpaper-image"
-          :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
-        >
-        </div>
+        <WallpaperBackground></WallpaperBackground>
         <div class="login-modal-header">
           <img class="login-logo" :src="$Config.System.logo" :alt="$Config.System.title">
         </div>
@@ -102,8 +85,6 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-
   export default {
     name: 'Login',
     data () {
@@ -130,11 +111,6 @@
         // 密码输入框类型
         passwordInputType: 'password'
       }
-    },
-    computed: {
-      ...mapState('Platform/Wallpaper', {
-        currentWallpaper: state => state.currentWallpaper
-      })
     },
     methods: {
       triggerMenu: function (routerName) {
