@@ -113,19 +113,6 @@
       }
     }
 
-    .wallpaper-image {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: rgba(255, 255, 255, .1);
-      filter: blur(20px);
-      margin: -30px;
-      z-index: -1;
-    }
-
     .app-window-header {
       position: absolute;
       top: 0;
@@ -210,11 +197,7 @@
     <div v-if="enableResizeHandler('right-border')" class="app-window-resize resize-right-border"></div>
     <div v-if="enableResizeHandler('bottom-border')" class="app-window-resize resize-bottom-border"></div>
     <div v-if="enableResizeHandler('left-border')" class="app-window-resize resize-left-border"></div>
-    <div
-      class="wallpaper-image"
-      :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
-    >
-    </div>
+    <WallpaperBackground></WallpaperBackground>
     <div
       class="app-window-header"
     >
@@ -399,9 +382,6 @@
           console.log('state', mapState, state)
           return state._appData
         }
-      }),
-      ...mapState('Platform/Wallpaper', {
-        currentWallpaper: state => state.currentWallpaper
       }),
       windowSizeClass: function () {
         let _t = this

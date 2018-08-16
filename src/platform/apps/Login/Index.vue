@@ -12,28 +12,17 @@
     bottom: 0;
     left: 0;
 
-    .wallpaper-image {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: rgba(255, 255, 255, .1);
-      filter: blur(10px);
-      margin: -30px;
-      z-index: -1;
-    }
-
     .main-box {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 400px;
-      height: 250px;
-      margin-left: -200px;
-      margin-top: -125px;
+      width: 280px;
+      /*height: 250px;*/
+      margin-left: -140px;
+      margin-top: -200px;
       box-shadow: 0 0 5px 5px rgba(0, 0, 0, .1);
       background: rgba(255, 255, 255, .1);
+      overflow: hidden;
 
       &:hover,
       &:focus {
@@ -43,6 +32,8 @@
 
     .login-header {
       text-align: center;
+      background: #fff;
+      height: 129px;
 
       .avatar-block {
         display: inline-block;
@@ -62,11 +53,24 @@
     }
     .login-body {
       text-align: center;
+      padding-top: 100px;
 
       .login-form {
         width: 250px;
         margin: 0 auto;
         text-align: left;
+      }
+    }
+
+    .login-footer {
+      padding: 12px 15px;
+      text-align: right;
+
+      .notice-text {
+        display: inline-block;
+        color: #fff;
+        text-align: left;
+        float: left;
       }
     }
 
@@ -81,12 +85,8 @@
 
 <template>
   <div class="app-login">
-    <div
-      class="wallpaper-image"
-      :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
-    >
-    </div>
     <div class="main-box">
+      <WallpaperBackground></WallpaperBackground>
       <a :href="$Config.System.repository.url" target="_blank">
         <img
           style="position: absolute; top: -2px; right: -2px; border: 0; z-index: 5000"
@@ -103,24 +103,24 @@
         <Form class="login-form" ref="signInForm" :model="formData" :rules="signInFormRules">
           <Form-item prop="account">
             <Input type="text" v-model="formData.account" placeholder="请输入用户名">
-            <Icon type="ios-person-outline" slot="prepend" style="font-size: 16px;"></Icon>
             </Input>
           </Form-item>
           <Form-item prop="password">
             <Input :type="passwordInputType" v-model="formData.password" placeholder="请输入密码，回车登录" @on-enter="handleSignIn">
-            <Icon type="ios-locked-outline" slot="prepend" style="font-size: 16px;"></Icon>
             <Button slot="append" :icon="passwordInputType === 'password' ? 'eye-disabled' : 'eye'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
             </Input>
           </Form-item>
         </Form>
+      </div>
+      <div class="login-footer">
+        <div class="notice-text">测试账号：admin，密码：123456</div>
+        <Button type="primary" :loading="loading" @click="handleSignIn">登录</Button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-
   export default {
     name: 'Login',
     data () {
@@ -147,11 +147,6 @@
         // 密码输入框类型
         passwordInputType: 'password'
       }
-    },
-    computed: {
-      ...mapState('Platform/Wallpaper', {
-        currentWallpaper: state => state.currentWallpaper
-      })
     },
     methods: {
       triggerMenu: function (routerName) {

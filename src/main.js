@@ -11,7 +11,8 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 // 导入UI库
 import iView from 'iview'
-import 'iview/dist/styles/iview.css'
+// import 'iview/dist/styles/iview.css'
+import './themes/index.less'
 // 导入 动画库
 import 'animate.css/animate.min.css'
 // 导入 cookie插件
@@ -29,10 +30,8 @@ import platformStore from './store/platform/index'
 import appsStore from './store/apps/index'
 
 // 注册全局组件
-import NoData from './global/components/NoData.vue'
-import Switch from './global/components/Switch.vue'
-Vue.component('NoData', NoData)
-Vue.component('USwitch', Switch)
+import globalComponents from './global/components'
+globalComponents.register(Vue)
 
 // 导入 全局插件
 // import plugin from './global/plugin'

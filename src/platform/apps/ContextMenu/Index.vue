@@ -17,7 +17,7 @@
       padding: 5px 10px 5px 40px;
       position: relative;
       cursor: default;
-      border: 1px solid transparent;
+      /*border: 1px solid transparent;*/
       border-left: none;
       border-right: none;
 

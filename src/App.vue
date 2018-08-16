@@ -22,16 +22,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  /* 根组件修改iview $Message组件样式 */
-  .ivu-message-notice {
-    width: auto;
-    vertical-align: middle;
-    left: 0;
-    display: block;
-    clear: both;
-    position: relative;
-    margin-bottom: 5px;
-  }
 </style>
 
 <template>

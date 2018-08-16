@@ -120,19 +120,6 @@
         left: 0;
         display: inline-block;
         overflow: hidden;
-
-        .wallpaper-image {
-          position: absolute;
-          top: -30px;
-          right: -30px;
-          bottom: -30px;
-          left: -30px;
-          z-index: -1;
-          display: inline-block;
-          background: #323E54;
-          filter: blur(20px);
-          overflow: hidden;
-        }
       }
 
       .start-menu-body {
@@ -146,7 +133,7 @@
         width: 61%;
         max-width: 250px;
         height: 100%;
-        background: rgba(255, 255, 255, .9);
+        background: rgba(255, 255, 255, .5);
         display: inline-block;
         float: left;
         overflow: auto;
@@ -169,9 +156,11 @@
           }
           &:hover {
             /*background: #f3f3f3;*/
-            background: #cfe3fd;
+            /*background: #cfe3fd;*/
+            background: #fff;
             &:before {
-              background: #2A5AAD;
+              /*background: #2A5AAD;*/
+              background: #57a3f3;
             }
           }
           .list-item-icon {
@@ -186,6 +175,7 @@
           .list-item-title {
             display: inline-block;
             vertical-align: middle;
+            color: #000;
           }
         }
       }
@@ -302,11 +292,7 @@
       <div
         class="start-menu-bg"
       >
-        <div
-          class="wallpaper-image"
-          :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
-        >
-        </div>
+        <WallpaperBackground></WallpaperBackground>
       </div>
       <div class="start-menu-body">
         <div class="list-block">
@@ -381,9 +367,6 @@
     computed: {
       ...mapState('Platform/Admin', {
         appData: state => state.appData
-      }),
-      ...mapState('Platform/Wallpaper', {
-        currentWallpaper: state => state.currentWallpaper
       })
     },
     methods: {

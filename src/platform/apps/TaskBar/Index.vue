@@ -24,19 +24,6 @@
       /*opacity: .5;*/
       /*filter: blur(20px);*/
       overflow: hidden;
-
-      .wallpaper-image {
-        position: absolute;
-        top: -30px;
-        right: -30px;
-        bottom: -30px;
-        left: -30px;
-        z-index: -1;
-        display: inline-block;
-        background: #323E54;
-        filter: blur(10px);
-        overflow: hidden;
-      }
     }
     .app-task-bar-main {
       position: absolute;
@@ -69,11 +56,7 @@
 <template>
   <div class="app-task-bar">
     <div class="app-task-bar-bg">
-      <div
-        class="wallpaper-image"
-        :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
-      >
-      </div>
+      <WallpaperBackground></WallpaperBackground>
     </div>
     <div class="app-task-bar-main">
       <slot name="StartMenu"></slot>
@@ -84,14 +67,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-
   export default {
-    name: 'TaskBar',
-    computed: {
-      ...mapState('Platform/Wallpaper', {
-        currentWallpaper: state => state.currentWallpaper
-      })
-    }
+    name: 'TaskBar'
   }
 </script>
