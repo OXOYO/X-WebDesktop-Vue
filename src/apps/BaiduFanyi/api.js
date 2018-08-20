@@ -4,11 +4,11 @@
  * 接口
  */
 
-import Vue from 'vue'
+import Http from 'vue-resource/src/http'
 
 export default {
   doTranslate: async (data) => {
-    let res = await Vue.prototype.$http.get('//api.fanyi.baidu.com/api/trans/vip/translate', {
+    let res = await Http.jsonp('//api.fanyi.baidu.com/api/trans/vip/translate', {
       params: data
     })
     return res

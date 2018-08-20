@@ -41,6 +41,10 @@
         padding: 10px;
         min-height: 80px;
         background: #f5f5f5;
+
+        .translate-result {
+          padding: 5px;
+        }
       }
     }
   }
@@ -90,10 +94,16 @@
     </div>
     <div class="block-body">
       <div class="block-input">
-        <Input v-model="formData.query" type="textarea" autofocus :rows="3" placeholder="输入文字" />
+        <Input v-model="formData.query" type="textarea" autofocus :autosize="{minRows: 3}" placeholder="输入文字" />
       </div>
       <div class="block-output">
-        {{ translateResult }}
+        <div
+          class="translate-result"
+          v-for="(item, index) in translateResult"
+          :key="index"
+        >
+          {{ item.dst }}
+        </div>
       </div>
     </div>
   </div>
@@ -281,7 +291,7 @@
         appid: '20180820000196336',
         key: 'WjsBnkboTn9mCaimqXjW',
         baseApi: '//api.fanyi.baidu.com/api/trans/vip/translate',
-        translateResult: ''
+        translateResult: []
       }
     },
     methods: {
@@ -308,7 +318,7 @@
         } else if (res.status !== 200) {
           return
         }
-        _t.translateResult = res.data.trans_result[0].dst
+        _t.translateResult = res.data.trans_result || []
       }
     }
   }
