@@ -21,6 +21,7 @@
     "html2canvas": "^1.0.0-alpha.12",
     "iview": "^2.6.0",
     "js-cookie": "^2.1.4",
+    "md5": "^2.2.1",
     "video.js": "^6.8.0",
     "videojs-playlist": "^4.2.0",
     "vue": "^2.3.3",
