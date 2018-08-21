@@ -7,7 +7,7 @@
   .app-window-modal {
     width: 100%;
     height: 100%;
-    background: #ffffff;
+    /*background: #ffffff;*/
 
     .loading {
       display: inline-block;

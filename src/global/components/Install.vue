@@ -7,6 +7,8 @@
 <style scoped lang="less" rel="stylesheet/less">
   .app-block {
     width: 100%;
+    height: 100%;
+    background: #fff;
     display: inline-block;
 
     .block-header {
@@ -28,7 +30,8 @@
         height: 50px;
 
         img {
-
+          width: 48px;
+          height: 48px;
         }
       }
       .loading {
