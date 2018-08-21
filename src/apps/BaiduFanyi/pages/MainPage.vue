@@ -8,6 +8,7 @@
     width: 100%;
     height: 100%;
     overflow: auto;
+    user-select: text;
 
     .block-header {
       padding: 20px 10px;
