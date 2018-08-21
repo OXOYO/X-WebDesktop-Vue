@@ -28427,6 +28427,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -31584,7 +31585,7 @@ exports = module.exports = __webpack_require__(466)(false);
 
 
 // module
-exports.push([module.i, ".main-page[data-v-87e9baba]{width:100%;height:100%;overflow:auto}.main-page .block-header[data-v-87e9baba]{padding:20px 10px}.main-page .block-header .language-select[data-v-87e9baba]{display:inline-block}.main-page .block-header .language-select .from-to-exchange[data-v-87e9baba]{display:inline-block;padding:0 10px;vertical-align:middle}.main-page .block-header .language-select .from-to-exchange img[data-v-87e9baba]{width:20px;height:20px}.main-page .block-header .action-btn[data-v-87e9baba]{display:inline-block}.main-page .block-body[data-v-87e9baba]{padding:0 10px}.main-page .block-body .block-input[data-v-87e9baba]{padding:10px 0;min-height:80px}.main-page .block-body .block-output[data-v-87e9baba]{padding:10px;min-height:80px;background:#f5f5f5}.main-page .block-body .block-output .translate-result[data-v-87e9baba]{padding:5px}", ""]);
+exports.push([module.i, ".main-page[data-v-87e9baba]{width:100%;height:100%;overflow:auto;-webkit-user-select:text;-moz-user-select:text;-ms-user-select:text;user-select:text}.main-page .block-header[data-v-87e9baba]{padding:20px 10px}.main-page .block-header .language-select[data-v-87e9baba]{display:inline-block}.main-page .block-header .language-select .from-to-exchange[data-v-87e9baba]{display:inline-block;padding:0 10px;vertical-align:middle}.main-page .block-header .language-select .from-to-exchange img[data-v-87e9baba]{width:20px;height:20px}.main-page .block-header .action-btn[data-v-87e9baba]{display:inline-block}.main-page .block-body[data-v-87e9baba]{padding:0 10px}.main-page .block-body .block-input[data-v-87e9baba]{padding:10px 0;min-height:80px}.main-page .block-body .block-output[data-v-87e9baba]{padding:10px;min-height:80px;background:#f5f5f5}.main-page .block-body .block-output .translate-result[data-v-87e9baba]{padding:5px}", ""]);
 
 // exports
 
