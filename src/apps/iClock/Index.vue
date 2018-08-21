@@ -9,7 +9,7 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background: #ffffff;
+    background: transparent;
   }
 </style>
 
@@ -24,7 +24,7 @@
   import Store from './store'
 
   export default {
-    name: 'BaiduFanyi',
+    name: 'iClock',
     components: {
       MainPage
     },
