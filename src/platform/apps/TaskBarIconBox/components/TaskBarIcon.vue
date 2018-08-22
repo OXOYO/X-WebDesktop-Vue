@@ -160,6 +160,7 @@
       margin-top: -15px;
       width: 30px;
       height: 30px;
+      border-radius: 5px;
       /*filter: drop-shadow(0 0 10px #ccc);*/
       /*background: hsla(0,0%,100%,.25) border-box;*/
       /*box-shadow: 0 0 0 1px hsla(0,0%,100%,.3) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);*/
