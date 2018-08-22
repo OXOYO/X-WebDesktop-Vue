@@ -105,12 +105,14 @@
       position: absolute;
       z-index: 5000;
       left: 0;
-      bottom: 40px;
+      bottom: 39px;
       width: 410px;
       height: 600px;
       padding: 8px;
       border: 1px solid rgba(14, 46, 73, 0.3);
-      box-shadow: 5px -5px 5px 0px rgba(0, 0, 0, 0.1);
+      box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.1);
+      border-top-right-radius: 5px;
+      border-top-left-radius: 5px;
 
       .start-menu-bg {
         position: absolute;
@@ -120,6 +122,21 @@
         left: 0;
         display: inline-block;
         overflow: hidden;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+
+        &:before {
+          content: ' ';
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          border: 1px solid rgba(255, 255, 255, .1);
+          border-bottom: none;
+          border-top-right-radius: 5px;
+          border-top-left-radius: 5px;
+        }
       }
 
       .start-menu-body {
@@ -292,7 +309,7 @@
       <div
         class="start-menu-bg"
       >
-        <WallpaperBackground></WallpaperBackground>
+        <WallpaperBackground style="border-top-right-radius: 5px; border-top-left-radius: 5px;"></WallpaperBackground>
       </div>
       <div class="start-menu-body">
         <div class="list-block">

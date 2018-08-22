@@ -279,9 +279,8 @@
         if (!icon) {
           return {}
         }
-        let img = icon
         return {
-          backgroundImage: 'url(' + img + ')'
+          backgroundImage: 'url(' + icon + ')'
         }
       }
     },
