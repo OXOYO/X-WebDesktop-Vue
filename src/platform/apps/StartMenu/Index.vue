@@ -11,7 +11,7 @@
     height: 39px;
     margin: 0;
     position: relative;
-    user-select:none;
+    user-select: none;
 
     .start-menu-icon-main {
       width: 60px;
