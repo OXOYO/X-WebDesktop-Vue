@@ -19,6 +19,7 @@
     transition: all .2s ease-out;
     user-select: none;
     writing-mode: lr-tb;
+    overflow: hidden;
 
     &:after {
       content: ' ';
@@ -38,6 +39,14 @@
       border-color: #B9D7FC;
       &:after {
         opacity: 1;
+      }
+
+      .app-icon-bg {
+        display: block !important;
+        /*filter: blur(6px);*/
+        .content {
+          /*filter: blur(10px);*/
+        }
       }
     }
     img {
@@ -61,6 +70,36 @@
       text-overflow: ellipsis;
       margin-top: 5px;
     }
+
+    .app-icon-bg {
+      position: absolute;
+      display: none;
+      overflow: hidden;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      /*filter: blur(50px);*/
+      /*background-position: center top;*/
+      transition: all .2s ease-out;
+      /*background-size: cover;*/
+      /*background-attachment: fixed;*/
+
+      .content {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        filter: blur(50px);
+        background-color: transparent;
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+    }
   }
 </style>
 
@@ -68,6 +107,7 @@
   <div
     class="desktop-icon"
     @mousedown.left="mouseDownHandle"
+    @mouseup.left="mouseUpHandle"
     @dblclick="openApp"
     @contextmenu.stop.prevent="handleRightClick($event)"
     draggable="true"
@@ -78,6 +118,9 @@
     <img :class="{ 'desktop-icon-down': isMouseDown}" v-if="info.config.app.icon" :src="info.config.app.icon || appIcon" :data-name="info.app_name || info.config.app.name">
     <!--<img :class="{ 'desktop-icon-down': isMouseDown}" v-if="info.app.icon" src="../../../apps/ApplicationMarket/assets/logo.png" :data-name="info.app.name">-->
     <span v-if="showTitle" :data-name="info.app_name || info.config.app.name">{{ info.app_title || info.config.app.title }}</span>
+    <div class="app-icon-bg" v-if="info.config.app.icon && enableAppIconBg">
+      <div class="content" :style="appIconBg"></div>
+    </div>
   </div>
 </template>
 
@@ -116,7 +159,8 @@
     },
     data () {
       return {
-        isMouseDown: false
+        isMouseDown: false,
+        enableAppIconBg: false
       }
     },
     computed: {
@@ -125,13 +169,27 @@
       }),
       ...mapState('Platform', {
         appIcon: state => state.appIcon
-      })
+      }),
+      appIconBg: function () {
+        let _t = this
+        let icon = _t.info.config.app.hasOwnProperty('icon') && _t.info.config.app.icon ? _t.info.config.app.icon : null
+        if (!icon) {
+          return {}
+        }
+        return {
+          backgroundImage: 'url(' + icon + ')'
+        }
+      }
     },
     methods: {
       // 鼠标按下
       mouseDownHandle: function () {
         let _t = this
         _t.isMouseDown = true
+      },
+      mouseUpHandle: function () {
+        let _t = this
+        _t.isMouseDown = false
       },
       // 打开应用
       openApp: function () {

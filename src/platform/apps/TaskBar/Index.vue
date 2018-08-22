@@ -35,6 +35,17 @@
       // #0E2E49
       border-top: 1px solid rgba(14, 46, 73, .3);
       box-sizing: content-box;
+      background: rgba(0, 0, 0, .1);
+
+      &:before {
+        content: ' ';
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 1px;
+        background: rgba(255, 255, 255, .2);
+      }
     }
     .time-block {
       float: right;

@@ -14,7 +14,7 @@
     overflow: hidden;
     background: #fff;
     /*border: 1px solid #fff;*/
-    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .1);
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, .1);
     writing-mode: horizontal-tb;
     transition: all .3s ease-out;
 
