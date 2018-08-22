@@ -10,7 +10,7 @@
     height: 39px;
     margin: 0 4px;
     position: relative;
-    user-select:none;
+    user-select: none;
     &.task-bar-icon-pinned {
     }
 
@@ -209,11 +209,13 @@
     @mousedown.left.stop.prevent="onIconMouseDown"
     @mouseup.left.stop.prevent="onIconMouseUp"
     @contextmenu.stop.prevent="onIconRightClick($event)"
-    @mouseenter.stop.prevent="onIconMouseOver"
-    @mouseleave.stop.prevent="onIconMouseOut"
     :title="info.app_title || info.config.app.title"
     :data-name="info.app_name || info.config.app.name"
   >
+    <!--
+    @mouseenter.stop.prevent="onIconMouseOver"
+    @mouseleave.stop.prevent="onIconMouseOut"
+    -->
     <!-- 预览图 -->
     <div class="task-bar-preview"
       v-show="previewImg"
@@ -223,9 +225,11 @@
         @mousedown.left.stop.prevent
         @mouseup.left.stop.prevent="onPreviewMouseUp"
         @contextmenu.stop.prevent
+      >
+        <!--
         @mouseover.stop.prevent="onPreviewMouseOver"
         @mouseout.stop.prevent="onPreviewMouseOut"
-      >
+        -->
         <div class="preview-bg" :style="{ 'background-image': 'url('+ previewImg + ')' }"></div>
         <div class="preview-title">{{ info.app_title || info.config.app.title }}</div>
         <div class="preview-img">
@@ -509,7 +513,10 @@
         // 转换方法
         let handler = function () {
           console.log('_t.targetWindow', _t.targetWindow.offsetWidth, _t.targetWindow.offsetHeight)
-          html2canvas(_t.targetWindow).then(function (canvas) {
+          html2canvas(_t.targetWindow, {
+            backgroundColor: null,
+            imageTimeout: 0
+          }).then(function (canvas) {
             _t.previewImg = canvas.toDataURL()
           }).catch(function (error) {
             console.warn('html2canvas render error!', error)
@@ -521,28 +528,26 @@
         if (appInfo.config.window.status !== 'open') {
           return
         }
-        let targetWindow
-        // if (appInfo.window.type === 'iframe') {
-        // targetWindow = document.querySelector('[window-name=' + appInfo.app.name + '] iframe body')
-        // } else if (appInfo.window.type === 'modal') {
-        let appName = appInfo.app_name || appInfo.config.app.name
-        targetWindow = document.querySelector('[window-name=' + appName + ']')
-        // }
-        _t.targetWindow = targetWindow
-        // 判断应用size，当size 为min时无法截图，需将窗口显示在浏览器窗口范围内
-        if (appInfo.config.window.size === 'min') {
-          // 广播事件 触发window事件
-          _t.$utils.bus.$emit('platform/window/trigger', {
-            // 预览缩略图显示
-            action: 'previewThumbShow',
-            data: {
-              appInfo: appInfo,
-              callback: handler
-            }
-          })
-        } else {
-          // 执行处理函数
-          handler()
+        if (appInfo.config.window.type === 'iframe') {
+          _t.previewImg = appInfo.config.app.icon
+        } else if (appInfo.config.window.type === 'modal') {
+          let appName = appInfo.app_name || appInfo.config.app.name
+          _t.targetWindow = document.querySelector('[window-name=' + appName + ']')
+          // 判断应用size，当size 为min时无法截图，需将窗口显示在浏览器窗口范围内
+          if (appInfo.config.window.size === 'min') {
+            // 广播事件 触发window事件
+            _t.$utils.bus.$emit('platform/window/trigger', {
+              // 预览缩略图显示
+              action: 'previewThumbShow',
+              data: {
+                appInfo: appInfo,
+                callback: handler
+              }
+            })
+          } else {
+            // 执行处理函数
+            handler()
+          }
         }
 //        setTimeout(function () {
 //          html2canvas(targetWindow).then(function (canvas) {
