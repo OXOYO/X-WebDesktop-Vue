@@ -17,7 +17,7 @@
     border: 1px solid transparent;
     border-radius: 2px;
     transition: all .2s ease-out;
-    user-select:none;
+    user-select: none;
     writing-mode: lr-tb;
 
     &:after {

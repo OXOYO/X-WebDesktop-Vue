@@ -52,13 +52,14 @@
 
 <script>
   import VideoPlayer from '../components/VideoPlayer'
-  import DVideoPlayer from '../components/DVideoPlayer'
+  // import DVideoPlayer from '../components/DVideoPlayer'
 
   export default {
     name: 'MainPage',
     components: {
-      VideoPlayer,
-      DVideoPlayer
+      VideoPlayer
+      // ,
+      // DVideoPlayer
     },
     data () {
       return {
