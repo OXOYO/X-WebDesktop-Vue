@@ -32,7 +32,7 @@ Version: 2.0.0 【开发中...】
 
 ## Preview
 
-  **Url**：[https://oxoyo.github.io/X-WebDesktop-Vue/](https://oxoyo.github.io/X-WebDesktop-Vue/)
+  **Url**：[http://47.93.49.248/X-WebDesktop-Vue/](http://47.93.49.248/X-WebDesktop-Vue/)
 
   **Account**：`admin`
 
