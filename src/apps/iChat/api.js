@@ -4,4 +4,11 @@
  * 接口
  */
 
-export default {}
+import Vue from 'vue'
+
+export default {
+  doSendMessage: async (data) => {
+    let res = await Vue.prototype.$http.post('/iChat/sendMessage', data)
+    return res
+  }
+}
