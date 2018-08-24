@@ -15,15 +15,24 @@
 
 <template>
   <div class="app-main">
-    <h1>TODO iChat</h1>
+    <MainPage :info="info"></MainPage>
   </div>
 </template>
 
 <script>
+  import MainPage from './pages/MainPage.vue'
   import Store from './store'
 
   export default {
     name: 'iChat',
+    components: {
+      MainPage
+    },
+    props: {
+      info: {
+        type: Object
+      }
+    },
     created: function () {
       let _t = this
       // 将store注册到apps下
