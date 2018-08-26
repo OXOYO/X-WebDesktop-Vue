@@ -48994,6 +48994,52 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'MainPage',
@@ -50286,7 +50332,7 @@ exports = module.exports = __webpack_require__(466)(false);
 
 
 // module
-exports.push([module.i, ".main-page{width:100%;height:100%;overflow:auto}.main-page .block-body{height:calc(100% - 50px);border-bottom:1px solid rgba(0,0,0,.1);padding:10px;overflow:auto}.main-page .block-body .msg-item{display:inline-block;margin:10px 0;width:100%}.main-page .block-body .msg-item.msg-robot .item-avatar{float:left;margin-right:10px}.main-page .block-body .msg-item.msg-robot .item-content{float:left}.main-page .block-body .msg-item.msg-visitor .item-avatar{float:right;margin-left:10px}.main-page .block-body .msg-item.msg-visitor .item-content,.main-page .block-body .msg-item.msg-visitor .msg-status-fail{float:right}.main-page .block-body .msg-item .item-avatar{width:32px;height:32px;display:inline-block}.main-page .block-body .msg-item .msg-status-fail{color:#ed3f14;margin:12px}.main-page .block-body .msg-item .item-content{display:inline-block;max-width:calc(100% - 80px);padding:10px;word-break:break-all;word-wrap:break-word;border-radius:4px;background:#f5f7f9}.main-page .block-body .msg-item .item-content.msg-last{background:#2db7f5;color:#fff}.main-page .block-body .msg-item .item-content img{max-width:100%}.main-page .block-footer{height:50px;padding:10px}.main-page .block-footer .msg-input{width:200px}.main-page .block-footer .msg-input input{border:none;outline:none}.main-page .block-footer .msg-input input:focus{box-shadow:none}.main-page .block-footer .msg-send{width:40px;float:right}", ""]);
+exports.push([module.i, ".main-page{width:100%;height:100%;overflow:auto}.main-page .block-body{height:calc(100% - 50px);border-bottom:1px solid rgba(0,0,0,.1);padding:10px;overflow:auto}.main-page .block-body .msg-item{display:inline-block;margin:10px 0;width:100%}.main-page .block-body .msg-item.msg-robot .item-avatar{float:left;margin-right:10px}.main-page .block-body .msg-item.msg-robot .item-content{float:left}.main-page .block-body .msg-item.msg-visitor .item-avatar{float:right;margin-left:10px}.main-page .block-body .msg-item.msg-visitor .item-content,.main-page .block-body .msg-item.msg-visitor .msg-status-fail{float:right}.main-page .block-body .msg-item .item-avatar{width:32px;height:32px;display:inline-block}.main-page .block-body .msg-item .msg-status-fail{color:#ed3f14;margin:12px}.main-page .block-body .msg-item .item-content{display:inline-block;max-width:calc(100% - 45px);padding:10px;word-break:break-all;word-wrap:break-word;border-radius:4px;background:#f5f7f9}.main-page .block-body .msg-item .item-content.msg-last{background:#2db7f5;color:#fff}.main-page .block-body .msg-item .item-content.msg-last a{color:#fff}.main-page .block-body .msg-item .item-content img{max-width:100%}.main-page .block-body .msg-item .item-content .news-item{display:inline-block;width:100%;max-height:60px;margin-bottom:10px;overflow:hidden}.main-page .block-body .msg-item .item-content .news-item:hover{background:#fff}.main-page .block-body .msg-item .item-content .news-item:hover .title{color:#495060}.main-page .block-body .msg-item .item-content .news-item .icon{width:60px;height:60px;float:left}.main-page .block-body .msg-item .item-content .news-item .title{width:calc(100% - 70px);max-height:60px;overflow:hidden;text-overflow:ellipsis;float:right}.main-page .block-footer{position:relative;height:50px;padding:10px}.main-page .block-footer .msg-input{width:200px}.main-page .block-footer .msg-input input{border:none;outline:none}.main-page .block-footer .msg-input input:focus{box-shadow:none}.main-page .block-footer .msg-send{width:40px;float:right}", ""]);
 
 // exports
 
@@ -59718,7 +59764,23 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "src": item.msg
       }
-    })] : _vm._e()], 2), _vm._v(" "), (item.status === 'fail') ? _c('Icon', {
+    })] : _vm._e(), _vm._v(" "), (item.type === 'news') ? _vm._l((item.msg), function(newsItem, newsIndex) {
+      return _c('a', {
+        key: newsIndex,
+        staticClass: "news-item",
+        attrs: {
+          "href": newsItem.detailurl,
+          "target": "_blank"
+        }
+      }, [_c('img', {
+        staticClass: "icon",
+        attrs: {
+          "src": newsItem.icon
+        }
+      }), _vm._v(" "), _c('div', {
+        staticClass: "title"
+      }, [_vm._v(_vm._s(newsItem.name))])])
+    }) : _vm._e()], 2), _vm._v(" "), (item.status === 'fail') ? _c('Icon', {
       staticClass: "msg-status-fail",
       attrs: {
         "type": "information-circled"
