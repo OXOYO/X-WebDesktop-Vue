@@ -61,7 +61,7 @@
 
         .item-content {
           display: inline-block;
-          max-width: calc(~"100% - 80px");
+          max-width: calc(~"100% - 45px");
           padding: 10px;
           word-break: break-all;
           word-wrap: break-word;
@@ -71,6 +71,10 @@
           &.msg-last {
             background: #2db7f5;
             color: #ffffff;
+
+            a {
+              color: #ffffff;
+            }
           }
 
           &.msg-type-text {
@@ -80,10 +84,40 @@
           img {
             max-width: 100%;
           }
+
+          .news-item {
+            display: inline-block;
+            width: 100%;
+            max-height: 60px;
+            margin-bottom: 10px;
+            overflow: hidden;
+
+            &:hover {
+              background: #ffffff;
+
+              .title {
+                color: #495060;
+              }
+            }
+
+            .icon {
+              width: 60px;
+              height: 60px;
+              float: left;
+            }
+            .title {
+              width: calc(~"100% - 70px");
+              max-height: 60px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              float: right;
+            }
+          }
         }
       }
     }
     .block-footer {
+      position: relative;
       height: 50px;
       padding: 10px;
 
@@ -135,6 +169,18 @@
           </template>
           <template v-if="item.type === 'image'">
             <img :src="item.msg">
+          </template>
+          <template v-if="item.type === 'news'">
+            <a
+              class="news-item"
+              v-for="(newsItem, newsIndex) in item.msg"
+              :key="newsIndex"
+              :href="newsItem.detailurl"
+              target="_blank"
+            >
+              <img class="icon" :src="newsItem.icon">
+              <div class="title">{{ newsItem.name }}</div>
+            </a>
           </template>
         </div>
         <Icon v-if="item.status === 'fail'" class="msg-status-fail" type="information-circled"></Icon>
