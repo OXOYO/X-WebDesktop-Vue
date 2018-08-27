@@ -120,6 +120,13 @@ export default {
       path: './apps/Wallpaper/',
       component: 'Index.vue',
       store: 'store/index.js'
+    },
+    // 分屏预览
+    SplitScreen: {
+      name: 'SplitScreen',
+      path: './apps/SplitScreen/',
+      component: 'Index.vue',
+      store: 'store/index.js'
     }
   }
 }

@@ -52,6 +52,8 @@
         :info="item"
       ></component>
       <component :is="childComponents.Wallpaper" :style="{ 'z-index': 1000 }"></component>
+      <!-- 分屏组件 -->
+      <component :is="childComponents.SplitScreen" :data="splitScreenData"></component>
     </div>
     <slot></slot>
   </div>
@@ -131,6 +133,12 @@
           height: '600px',
           'margin-left': '-400px',
           'margin-top': '-300px'
+        },
+        // 分屏数据
+        splitScreenData: {
+          enable: false,
+          // 分屏模式
+          type: ''
         }
       }
     },
@@ -1186,6 +1194,10 @@
           // 刷新用户应用列表
           _t.$utils.bus.$emit('Admin/appData/refresh')
         })
+      },
+      handleSplitScreen: function (tmpInfo) {
+        let _t = this
+        _t.splitScreenData = tmpInfo.data
       }
     },
     created: function () {
@@ -1207,6 +1219,10 @@
       // 监听 window 操作
       _t.$utils.bus.$on('platform/window/trigger', function (tmpInfo) {
         _t.handleWindowTrigger(tmpInfo)
+      })
+      // 监听 window 分屏
+      _t.$utils.bus.$on('platform/window/splitScreen', function (tmpInfo) {
+        _t.handleSplitScreen(tmpInfo)
       })
       // 监听应用安装
       _t.$utils.bus.$on('platform/application/install', function (tmpInfo) {
