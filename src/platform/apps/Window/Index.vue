@@ -307,8 +307,17 @@
             // 回调
             callback: {
               start: null,
-              move: null,
+              move: _t.handleDragResizeMove,
               done: _t.handleDragResizeDone
+            },
+            // 范围
+            range: () => {
+              return {
+                minX: 0,
+                maxX: document.body.clientWidth,
+                minY: 0,
+                maxY: document.body.clientHeight - 60
+              }
             }
           },
           // 缩放配置
@@ -483,6 +492,36 @@
           action: 'zIndexChangeByWindow',
           data: {
             appInfo: appInfo
+          }
+        })
+      },
+      // 拖拽中回调
+      handleDragResizeMove: function (style, mousePosition, range) {
+        let _t = this
+        console.log('mousePosition', mousePosition)
+        let splitScreen = {
+          enable: true,
+          // 分屏模式
+          type: ''
+        }
+        if (mousePosition.x === range.minX) {
+          splitScreen.type = 'half-left'
+        } else if (mousePosition.x === range.maxX) {
+          splitScreen.type = 'half-right'
+        } else if (mousePosition.y === range.minY) {
+          splitScreen.type = 'full-screen'
+        } else {
+          splitScreen.enable = false
+        }
+        // if (splitScreen.enable) {
+        //
+        // }
+        // 广播事件 触发splitScreen事件
+        _t.$utils.bus.$emit('platform/window/splitScreen', {
+          // 通过XDrag控制窗口拖拽、缩放
+          action: 'splitScreen',
+          data: {
+            ...splitScreen
           }
         })
       },

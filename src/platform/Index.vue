@@ -35,7 +35,8 @@
          DesktopIcon: components.DesktopIcon,
          DesktopWidget: components.DesktopWidget,
          Window: components.Window,
-         Wallpaper: components.Wallpaper
+         Wallpaper: components.Wallpaper,
+         SplitScreen: components.SplitScreen
         }"
       >
         <component :is="components.TaskBar">
