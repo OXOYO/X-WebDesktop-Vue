@@ -316,7 +316,9 @@
                 minX: 0,
                 maxX: document.body.clientWidth,
                 minY: 0,
-                maxY: document.body.clientHeight - 60
+                maxY: document.body.clientHeight - 60,
+                // 间距5px
+                margin: 5
               }
             }
           },
@@ -498,17 +500,29 @@
       // 拖拽中回调
       handleDragResizeMove: function (style, mousePosition, range) {
         let _t = this
-        console.log('mousePosition', mousePosition)
+        console.log('mousePosition', mousePosition, range)
         let splitScreen = {
           enable: true,
           // 分屏模式
           type: ''
         }
-        if (mousePosition.x === range.minX) {
-          splitScreen.type = 'half-left'
-        } else if (mousePosition.x === range.maxX) {
-          splitScreen.type = 'half-right'
-        } else if (mousePosition.y === range.minY) {
+        let minX = range.minX + range.margin
+        let maxX = range.maxX - range.margin
+        let minY = range.minY + range.margin
+        let maxY = range.maxY - range.margin
+        if (mousePosition.x <= minX && mousePosition.y <= minY) {
+          splitScreen.type = 'left-top'
+        } else if (mousePosition.x <= minX && mousePosition.y >= maxY) {
+          splitScreen.type = 'left-bottom'
+        } else if (mousePosition.x >= maxX && mousePosition.y <= minY) {
+          splitScreen.type = 'right-top'
+        } else if (mousePosition.x >= maxX && mousePosition.y >= maxY) {
+          splitScreen.type = 'right-bottom'
+        } else if (mousePosition.x <= minX) {
+          splitScreen.type = 'left'
+        } else if (mousePosition.x >= maxX) {
+          splitScreen.type = 'right'
+        } else if (mousePosition.y <= minY) {
           splitScreen.type = 'full-screen'
         } else {
           splitScreen.enable = false

@@ -133,13 +133,14 @@ XDrag.install = function (Vue) {
                   }
                   // 检查范围
                   let range
+                  let isOutRange = false
                   if (config.drag.range) {
                     range = config.drag.range
                     if (typeof config.drag.range === 'function') {
                       range = config.drag.range()
                       if (mousePosition.x < range.minX || mousePosition.x > range.maxX || mousePosition.y < range.minY || mousePosition.y > range.maxY) {
                         console.log('XDrag Warning:: drag out range!')
-                        return
+                        isOutRange = true
                       }
                     }
                   }
@@ -149,18 +150,20 @@ XDrag.install = function (Vue) {
                   if (!target.classList.contains(config.drag.class.move)) {
                     target.classList.add(config.drag.class.move)
                   }
-                  let dis = {
-                    x: mousePosition.x - dragInfo.start.x,
-                    y: mousePosition.y - dragInfo.start.y
+                  if (!isOutRange) {
+                    let dis = {
+                      x: mousePosition.x - dragInfo.start.x,
+                      y: mousePosition.y - dragInfo.start.y
+                    }
+                    dragInfo.done = {
+                      left: dragInfo.position.left + dis.x + 'px',
+                      top: dragInfo.position.top + dis.y + 'px',
+                      margin: 0
+                    }
+                    Object.keys(dragInfo.done).map(function (key) {
+                      target.style[key] = dragInfo.done[key]
+                    })
                   }
-                  dragInfo.done = {
-                    left: dragInfo.position.left + dis.x + 'px',
-                    top: dragInfo.position.top + dis.y + 'px',
-                    margin: 0
-                  }
-                  Object.keys(dragInfo.done).map(function (key) {
-                    target.style[key] = dragInfo.done[key]
-                  })
                   if (config.drag.callback && typeof config.drag.callback.move === 'function') {
                     config.drag.callback.move(dragInfo.done, mousePosition, range)
                   }

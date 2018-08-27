@@ -10,30 +10,56 @@
     z-index: 1999;
     padding: 10px;
 
-    &.half-left {
+    &.left-top {
       top: 0;
       right: 50%;
+      bottom: 50%;
       left: 0;
-      bottom: 40px;
     }
-    &.half-right {
+    &.left-bottom {
+      top: 50%;
+      right: 50%;
+      bottom: 40px;
+      left: 0;
+    }
+    &.right-top {
       top: 0;
       right: 0;
+      bottom: 50%;
       left: 50%;
+    }
+    &.right-bottom {
+      top: 50%;
+      right: 0;
       bottom: 40px;
+      left: 50%;
+    }
+    &.left {
+      top: 0;
+      right: 50%;
+      bottom: 40px;
+      left: 0;
+    }
+    &.right {
+      top: 0;
+      right: 0;
+      bottom: 40px;
+      left: 50%;
     }
     &.full-screen {
       top: 0;
       right: 0;
-      left: 0;
       bottom: 40px;
+      left: 0;
     }
 
     .content {
       display: inline-block;
       width: 100%;
       height: 100%;
-      background: rgba(255, 255, 255, .8);
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 5px 5px rgba(0, 0, 0, .2);
     }
   }
 </style>
