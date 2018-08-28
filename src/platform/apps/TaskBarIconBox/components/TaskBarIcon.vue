@@ -8,7 +8,7 @@
     display: inline-block;
     width: 60px;
     height: 39px;
-    margin: 0 4px;
+    margin: 0 1px;
     position: relative;
     user-select: none;
     &.task-bar-icon-pinned {
