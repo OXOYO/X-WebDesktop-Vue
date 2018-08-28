@@ -384,13 +384,17 @@
             height: 0,
             top: '100%'
           }
+        },
+        splitScreen: {
+          enable: false,
+          // 分屏模式
+          type: ''
         }
       }
     },
     computed: {
       ...mapState('Platform/Admin', {
         _appData: state => {
-          console.log('state', mapState, state)
           return state._appData
         }
       }),
@@ -426,7 +430,6 @@
       // 处理窗口拖拽缩放配置
       handleDragResizeConfig: function () {
         let _t = this
-        console.log('_t.info', _t.info)
         // 当前应用的拖拽缩放配置
         let appDragResizeConfig = _t.info.config.window.hasOwnProperty('dragResizeConfig') ? _t.info.config.window.dragResizeConfig : {}
         // 合并配置，遇到对象则合并，其他覆盖
@@ -500,11 +503,12 @@
       // 拖拽中回调
       handleDragResizeMove: function (style, mousePosition, range) {
         let _t = this
-        console.log('mousePosition', mousePosition, range)
         let splitScreen = {
           enable: true,
           // 分屏模式
-          type: ''
+          type: '',
+          mousePosition,
+          range
         }
         let minX = range.minX + range.margin
         let maxX = range.maxX - range.margin
@@ -527,11 +531,9 @@
         } else {
           splitScreen.enable = false
         }
-        // if (splitScreen.enable) {
-        //
-        // }
-        // 广播事件 触发splitScreen事件
-        _t.$utils.bus.$emit('platform/window/splitScreen', {
+        _t.splitScreen = splitScreen
+        // 广播事件 触发splitScreen显示事件
+        _t.$utils.bus.$emit('platform/window/splitScreen/show', {
           // 通过XDrag控制窗口拖拽、缩放
           action: 'splitScreen',
           data: {
@@ -542,12 +544,75 @@
       // 拖拽完成回调
       handleDragResizeDone: function (style) {
         let _t = this
-//        console.log('drag resize style', style)
         // 分发mutations，更新窗口样式
         let appInfo = {..._t.info}
+        let bodyWidth = document.body.clientWidth
+        let bodyHeight = document.body.clientHeight - 40
+        let splitScreenStyle = {}
+        if (_t.splitScreen.enable && _t.splitScreen.type) {
+          switch (_t.splitScreen.type) {
+            case 'left-top':
+              splitScreenStyle = {
+                top: 0,
+                left: 0,
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight / 2 + 'px'
+              }
+              break
+            case 'left-bottom':
+              splitScreenStyle = {
+                top: bodyHeight / 2 + 'px',
+                left: 0,
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight / 2 + 'px'
+              }
+              break
+            case 'right-top':
+              splitScreenStyle = {
+                top: 0,
+                left: bodyWidth / 2 + 'px',
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight / 2 + 'px'
+              }
+              break
+            case 'right-bottom':
+              splitScreenStyle = {
+                top: bodyHeight / 2 + 'px',
+                left: bodyWidth / 2 + 'px',
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight / 2 + 'px'
+              }
+              break
+            case 'left':
+              splitScreenStyle = {
+                top: 0,
+                left: 0,
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight + 'px'
+              }
+              break
+            case 'right':
+              splitScreenStyle = {
+                top: 0,
+                left: bodyWidth / 2 + 'px',
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight + 'px'
+              }
+              break
+            case 'full-screen':
+              splitScreenStyle = {
+                top: 0,
+                left: 0,
+                width: bodyWidth + 'px',
+                height: bodyHeight + 'px'
+              }
+              break
+          }
+        }
         appInfo.config['window']['style'] = {
           ...appInfo.config['window']['style'],
-          ...style
+          ...style,
+          ...splitScreenStyle
         }
         // 广播事件 触发window事件
         _t.$utils.bus.$emit('platform/window/trigger', {
@@ -557,6 +622,8 @@
             appInfo: appInfo
           }
         })
+        // 广播事件 触发splitScreen隐藏事件
+        _t.$utils.bus.$emit('platform/window/splitScreen/hide')
       }
     }
   }

@@ -108,12 +108,14 @@
 //            'margin-top': '-300px'
           },
           max: {
-            width: 'auto',
-            height: 'auto',
+            // width: 'auto',
+            // height: 'auto',
+            width: 'calc(100%)',
+            height: 'calc(100% - 40px)',
             left: 0,
-            top: 0,
-            right: 0,
-            bottom: '42px'
+            top: 0
+            // right: 0,
+            // bottom: '42px'
           },
           min: {
             width: 0,
@@ -1220,8 +1222,8 @@
       _t.$utils.bus.$on('platform/window/trigger', function (tmpInfo) {
         _t.handleWindowTrigger(tmpInfo)
       })
-      // 监听 window 分屏
-      _t.$utils.bus.$on('platform/window/splitScreen', function (tmpInfo) {
+      // 监听 window 分屏显示
+      _t.$utils.bus.$on('platform/window/splitScreen/show', function (tmpInfo) {
         _t.handleSplitScreen(tmpInfo)
       })
       // 监听应用安装

@@ -8,68 +8,50 @@
   .split-screen {
     position: absolute;
     z-index: 1999;
-    padding: 10px;
-
-    &.left-top {
-      top: 0;
-      right: 50%;
-      bottom: 50%;
-      left: 0;
-    }
-    &.left-bottom {
-      top: 50%;
-      right: 50%;
-      bottom: 40px;
-      left: 0;
-    }
-    &.right-top {
-      top: 0;
-      right: 0;
-      bottom: 50%;
-      left: 50%;
-    }
-    &.right-bottom {
-      top: 50%;
-      right: 0;
-      bottom: 40px;
-      left: 50%;
-    }
-    &.left {
-      top: 0;
-      right: 50%;
-      bottom: 40px;
-      left: 0;
-    }
-    &.right {
-      top: 0;
-      right: 0;
-      bottom: 40px;
-      left: 50%;
-    }
-    &.full-screen {
-      top: 0;
-      right: 0;
-      bottom: 40px;
-      left: 0;
-    }
+    transition: all .2s ease-in;
 
     .content {
       display: inline-block;
-      width: 100%;
-      height: 100%;
+      width: calc(~"100% - 20px");
+      height: calc(~"100% - 20px");
+      margin: 10px;
       background: transparent;
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 0 5px 5px rgba(0, 0, 0, .2);
     }
+    .ripple {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      /*background: #b8e0e0;*/
+      background: #ffffff;
+      border-radius: 100%;
+      transform: scale(0);
+
+      &.animate {
+        animation: ripple .2s linear;
+      }
+    }
+    @keyframes ripple {
+      100% {opacity: 0; transform: scale(2.5);}
+    }
+
   }
 </style>
 
 <template>
   <div
-    v-show="splitScreenData.enable"
+    v-show="isShow"
     class="split-screen"
-    :class="splitScreenData.type"
+    :class="data.type"
+    :style="splitScreenStyle"
   >
+    <div
+      class="ripple"
+      :class="{'animate': isEnableRipple}"
+      :style="rippleStyle"
+    >
+    </div>
     <div class="content"></div>
   </div>
 </template>
@@ -79,7 +61,54 @@
     name: 'SplitScreen',
     data () {
       return {
-        splitScreenData: {}
+        isShow: false,
+        isEnableRipple: false,
+        splitScreenStyle: {},
+        splitScreenStyleByType: {
+          'left-top': {
+            top: 0,
+            right: '50%',
+            bottom: 'calc(50% - 40px)',
+            left: 0
+          },
+          'left-bottom': {
+            top: '50%',
+            right: '50%',
+            bottom: '40px',
+            left: 0
+          },
+          'right-top': {
+            top: 0,
+            right: 0,
+            bottom: '50%',
+            left: '50%'
+          },
+          'right-bottom': {
+            top: '50%',
+            right: 0,
+            bottom: '40px',
+            left: '50%'
+          },
+          left: {
+            top: 0,
+            right: '50%',
+            bottom: '40px',
+            left: 0
+          },
+          right: {
+            top: 0,
+            right: 0,
+            bottom: '40px',
+            left: '50%'
+          },
+          'full-screen': {
+            top: 0,
+            right: 0,
+            bottom: '40px',
+            left: 0
+          }
+        },
+        rippleStyle: {}
       }
     },
     props: {
@@ -99,11 +128,142 @@
       data: {
         handler: function (val) {
           let _t = this
-          console.log('splitScreenData', val)
-          _t.splitScreenData = val
+          if (val.enable && val.type) {
+            _t.isShow = true
+            if (!Object.keys(_t.splitScreenStyle).length) {
+              _t.splitScreenStyle = {
+                top: val.mousePosition.y + 'px',
+                right: val.range.maxX - val.mousePosition.x + 'px',
+                bottom: val.range.maxY - val.mousePosition.y + 40 + 'px',
+                left: val.mousePosition.x + 'px'
+              }
+              switch (val.type) {
+                case 'left-top':
+                  _t.rippleStyle = {
+                    top: val.mousePosition.y - 20 + 'px',
+                    left: '-20px'
+                  }
+                  break
+                case 'left-bottom':
+                  _t.rippleStyle = {
+                    bottom: '-20px',
+                    left: '-20px'
+                  }
+                  break
+                case 'right-top':
+                  _t.rippleStyle = {
+                    top: val.mousePosition.y - 20 + 'px',
+                    right: '-20px'
+                  }
+                  break
+                case 'right-bottom':
+                  _t.rippleStyle = {
+                    bottom: '-20px',
+                    right: '-20px'
+                  }
+                  break
+                case 'left':
+                  _t.rippleStyle = {
+                    top: val.mousePosition.y - 20 + 'px',
+                    left: '-20px'
+                  }
+                  break
+                case 'right':
+                  _t.rippleStyle = {
+                    top: val.mousePosition.y - 20 + 'px',
+                    right: '-20px'
+                  }
+                  break
+                case 'full-screen':
+                  _t.rippleStyle = {
+                    top: '-20px',
+                    left: val.mousePosition.x - 20 + 'px'
+                  }
+                  break
+              }
+            }
+            setTimeout(function () {
+              let splitScreenStyle = {}
+              let bodyWidth = document.body.clientWidth
+              let bodyHeight = document.body.clientHeight - 40
+              switch (val.type) {
+                case 'left-top':
+                  splitScreenStyle = {
+                    top: 0,
+                    left: 0,
+                    width: bodyWidth / 2 + 'px',
+                    height: bodyHeight / 2 + 'px'
+                  }
+                  break
+                case 'left-bottom':
+                  splitScreenStyle = {
+                    top: bodyHeight / 2 + 'px',
+                    left: 0,
+                    width: bodyWidth / 2 + 'px',
+                    height: bodyHeight / 2 + 'px'
+                  }
+                  break
+                case 'right-top':
+                  splitScreenStyle = {
+                    top: 0,
+                    left: bodyWidth / 2 + 'px',
+                    width: bodyWidth / 2 + 'px',
+                    height: bodyHeight / 2 + 'px'
+                  }
+                  break
+                case 'right-bottom':
+                  splitScreenStyle = {
+                    top: bodyHeight / 2 + 'px',
+                    left: bodyWidth / 2 + 'px',
+                    width: bodyWidth / 2 + 'px',
+                    height: bodyHeight / 2 + 'px'
+                  }
+                  break
+                case 'left':
+                  splitScreenStyle = {
+                    top: 0,
+                    left: 0,
+                    width: bodyWidth / 2 + 'px',
+                    height: bodyHeight + 'px'
+                  }
+                  break
+                case 'right':
+                  splitScreenStyle = {
+                    top: 0,
+                    left: bodyWidth / 2 + 'px',
+                    width: bodyWidth / 2 + 'px',
+                    height: bodyHeight + 'px'
+                  }
+                  break
+                case 'full-screen':
+                  splitScreenStyle = {
+                    top: 0,
+                    left: 0,
+                    width: bodyWidth + 'px',
+                    height: bodyHeight + 'px'
+                  }
+                  break
+              }
+              _t.splitScreenStyle = splitScreenStyle
+              setTimeout(function () {
+                _t.isEnableRipple = true
+              }, 200)
+            }, 0)
+          } else {
+            _t.isShow = false
+            _t.isEnableRipple = false
+            _t.splitScreenStyle = {}
+          }
         },
         deep: true
       }
+    },
+    created: function () {
+      let _t = this
+      // 监听 window 分屏
+      _t.$utils.bus.$on('platform/window/splitScreen/hide', function (tmpInfo) {
+        _t.isShow = false
+      })
     }
   }
 </script>
