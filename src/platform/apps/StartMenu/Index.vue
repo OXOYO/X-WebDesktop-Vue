@@ -49,7 +49,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-left: -20px;
+        margin-left: -23px;
         margin-top: -20px;
         width: 40px;
         height: 40px;
@@ -58,7 +58,7 @@
         /*box-shadow: 0 0 0 1px hsla(0,0%,100%,.3) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);*/
       }
       .app-icon-down {
-        margin-left: -19px;
+        margin-left: -22px;
         margin-top: -19px;
       }
       .app-icon-bg {
