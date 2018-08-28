@@ -738,10 +738,10 @@
                 let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
                 if (taskBarList.length) {
                   let taskBarIndex = taskBarList.indexOf(currentAppIndex)
-                  // FIXME 每个任务栏图标实际宽度 68px
+                  // FIXME 每个任务栏图标实际宽度 62px
                   iconList[currentAppIndex].config['window']['style'] = {
                     ...iconList[currentAppIndex].config['window']['style'],
-                    left: 68 * (taskBarIndex + 1) + 'px'
+                    left: 62 * (taskBarIndex + 1) + 'px'
                   }
                 }
               } else {
@@ -783,10 +783,10 @@
               let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
               if (taskBarList.length) {
                 let taskBarIndex = taskBarList.indexOf(currentAppIndex)
-                // FIXME 每个任务栏图标实际宽度 68px
+                // FIXME 每个任务栏图标实际宽度 62px
                 iconList[currentAppIndex].config['window']['style'] = {
                   ...iconList[currentAppIndex].config['window']['style'],
-                  left: 68 * (taskBarIndex + 1) + 'px'
+                  left: 62 * (taskBarIndex + 1) + 'px'
                 }
               }
               break
@@ -940,10 +940,10 @@
           let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
           if (taskBarList.length) {
             let taskBarIndex = taskBarList.indexOf(currentAppIndex)
-            // FIXME 每个任务栏图标实际宽度 68px
+            // FIXME 每个任务栏图标实际宽度 62px
             iconList[currentAppIndex].config['window']['style'] = {
               ...iconList[currentAppIndex].config['window']['style'],
-              left: 68 * (taskBarIndex + 1) + 'px'
+              left: 62 * (taskBarIndex + 1) + 'px'
             }
           }
           _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
@@ -1042,10 +1042,10 @@
                   let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
                   if (taskBarList.length) {
                     let taskBarIndex = taskBarList.indexOf(currentAppIndex)
-                    // FIXME 每个任务栏图标实际宽度 68px
+                    // FIXME 每个任务栏图标实际宽度 62px
                     iconList[currentAppIndex].config['window']['style'] = {
                       ...iconList[currentAppIndex].config['window']['style'],
-                      left: 68 * (taskBarIndex + 1) + 'px'
+                      left: 62 * (taskBarIndex + 1) + 'px'
                     }
                   }
                 } else {

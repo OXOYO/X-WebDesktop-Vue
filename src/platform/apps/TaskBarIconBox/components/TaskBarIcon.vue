@@ -209,6 +209,8 @@
     @mousedown.left.stop.prevent="onIconMouseDown"
     @mouseup.left.stop.prevent="onIconMouseUp"
     @contextmenu.stop.prevent="onIconRightClick($event)"
+    @mouseenter.stop.prevent="onIconMouseOver"
+    @mouseleave.stop.prevent="onIconMouseOut"
     :title="info.app_title || info.config.app.title"
     :data-name="info.app_name || info.config.app.name"
   >
@@ -230,9 +232,9 @@
         @mouseover.stop.prevent="onPreviewMouseOver"
         @mouseout.stop.prevent="onPreviewMouseOut"
         -->
-        <div class="preview-bg" :style="{ 'background-image': 'url('+ previewImg + ')' }"></div>
+        <!--<div class="preview-bg" :style="{ 'background-image': 'url('+ previewImg || '' + ')' }"></div>-->
         <div class="preview-title">{{ info.app_title || info.config.app.title }}</div>
-        <div class="preview-img">
+        <div class="preview-img" v-if="previewImg">
           <img :src="previewImg">
         </div>
       </div>
@@ -562,6 +564,7 @@
         if (_t.previewImg && _t.targetWindow) {
           _t.previewImg = null
           _t.targetWindow = null
+          /*
           let appInfo = {..._t.info}
           // 广播事件 触发window事件
           _t.$utils.bus.$emit('platform/window/trigger', {
@@ -571,6 +574,7 @@
               appInfo: appInfo
             }
           })
+          */
         }
       },
       // 预览当前窗口 打开
