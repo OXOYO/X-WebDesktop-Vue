@@ -64,50 +64,6 @@
         isShow: false,
         isEnableRipple: false,
         splitScreenStyle: {},
-        splitScreenStyleByType: {
-          'left-top': {
-            top: 0,
-            right: '50%',
-            bottom: 'calc(50% - 40px)',
-            left: 0
-          },
-          'left-bottom': {
-            top: '50%',
-            right: '50%',
-            bottom: '40px',
-            left: 0
-          },
-          'right-top': {
-            top: 0,
-            right: 0,
-            bottom: '50%',
-            left: '50%'
-          },
-          'right-bottom': {
-            top: '50%',
-            right: 0,
-            bottom: '40px',
-            left: '50%'
-          },
-          left: {
-            top: 0,
-            right: '50%',
-            bottom: '40px',
-            left: 0
-          },
-          right: {
-            top: 0,
-            right: 0,
-            bottom: '40px',
-            left: '50%'
-          },
-          'full-screen': {
-            top: 0,
-            right: 0,
-            bottom: '40px',
-            left: 0
-          }
-        },
         rippleStyle: {}
       }
     },
@@ -140,26 +96,26 @@
               switch (val.type) {
                 case 'left-top':
                   _t.rippleStyle = {
-                    top: val.mousePosition.y - 20 + 'px',
+                    top: '-20px',
                     left: '-20px'
                   }
                   break
                 case 'left-bottom':
                   _t.rippleStyle = {
-                    bottom: '-20px',
+                    top: 'calc(100% - 20px)',
                     left: '-20px'
                   }
                   break
                 case 'right-top':
                   _t.rippleStyle = {
-                    top: val.mousePosition.y - 20 + 'px',
-                    right: '-20px'
+                    top: '-20px',
+                    left: 'calc(100% - 20px)'
                   }
                   break
                 case 'right-bottom':
                   _t.rippleStyle = {
-                    bottom: '-20px',
-                    right: '-20px'
+                    top: 'calc(100% - 20px)',
+                    left: 'calc(100% - 20px)'
                   }
                   break
                 case 'left':
@@ -172,6 +128,18 @@
                   _t.rippleStyle = {
                     top: val.mousePosition.y - 20 + 'px',
                     right: '-20px'
+                  }
+                  break
+                case 'top':
+                  _t.rippleStyle = {
+                    top: '-20px',
+                    left: val.mousePosition.x - parseInt(val.style.left) - 20 + 'px'
+                  }
+                  break
+                case 'bottom':
+                  _t.rippleStyle = {
+                    top: 'calc(100% - 20px)',
+                    left: val.mousePosition.x - parseInt(val.style.left) - 20 + 'px'
                   }
                   break
                 case 'full-screen':
@@ -232,6 +200,15 @@
                     top: 0,
                     left: bodyWidth / 2 + 'px',
                     width: bodyWidth / 2 + 'px',
+                    height: bodyHeight + 'px'
+                  }
+                  break
+                case 'top':
+                case 'bottom':
+                  splitScreenStyle = {
+                    top: 0,
+                    left: val.style.left,
+                    width: val.style.width,
                     height: bodyHeight + 'px'
                   }
                   break
