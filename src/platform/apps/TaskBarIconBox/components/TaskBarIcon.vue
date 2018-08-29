@@ -209,8 +209,6 @@
     @mousedown.left.stop.prevent="onIconMouseDown"
     @mouseup.left.stop.prevent="onIconMouseUp"
     @contextmenu.stop.prevent="onIconRightClick($event)"
-    @mouseenter.stop.prevent="onIconMouseOver"
-    @mouseleave.stop.prevent="onIconMouseOut"
     :title="info.app_title || info.config.app.title"
     :data-name="info.app_name || info.config.app.name"
   >
@@ -234,7 +232,7 @@
         -->
         <!--<div class="preview-bg" :style="{ 'background-image': 'url('+ previewImg || '' + ')' }"></div>-->
         <div class="preview-title">{{ info.app_title || info.config.app.title }}</div>
-        <div class="preview-img" v-if="previewImg">
+        <div class="preview-img">
           <img :src="previewImg">
         </div>
       </div>
