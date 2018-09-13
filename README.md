@@ -40,28 +40,8 @@ Version: 2.0.0 【开发中...】
 
 ## Screenshot
 
-### PC
+![](./document/screenshot/preview_pc_admin_0913.png "preview_pc_admin")
 
-![](./document/screenshot/preview_pc_home.png "preview_home")
-
-![](./document/screenshot/preview_pc_admin_002.png "preview_pc_admin_002")
-
-![](./document/screenshot/preview_pc_admin_003.png "preview_pc_admin_003")
-
-![](./document/screenshot/preview_pc_admin_004.png "preview_pc_admin_004")
-
-![](./document/screenshot/preview_pc_admin.gif "preview_admin")
-
-### Mobile
-
-![](./document/screenshot/preview_mobile_home_portrait_001.jpg "preview_mobile_home_portrait_001")
-![](./document/screenshot/preview_mobile_home_portrait_002.jpg "preview_mobile_home_portrait_002")
-![](./document/screenshot/preview_mobile_admin_portrait_001.jpg "preview_mobile_admin_portrait_001")
-![](./document/screenshot/preview_mobile_admin_portrait_002.jpg "preview_mobile_admin_portrait_002")
-![](./document/screenshot/preview_mobile_admin_portrait_003.jpg "preview_mobile_admin_portrait_003")
-![](./document/screenshot/preview_mobile_admin_portrait_004.jpg "preview_mobile_admin_portrait_004")
-![](./document/screenshot/preview_mobile_admin_landscape_001.jpg "preview_mobile_admin_landscape_001")
-![](./document/screenshot/preview_mobile_admin_landscape_002.jpg "preview_mobile_admin_landscape_002")
 
 ## 目录结构
 ```bash
