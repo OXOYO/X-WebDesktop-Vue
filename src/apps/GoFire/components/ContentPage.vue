@@ -26,6 +26,7 @@
       v-show="key === currentTabIndex"
       :key="key"
       :src="item.url"
+      ref="iframes"
       class="iframe-box"
       name="iframe-box"
       frameborder="0"
@@ -52,6 +53,22 @@
         let _t = this
         return _t.tabPageMap[_t.currentTabIndex]
       }
+    },
+    methods: {
+      handleUrl: function (url) {
+        if (url) {
+          url = url.replace(/^(https|http|ftp|rtsp|mms)?/i, 'http')
+        }
+      }
+    },
+    created: function () {
+      let _t = this
+      _t.$utils.bus.$on('Apps/GoFire/tab/refresh', function (data) {
+        _t.$refs.iframes[data.index].contentWindow.location = null
+        setTimeout(function () {
+          _t.$refs.iframes[data.index].contentWindow.location = data.info.url
+        }, 0)
+      })
     }
   }
 </script>

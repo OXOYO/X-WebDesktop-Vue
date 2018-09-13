@@ -12,27 +12,39 @@ export default {
     let tabPageMap = {
       ...state.tabPageMap
     }
-    delete tabPageMap[data]
-    if (!Object.keys(tabPageMap).length) {
-      tabPageMap[Object.keys(tabPageMap).length] = JSON.parse(JSON.stringify(state.homePage))
+    let targetIndex = Object.keys(tabPageMap).indexOf(data)
+    if (targetIndex > -1) {
+      if (Object.keys(tabPageMap).length > 1) {
+        if (targetIndex === 0) {
+          state.currentTabIndex = Object.keys(tabPageMap)[targetIndex + 1] + ''
+        } else {
+          state.currentTabIndex = Object.keys(tabPageMap)[targetIndex - 1] + ''
+        }
+      }
+      // 执行删除操作
+      delete tabPageMap[data]
+      if (!Object.keys(tabPageMap).length) {
+        let tabIndex = '0'
+        tabPageMap[tabIndex] = JSON.parse(JSON.stringify(state.newTab))
+        state.currentTabIndex = tabIndex
+      }
+      state.tabPageMap = {
+        ...tabPageMap
+      }
     }
-    state.tabPageMap = {
-      ...tabPageMap
-    }
-    state.currentTabIndex = (data - 1 > -1 ? data - 1 : 0) + ''
   },
   'tab/add': (state, data) => {
     let tabPageMap = {
       ...state.tabPageMap
     }
-    tabPageMap[Object.keys(tabPageMap).length] = JSON.parse(JSON.stringify(state.newTab))
+    let tabIndex = parseInt(Object.keys(tabPageMap)[Object.keys(tabPageMap).length - 1 > 0 ? Object.keys(tabPageMap).length - 1 : 0]) + 1 + ''
+    tabPageMap[tabIndex] = JSON.parse(JSON.stringify(state.newTab))
     state.tabPageMap = {
       ...tabPageMap
     }
-    state.currentTabIndex = Object.keys(tabPageMap).length - 1 + ''
+    state.currentTabIndex = tabIndex
   },
   'tab/update': (state, data) => {
-    console.log('data', data)
     state.tabPageMap[data.index] = data.info
   }
 }
