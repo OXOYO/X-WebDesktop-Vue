@@ -239,6 +239,15 @@
               &:hover {
                 color: #57a3f3;
               }
+
+              .info-author-link {
+                display: inline-block;
+                color: #ffffff;
+
+                &:hover {
+                  color: #2d8cf0;
+                }
+              }
             }
           }
         }
@@ -344,6 +353,11 @@
             <div class="info-action-group">
               <div class="info-action-item">
                 系统设置
+              </div>
+            </div>
+            <div class="info-action-group">
+              <div class="info-action-item">
+                <a class="info-author-link" v-if="$Config.System.repository.url" :href="$Config.System.repository.url" target="_blank">GitHub</a>
               </div>
             </div>
           </div>
