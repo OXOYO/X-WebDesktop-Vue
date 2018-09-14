@@ -1,20 +1,26 @@
 # X-WebDesktop-Vue
 
-Version: 2.0.0 【开发中...】
-
 基于 Vue 的 WebDesktop 系统
 
 # Version
 
 | FrontEnd | API |
 | :-------- | :-------- |
-| [2.0.0](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master) | [2.0.0](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/master) |
+| [2.x](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master) | [2.x](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/master) |
 | [1.0.1](https://github.com/OXOYO/X-WebDesktop-Vue/tree/1.0.1) | [1.0.1](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/1.0.1) |
 | [1.0.0](https://github.com/OXOYO/X-Desktop-Vue/tree/master) | - |
 
 ## Documentation
 
 [中文文档 (2.0.0)](./document/README.md)
+
+## Preview
+
+  **Url**：[http://47.93.49.248/X-WebDesktop-Vue/](http://47.93.49.248/X-WebDesktop-Vue/)
+
+  **Account**：`admin`
+
+  **Password**：`123456`
 
 ## Start
 
@@ -29,14 +35,6 @@ Version: 2.0.0 【开发中...】
 ```bash
   npm run build
 ```
-
-## Preview
-
-  **Url**：[http://47.93.49.248/X-WebDesktop-Vue/](http://47.93.49.248/X-WebDesktop-Vue/)
-
-  **Account**：`admin`
-
-  **Password**：`123456`
 
 ## Screenshot
 
@@ -110,8 +108,23 @@ Version: 2.0.0 【开发中...】
 ```
 
 ## TODO
-  1.架构调整，需重构，应用设计更合理。
+  v3.x
+  - [ ] 1.架构优化，前后端功能划分优化，项目结构优化。
+  - [ ] 2.支持多种应用类型，如应用、文件、快捷方式。
+  - [ ] 3.引入虚拟文件系统。
+  - [ ] 4.右键菜单支持上下文，右键菜单图标美化。
+  - [ ] 5.数据表结构优化，优化应用配置信息。
+  - [ ] 6.用户系统完善，支持多用户，引入RBAC。
+  - [ ] 7.登陆方式完善，支持多种OAuth登陆。
+  - [ ] 8.个人中心完善。
+  - [ ] 9.系统配置完善，如支持个性化设置。
+  - [ ] 10.支持快捷键。
+  - [ ] 11.应用丰富，如文本编辑器、图片查看器、计算器等。
 
-  2.优化系统性能。
 
-  3.编写开发指南。
+  v2.x
+  - [x] 1.架构调整，需重构，应用设计更合理。
+
+  - [x] 2.优化系统性能。
+
+  - [x] 3.编写开发指南。
