@@ -7,16 +7,16 @@ export default {
   tabPageMap: {
     '0': {
       name: 'home',
-      title: 'baidu',
-      url: 'http://www.baidu.com',
+      title: 'X-WebDesktop-Vue',
+      url: 'http://47.93.49.248/X-WebDesktop-Vue/',
       index: 0
     }
   },
   currentTabIndex: '0',
   homePage: {
     name: 'home',
-    title: 'baidu',
-    url: 'http://www.baidu.com',
+    title: 'X-WebDesktop-Vue',
+    url: 'http://47.93.49.248/X-WebDesktop-Vue/',
     index: 0
   },
   newTab: {
