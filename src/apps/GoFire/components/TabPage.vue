@@ -6,6 +6,9 @@
 <style scoped lang="less" rel="stylesheet/less">
   .tab-page {
     border-bottom: 1px solid #b6b4b4;
+    height: 80px;
+    background: #ffffff;
+
     .tab-bar {
       position: relative;
       display: flex;
@@ -201,7 +204,7 @@
             _t.$store.commit('Apps/GoFire/tab/add', val)
             break
           case 'visit':
-              // 新建tab页
+            // 新建tab页
             _t.$store.commit('Apps/GoFire/tab/update', {
               index: _t.currentTabIndex,
               info: {
