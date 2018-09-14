@@ -103,7 +103,9 @@ axiosInstance.interceptors.response.use(function (response) {
         // TODO 跳转登录页
         setTimeout(function () {
           Vue.prototype.$nextTick(function () {
-            routerInstance.push({name: 'platform.signin'})
+            // 清空用户登录信息
+            storeInstance.commit(Vue.prototype.$utils.store.getType('userInfo/reset', 'Platform'))
+            routerInstance.push({name: 'platform.index'})
           })
         }, 3000)
       }
