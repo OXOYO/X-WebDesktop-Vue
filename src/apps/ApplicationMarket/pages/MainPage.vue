@@ -116,7 +116,8 @@
 
         .list-item {
           flex: 0 0 auto;
-          height: 68px;
+          min-height: 68px;
+          max-height: 100px;
           margin: 5px;
           padding: 10px;
 
@@ -153,6 +154,13 @@
               width: 100%;
               height: 20px;
               line-height: 20px;
+            }
+            .item-description {
+              display: inline-block;
+              width: 100%;
+              height: 20px;
+              line-height: 20px;
+              color: #999999;
             }
             .item-install {
               display: none;
@@ -218,6 +226,7 @@
           </div>
           <div class="item-content">
             <div class="item-title">{{ item.title || item.app_title}}</div>
+            <div class="item-description">{{ item.description }}</div>
             <div class="item-install" @click.stop.prevent="handleAction(item, currentBoard.action.name)">{{ currentBoard.action.text }}</div>
           </div>
         </div>
