@@ -6,19 +6,20 @@ X-WebDesktop 是一个基于 [Vue](https://github.com/vuejs/vue) && [Koa](https:
 
 ### 在线预览
 
-**Url**：[https://oxoyo.github.io/X-WebDesktop-Vue/](https://oxoyo.github.io/X-WebDesktop-Vue/)
+**Url**：[http://47.93.49.248/X-WebDesktop-Vue/](http://47.93.49.248/X-WebDesktop-Vue/)
 
 **Account**：`admin`
 
 **Password**：`123456`
- 
+
 ### 更新日志
 
 最新稳定版本：2.0.0
 
 | FrontEnd | API |
 | :-------- | :-------- |
-| [2.0.0](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master) | [2.0.0](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/master) |
+| [3.x](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master) | [3.x](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/master) |
+| [2.0.0](https://github.com/OXOYO/X-WebDesktop-Vue/tree/2.0.0) | [2.0.0](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/2.0.0) |
 | [1.0.1](https://github.com/OXOYO/X-WebDesktop-Vue/tree/1.0.1) | [1.0.1](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/1.0.1) |
 | [1.0.0](https://github.com/OXOYO/X-Desktop-Vue/tree/master) | - |
 
