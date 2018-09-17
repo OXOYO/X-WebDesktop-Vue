@@ -6,7 +6,8 @@
 
 | FrontEnd | API |
 | :-------- | :-------- |
-| [2.x](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master) | [2.x](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/master) |
+| [3.x](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master) | [3.x](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/master) |
+| [2.0.0](https://github.com/OXOYO/X-WebDesktop-Vue/tree/2.0.0) | [2.0.0](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/2.0.0) |
 | [1.0.1](https://github.com/OXOYO/X-WebDesktop-Vue/tree/1.0.1) | [1.0.1](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/1.0.1) |
 | [1.0.0](https://github.com/OXOYO/X-Desktop-Vue/tree/master) | - |
 
