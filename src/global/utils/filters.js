@@ -6,8 +6,11 @@ export default {
   // 日期格式化
   formatDate: (time, fmt = 'yyyy-MM-dd hh:mm') => {
     // console.log('time', time, typeof time)
-    // TODO 10位时间戳格式化
+    if (time instanceof Date) {
+      time = new Date(time).getTime()
+    }
     let timeStr = time + ''
+    // 10位时间戳格式化
     if (timeStr.length < 13) {
       time = time * (Math.pow(10, 13 - timeStr.length))
     }
