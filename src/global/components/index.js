@@ -4,12 +4,16 @@
 
 import NoData from './NoData.vue'
 import USwitch from './Switch.vue'
+import UPanel from './UPanel.vue'
+import HighLight from './HighLight.vue'
 import WallpaperBackground from './WallpaperBackground.vue'
 
 export default {
   components: {
     NoData,
     USwitch,
+    UPanel,
+    HighLight,
     WallpaperBackground
   },
   // 注册全局组件
