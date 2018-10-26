@@ -94,7 +94,15 @@ var webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    new webpack.ContextReplacementPlugin(
+      /highlight\.js\/lib\/languages$/,
+      new RegExp(`^./(${['javascript', 'json', 'sql'].join('|')})$`)
+    ),
+    new webpack.ContextReplacementPlugin(
+      /highlight\.js\/styles/,
+      new RegExp(`^./(${['zenburn'].join('|')})$`)
+    )
   ]
 })
 
