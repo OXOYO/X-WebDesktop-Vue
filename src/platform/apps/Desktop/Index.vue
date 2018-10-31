@@ -37,9 +37,9 @@
     >
       <component
         :is="childComponents.DesktopIcon"
-        v-for="item in appData.iconList"
+        v-for="(item, index) in appData.iconList"
         v-if="item.action !== 'install' || (item.action === 'install' && item.installed)"
-        :key="item.app_name || item.config.app.name"
+        :key="'desktop_icon_' + index"
         :info="item"
         :showTitle="appData.showTitle"
         :style="item.config.desktopIcon.style"
@@ -47,8 +47,8 @@
       <component :is="childComponents.DesktopWidget"></component>
       <component
         :is="childComponents.Window"
-        v-for="item in openedWindowList"
-        :key="item.app_name || item.config.app.name"
+        v-for="(item, index) in openedWindowList"
+        :key="'window_' + index"
         :info="item"
       ></component>
       <component :is="childComponents.Wallpaper" :style="{ 'z-index': 1000 }"></component>
