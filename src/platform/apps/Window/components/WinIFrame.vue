@@ -124,8 +124,8 @@
         let _t = this
         _t.loadStatus = 'loading'
         _t.$nextTick(function () {
-          _t.appWidth = parseInt(_t.$el.offsetWidth)
-          _t.appHeight = parseInt(_t.$el.offsetHeight)
+          _t.appWidth = _t.$el ? parseInt(_t.$el.offsetWidth) : '100%'
+          _t.appHeight = _t.$el ? parseInt(_t.$el.offsetHeight) : '100%'
           _t.appPath = _t.info.config.app.url
           _t.loadStatus = _t.appPath ? 'success' : 'fail'
           document.body.onbeforeunload = function (event) {

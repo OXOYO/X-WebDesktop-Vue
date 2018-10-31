@@ -15,7 +15,7 @@
   const prefixCls = 'ivu-switch'
 
   export default {
-    name: 'Switch',
+    name: 'USwitch',
     props: {
       value: {
         type: Boolean,
