@@ -42,6 +42,10 @@ Vue.config.debug = isDev
 Vue.config.devtools = isDev
 Vue.config.productionTip = isDev
 
+if (!isDev) {
+  utils.DisableDebugger.init()
+}
+
 // 注册插件
 Vue.use(Vuex)
 Vue.use(VueRouter)
