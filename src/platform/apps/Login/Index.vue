@@ -53,11 +53,31 @@
     }
     .login-body {
       text-align: center;
-      padding-top: 100px;
+      padding: 30px 15px;
 
       .login-form {
-        width: 250px;
+        /*width: 250px;*/
         margin: 0 auto;
+        text-align: left;
+
+        .form-item {
+          margin: 24px auto 0;
+        }
+        input {
+          border: none;
+        }
+        .ivu-input-group-append,
+        .ivu-input-group-prepend {
+          background: #fff;
+          border: none;
+        }
+      }
+
+      .notice-text {
+        display: inline-block;
+        margin-top: 20px;
+        width: 100%;
+        color: #fff;
         text-align: left;
       }
     }
@@ -65,13 +85,6 @@
     .login-footer {
       padding: 12px 15px;
       text-align: right;
-
-      .notice-text {
-        display: inline-block;
-        color: #fff;
-        text-align: left;
-        float: left;
-      }
     }
 
     input {
@@ -101,20 +114,20 @@
       </div>
       <div class="login-body">
         <Form class="login-form" ref="signInForm" :model="formData" :rules="signInFormRules">
-          <Form-item prop="account">
+          <Form-item class="form-item" prop="account">
             <Input type="text" v-model="formData.account" placeholder="请输入用户名">
             </Input>
           </Form-item>
-          <Form-item prop="password">
+          <Form-item class="form-item" prop="password">
             <Input :type="passwordInputType" v-model="formData.password" placeholder="请输入密码，回车登录" @on-enter="handleSignIn">
             <Button slot="append" :icon="passwordInputType === 'password' ? 'eye-disabled' : 'eye'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
             </Input>
           </Form-item>
         </Form>
+        <div class="notice-text">测试账号：admin，密码：123456</div>
       </div>
       <div class="login-footer">
-        <div class="notice-text">测试账号：admin，密码：123456</div>
-        <Button type="primary" :loading="loading" @click="handleSignIn">登录</Button>
+        <Button type="primary" size="large" long :loading="loading" @click="handleSignIn">登录</Button>
       </div>
     </div>
   </div>
