@@ -21,17 +21,15 @@
     <Form
       class="detail-form"
       :model="detailInfo"
-      :label-width="180"
       v-if="isShowModal"
     >
       <FormItem
         v-for="key in Object.keys(detailInfo).filter(k => !['_index', '_rowKey'].includes(k)).sort()"
-        :label="key"
         :prop="key"
         :key="key"
         class="detail-form-item"
       >
-        <HighLight :ref="key" lang="Javascript" :data="detailInfo[key]"></HighLight>
+        <HighLight :ref="key" lang="Javascript" :title="key" :data="detailInfo[key]"></HighLight>
       </FormItem>
     </Form>
     <div slot="footer">
