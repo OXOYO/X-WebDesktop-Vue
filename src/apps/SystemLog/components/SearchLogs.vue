@@ -27,119 +27,120 @@
 
 <template>
   <div class="search-panel">
-    <UPanel title="查询">
-      <div slot="header-right" class="panel-header">
-        <div class="action-btn" @click.stop="handleAction('refresh')">
-          <Tooltip transfer placement="top" content="刷新">
-            <Icon class="action-icon" type="refresh"></Icon>
-          </Tooltip>
+    <Collapse v-model="currentActivePanel" class="search-form-collapse">
+      <Panel name="searchForm">
+        <span class="panel-header">查询条件</span>
+        <div slot="content" class="panel-body">
+          <Form
+            class="search-form"
+            :model="searchForm"
+            :label-width="120"
+            inline
+            @submit.native.prevent
+          >
+            <FormItem label="日志类别">
+              <Select v-model="searchForm.logType" style="width: 300px;" placeholder="请选择日志类别">
+                <Option
+                  v-for="item in logTypeList"
+                  :value="item.name"
+                  :key="item.name"
+                  :label="item.name"
+                >
+                  {{ item.name }}
+                </Option>
+              </Select>
+            </FormItem>
+            <FormItem label="日期">
+              <DatePicker v-model="searchForm.date" type="date" transfer placeholder="请选择日期" style="width: 300px"></DatePicker>
+            </FormItem>
+            <FormItem label="接口名称">
+              <Input type="text" v-model="searchForm.origin" placeholder="请输入接口名称" style="width: 300px;"></Input>
+            </FormItem>
+            <FormItem label="请求方式">
+              <Select v-model="searchForm.method" multiple transfer style="width: 300px;" placeholder="请选择请求方式">
+                <Option
+                  v-for="item in methodList"
+                  :value="item.value"
+                  :key="item.value"
+                  :label="item.label"
+                >
+                  {{ item.label }}
+                </Option>
+              </Select>
+            </FormItem>
+            <FormItem label="响应状态">
+              <Input type="text" v-model="searchForm.status" placeholder="请输入接口响应状态，多个请用英文逗号分隔" style="width: 300px;"></Input>
+            </FormItem>
+            <FormItem label="报文过滤">
+              <Input
+                v-model="searchForm.filterKeywords"
+                placeholder="请输入关键词"
+                @on-enter.stop.prevent="() => doSearch(true)"
+                style="width: 300px;"
+              >
+              <Select v-model="searchForm.filterType" slot="prepend" style="width: 120px">
+                <Option value="request">request 报文</Option>
+                <Option value="response">respons 报文</Option>
+              </Select>
+              </Input>
+            </FormItem>
+            <FormItem label="用户过滤">
+              <Input
+                v-model="searchForm.filterUserKeywords"
+                :placeholder="searchForm.filterUserType === 'account' ? '请输入账号' : '请输入姓名'"
+                @on-enter.stop.prevent="() => doSearch(true)"
+                style="width: 300px;"
+              >
+              <Select v-model="searchForm.filterUserType" slot="prepend" style="width: 120px">
+                <Option value="account">账号</Option>
+                <Option value="name">姓名</Option>
+              </Select>
+              </Input>
+            </FormItem>
+            <!-- FIXME 暂不支持用户级别过滤 -->
+            <!--
+            <FormItem label="用户级别">
+              <CheckboxGroup v-model="searchForm.userType">
+                <Checkbox :label="2">
+                  <Icon :type="userClass[2]['icon']"></Icon>
+                  <span>普通用户</span>
+                </Checkbox>
+                <Checkbox :label="1">
+                  <Icon :type="userClass[1]['icon']"></Icon>
+                  <span>管理员</span>
+                </Checkbox>
+                <Checkbox :label="0">
+                  <Icon :type="userClass[0]['icon']"></Icon>
+                  <span>超级管理员</span>
+                </Checkbox>
+              </CheckboxGroup>
+            </FormItem>
+            -->
+          </Form>
+          <Form
+            class="search-form"
+            :label-width="120"
+            @submit.native.prevent
+          >
+            <FormItem>
+              <Button type="primary" :loading="isLoading" @click="() => doSearch(true)">查询</Button>
+            </FormItem>
+          </Form>
         </div>
-      </div>
-      <div slot="body" class="panel-body">
-        <Form
-          class="search-form"
-          :model="searchForm"
-          :label-width="120"
-          inline
-          @submit.native.prevent
-        >
-          <FormItem label="日志类别">
-            <Select v-model="searchForm.logType" style="width: 300px;" placeholder="请选择日志类别">
-              <Option
-                v-for="item in logTypeList"
-                :value="item.name"
-                :key="item.name"
-                :label="item.name"
-              >
-                {{ item.name }}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="日期">
-            <DatePicker v-model="searchForm.date" type="date" transfer placeholder="请选择日期" style="width: 300px"></DatePicker>
-          </FormItem>
-          <FormItem label="接口名称">
-            <Input type="text" v-model="searchForm.origin" placeholder="请输入接口名称" style="width: 300px;"></Input>
-          </FormItem>
-          <FormItem label="请求方式">
-            <Select v-model="searchForm.method" multiple transfer style="width: 300px;" placeholder="请选择请求方式">
-              <Option
-                v-for="item in methodList"
-                :value="item.value"
-                :key="item.value"
-                :label="item.label"
-              >
-                {{ item.label }}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="响应状态">
-            <Input type="text" v-model="searchForm.status" placeholder="请输入接口响应状态，多个请用英文逗号分隔" style="width: 300px;"></Input>
-          </FormItem>
-          <FormItem label="报文过滤">
-            <Input
-              v-model="searchForm.filterKeywords"
-              placeholder="请输入关键词"
-              @on-enter.stop.prevent="doSearch"
-              style="width: 300px;"
-            >
-            <Select v-model="searchForm.filterType" slot="prepend" style="width: 120px">
-              <Option value="request">request 报文</Option>
-              <Option value="response">respons 报文</Option>
-            </Select>
-            </Input>
-          </FormItem>
-          <FormItem label="用户过滤">
-            <Input
-              v-model="searchForm.filterUserKeywords"
-              :placeholder="searchForm.filterUserType === 'account' ? '请输入账号' : '请输入姓名'"
-              @on-enter.stop.prevent="doSearch"
-              style="width: 300px;"
-            >
-            <Select v-model="searchForm.filterUserType" slot="prepend" style="width: 120px">
-              <Option value="account">账号</Option>
-              <Option value="name">姓名</Option>
-            </Select>
-            </Input>
-          </FormItem>
-          <!-- FIXME 暂不支持用户级别过滤 -->
-          <!--
-          <FormItem label="用户级别">
-            <CheckboxGroup v-model="searchForm.userType">
-              <Checkbox :label="2">
-                <Icon :type="userClass[2]['icon']"></Icon>
-                <span>普通用户</span>
-              </Checkbox>
-              <Checkbox :label="1">
-                <Icon :type="userClass[1]['icon']"></Icon>
-                <span>管理员</span>
-              </Checkbox>
-              <Checkbox :label="0">
-                <Icon :type="userClass[0]['icon']"></Icon>
-                <span>超级管理员</span>
-              </Checkbox>
-            </CheckboxGroup>
-          </FormItem>
-          -->
-        </Form>
-        <Form
-          class="search-form"
-          :label-width="120"
-          @submit.native.prevent
-        >
-          <FormItem>
-            <Button type="primary" :loading="isLoading" @click="doSearch">查询</Button>
-          </FormItem>
-        </Form>
-      </div>
-    </UPanel>
-    <Table
-      class="search-form-table"
-      v-if="tableData.length"
-      :data="tableData"
-      :columns="tableColumns"
-    ></Table>
-    <NoData :show="!tableData.length"></NoData>
+      </Panel>
+      <Panel name="searchResult">
+        <span class="panel-header">查询结果</span>
+        <div slot="content" class="panel-body">
+          <Table
+            class="search-form-table"
+            v-if="tableData.length"
+            :data="tableData"
+            :columns="tableColumns"
+          ></Table>
+          <NoData :show="!tableData.length"></NoData>
+        </div>
+      </Panel>
+    </Collapse>
   </div>
 </template>
 
@@ -296,7 +297,9 @@
           }
         ],
         methodList: methodList,
-        isLoading: false
+        isLoading: false,
+        // 当前激活的面板
+        currentActivePanel: ['searchForm', 'searchResult']
       }
     },
     // computed: {
@@ -306,10 +309,13 @@
     // },
     methods: {
       // 执行查询
-      doSearch: function (event) {
+      doSearch: function (isShowResutl) {
         let _t = this
         if (_t.isLoading) {
           return false
+        }
+        if (isShowResutl) {
+          _t.currentActivePanel = ['searchResult']
         }
         _t.isLoading = true
         // 查询列表
