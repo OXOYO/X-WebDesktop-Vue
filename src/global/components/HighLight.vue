@@ -148,10 +148,8 @@
         </div>
       </div>
     </div>
-    <div class="block-body" :style="blockBodyStyle">
-      <!--<pre><code class="code-content" :class="codeContentClass">{{ data ? data : nodata }}</code></pre>-->
-      <pre v-if="codeData"><code class="code-content" :class="codeContentClass" v-html="codeData"></code></pre>
-      <pre v-else><code class="code-content" :class="codeContentClass">{{ data ? data : nodata }}</code></pre>
+    <div class="block-body" :style="blockBodyStyle" ref="blockBody">
+      <pre><code class="code-content" :class="codeContentClass" v-text="codeData || nodata"></code></pre>
     </div>
   </div>
 </template>
@@ -168,13 +166,16 @@
   export default {
     name: 'HighLight',
     data () {
+      let _t = this
       return {
         isFullScreen: false,
-        codeData: null
+        codeData: _t.data
       }
     },
     props: {
-      data: {},
+      data: {
+        default: null
+      },
       styles: {
         type: String,
         // zenburn vs2015 agate
@@ -230,32 +231,29 @@
     },
     watch: {
       data: {
-        handler: function () {
+        handler: function (val) {
           let _t = this
-          _t.render()
+          _t.codeData = val
+          _t.$nextTick(function () {
+            _t.renderCode()
+          })
         },
         deep: true
       }
     },
     methods: {
-      render: function () {
+      renderCode: function (from) {
         let _t = this
-        _t.codeData = null
-        if (_t.data) {
-          _t.codeData = _t.data
-          setTimeout(function () {
-            // _t.$nextTick(function () {
-              // 初始化hljs
-              // hljs.configure({useBR: true})
-            let snippet = _t.$el.querySelector('.high-light-block pre code')
-            hljs.highlightBlock(snippet)
-            // })
-          }, 100)
+        // 初始化hljs
+        // hljs.configure({useBR: true})
+        if (_t.$refs.blockBody) {
+          let snippet = _t.$refs.blockBody.querySelector('code')
+          hljs.highlightBlock(snippet)
         }
       },
       handleAction: function (action) {
         let _t = this
-        let snippet = _t.$el.querySelector('.high-light-block pre code')
+        let snippet = _t.$refs.blockBody.querySelector('code')
         let handleSelectAll = function () {
           // 获取选区
           let selection = window.getSelection()
@@ -277,7 +275,6 @@
         let handleFullScreen = function () {
           if (!_t.isFullScreen) {
             // 全屏
-            // let docElm = document.documentElement
             let docElm = _t.$refs['HighLight']
             if (docElm.requestFullscreen) {
               docElm.requestFullscreen()
@@ -356,7 +353,9 @@
           _t.isFullScreen = false
         }
       }
+      _t.$nextTick(function () {
+        _t.renderCode()
+      })
     }
   }
 </script>
-
