@@ -82,8 +82,8 @@
       <div class="header-left">
         <slot name="header-left">
           <div class="u-panel-title">
-            <Icon type="chevron-up" v-show="!isFolded"></Icon>
-            <Icon type="chevron-down" v-show="isFolded"></Icon>
+            <Icon type="chevron-up" v-show="enableFold && !isFolded"></Icon>
+            <Icon type="chevron-down" v-show="enableFold && isFolded"></Icon>
             {{ title }}
           </div>
         </slot>
@@ -105,6 +105,10 @@
       title: {
         type: String
       },
+      enableFold: {
+        type: Boolean,
+        default: false
+      },
       name: {
         type: String
       }
@@ -118,6 +122,9 @@
     methods: {
       handleToggle: function () {
         let _t = this
+        if (!_t.enableFold) {
+          return
+        }
         // 处理面板折叠
         _t.isFolded = !_t.isFolded
       }
