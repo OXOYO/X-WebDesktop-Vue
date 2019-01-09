@@ -13,8 +13,7 @@ export default {
       parent: './apps',
       path: './apps/Admin/',
       component: 'Index.vue',
-      store: 'store/index.js',
-      routers: 'routers.js'
+      store: 'store/index.js'
     },
     // 右键菜单
     ContextMenu: {

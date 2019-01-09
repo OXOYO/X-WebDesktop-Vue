@@ -26,12 +26,17 @@
 
 <template>
   <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-    <router-view></router-view>
+    <Platform></Platform>
   </transition>
 </template>
 
 <script>
+  import Platform from './platform/Index'
+
   export default {
-    name: 'App'
+    name: 'App',
+    components: {
+      Platform
+    }
   }
 </script>

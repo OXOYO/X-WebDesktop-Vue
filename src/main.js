@@ -5,13 +5,10 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { sync } from 'vuex-router-sync'
 import createPersistedState from 'vuex-persistedstate'
-import VueRouter from 'vue-router'
 import axios from 'axios'
 // 导入UI库
 import iView from 'iview'
-// import 'iview/dist/styles/iview.css'
 import './themes/index.less'
 // 导入 动画库
 import 'animate.css/animate.min.css'
@@ -23,8 +20,6 @@ import utils from './global/utils'
 import * as Config from './config'
 // 导入 App组件
 import App from './App'
-// 导入 系统路由
-import routers from './routers'
 // 导入 系统 store 和 应用 store
 import platformStore from './store/platform/index'
 import appsStore from './store/apps/index'
@@ -48,7 +43,6 @@ if (!isDev) {
 
 // 注册插件
 Vue.use(Vuex)
-Vue.use(VueRouter)
 Vue.use(iView)
 import XDrag from './global/directives/XDrag'
 Vue.use(XDrag)
@@ -109,7 +103,6 @@ axiosInstance.interceptors.response.use(function (response) {
           Vue.prototype.$nextTick(function () {
             // 清空用户登录信息
             storeInstance.commit(Vue.prototype.$utils.store.getType('userInfo/reset', 'Platform'))
-            routerInstance.push({name: 'platform.index'})
           })
         }, 3000)
       }
@@ -131,48 +124,6 @@ axiosInstance.interceptors.response.use(function (response) {
 // 注册 $http
 Vue.prototype.$http = axiosInstance
 
-// 创建 router 实例
-const routerInstance = new VueRouter({
-  // 开启 HTML5 history 模式
-  mode: 'history',
-  base: '/X-WebDesktop-Vue/',
-  routes: routers,
-  scrollBehavior: (to, from, savedPosition) => {
-    if (savedPosition) {
-      return savedPosition
-    } else {
-      const position = {}
-      if (to.hash) {
-        position.selector = to.hash
-      }
-      if (to.matched.some(m => m.meta.scrollToTop)) {
-        position.x = 0
-        position.y = 0
-      }
-      return position
-    }
-  }
-})
-// 注册全局前置守卫
-routerInstance.beforeEach((to, from, next) => {
-  iView.LoadingBar.start()
-  // 如果没有匹配项
-  if (!to.matched.length) {
-    // 判断路由类别
-    if (to.path.includes('/admin/')) {
-      next({ name: 'platform.admin.Error404ForAdmin' })
-    } else {
-      next({ name: 'platform.Error404' })
-    }
-  } else {
-    next()
-  }
-})
-// 注册全局后置钩子
-routerInstance.afterEach((to, from) => {
-  iView.LoadingBar.finish()
-})
-
 // 创建 store 实例
 const storeInstance = new Vuex.Store({
   modules: {
@@ -186,12 +137,8 @@ const storeInstance = new Vuex.Store({
   ]
 })
 
-// router & store 同步
-sync(storeInstance, routerInstance, { moduleName: 'x-router' })
-
 // 启动应用
 new Vue({
   store: storeInstance,
-  router: routerInstance,
   render: h => h(App)
 }).$mount('#app')
