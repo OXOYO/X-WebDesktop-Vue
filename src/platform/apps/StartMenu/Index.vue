@@ -423,7 +423,6 @@
         })
         // 清空用户登录信息
         _t.$store.commit(_t.$utils.store.getType('userInfo/reset', 'Platform'))
-        _t.$router.push({name: 'platform.index'})
       },
       openApp: function (info) {
         let _t = this

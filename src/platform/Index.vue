@@ -47,9 +47,6 @@
       </component>
     </component>
     <component :is="components.ContextMenu"></component>
-    <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-      <router-view></router-view>
-    </transition>
   </div>
 </template>
 
@@ -108,16 +105,6 @@
               console.log('store load error:', err.message)
             }
           }
-          // if (item.routers) {
-          //   try {
-          //     // 3.加载路由
-          //     let routersObj = require('' + item.path + item.routers)
-          //     console.log('routersObj', routersObj.default)
-          //     _t.$router.addRoutes(routersObj.default)
-          //   } catch (err) {
-          //     console.log('store load error:', err.message)
-          //   }
-          // }
         }
         console.groupEnd()
         _t.components = components
@@ -246,8 +233,6 @@
         if (_t.userInfo.isLogin) {
           // 刷新用户应用数据
           _t.$utils.bus.$emit('Admin/appData/refresh')
-        } else {
-          _t.$router.go(0)
         }
       }
     },

@@ -1,6 +1,6 @@
 /**
  * Created by OXOYO on 2017/12/24.
- *
+ * 【已废弃】系统路由表
  */
 
 export default [

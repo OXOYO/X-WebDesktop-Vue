@@ -162,14 +162,6 @@
       }
     },
     methods: {
-      triggerMenu: function (routerName) {
-        let _t = this
-        if (routerName === 'SignIn') {
-          _t.showSignInModal = true
-          _t.passwordInputType = 'password'
-          _t.loading = false
-        }
-      },
       handleSignIn: async function () {
         let _t = this
         // 调用接口执行登录
