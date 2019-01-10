@@ -3,6 +3,7 @@
  */
 
 import NoData from './NoData.vue'
+import RainDay from './RainDay.vue'
 import USwitch from './Switch.vue'
 import UPanel from './UPanel.vue'
 import HighLight from './HighLight.vue'
@@ -11,6 +12,7 @@ import WallpaperBackground from './WallpaperBackground.vue'
 export default {
   components: {
     NoData,
+    RainDay,
     USwitch,
     UPanel,
     HighLight,
