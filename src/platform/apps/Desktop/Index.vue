@@ -51,7 +51,7 @@
         :key="'window_' + index"
         :info="item"
       ></component>
-      <component :is="childComponents.Wallpaper" :style="{ 'z-index': 1000 }"></component>
+      <component :is="childComponents.Wallpaper" switchType="bing" :style="{ 'z-index': 1000 }"></component>
       <!-- 分屏组件 -->
       <component :is="childComponents.SplitScreen" :data="splitScreenData"></component>
     </div>

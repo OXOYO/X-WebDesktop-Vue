@@ -25,7 +25,7 @@
     <!-- 前台 -->
     <component :is="components.Home" v-if="!userInfo.isLogin">
       <component :is="components.Login"></component>
-      <component :is="components.Wallpaper" :style="{ 'z-index': -10 }"></component>
+      <component :is="components.Wallpaper" switchType="components" :style="{ 'z-index': -10 }"></component>
     </component>
     <!-- 后台 -->
     <component :is="components.Admin" v-if="userInfo.isLogin">
