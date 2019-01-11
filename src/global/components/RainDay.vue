@@ -55,7 +55,7 @@
       },
       background: {
         type: String,
-        default: '/static/win7/wallpaper.jpg'
+        default: './static/win7/wallpaper.jpg'
       }
     },
     methods: {
