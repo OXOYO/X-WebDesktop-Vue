@@ -6,7 +6,7 @@ X-WebDesktop 是一个基于 [Vue](https://github.com/vuejs/vue) && [Koa](https:
 
 ### 在线预览
 
-**Url**：[http://47.93.49.248/X-WebDesktop-Vue/](http://47.93.49.248/X-WebDesktop-Vue/)
+**Url**：[http://oxoyo.co/X-WebDesktop-Vue/](http://oxoyo.co/X-WebDesktop-Vue/)
 
 **Account**：`admin`
 
