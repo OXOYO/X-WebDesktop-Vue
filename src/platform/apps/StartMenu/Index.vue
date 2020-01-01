@@ -239,6 +239,15 @@
               &:hover {
                 color: #57a3f3;
               }
+
+              .info-author-link {
+                display: inline-block;
+                color: #ffffff;
+
+                &:hover {
+                  color: #2d8cf0;
+                }
+              }
             }
           }
         }
@@ -346,6 +355,11 @@
                 系统设置
               </div>
             </div>
+            <div class="info-action-group">
+              <div class="info-action-item">
+                <a class="info-author-link" v-if="$Config.System.repository.url" :href="$Config.System.repository.url" target="_blank">GitHub</a>
+              </div>
+            </div>
           </div>
           <div class="info-btn">
             <Button class="info-btn-item" type="ghost" long @click="doLogout">退出</Button>
@@ -409,7 +423,6 @@
         })
         // 清空用户登录信息
         _t.$store.commit(_t.$utils.store.getType('userInfo/reset', 'Platform'))
-        _t.$router.push({name: 'platform.index'})
       },
       openApp: function (info) {
         let _t = this

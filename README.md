@@ -1,20 +1,27 @@
 # X-WebDesktop-Vue
 
-Version: 2.0.0 【开发中...】
-
 基于 Vue 的 WebDesktop 系统
 
 # Version
 
-| FrontEnd | API |
-| :-------- | :-------- |
-| [2.0.0](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master) | [2.0.0](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/master) |
-| [1.0.1](https://github.com/OXOYO/X-WebDesktop-Vue/tree/1.0.1) | [1.0.1](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/1.0.1) |
-| [1.0.0](https://github.com/OXOYO/X-Desktop-Vue/tree/master) | - |
+| FrontEnd | API | Electron |
+| :-------- | :-------- | :-------- |
+| [3.x](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master) | [3.x](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/master) | [3.x](https://github.com/OXOYO/X-WebDesktop-Electron/tree/master) |
+| [2.0.0](https://github.com/OXOYO/X-WebDesktop-Vue/tree/2.0.0) | [2.0.0](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/2.0.0) | [2.0.0](https://github.com/OXOYO/X-WebDesktop-Electron/tree/2.0.0) |
+| [1.0.1](https://github.com/OXOYO/X-WebDesktop-Vue/tree/1.0.1) | [1.0.1](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/1.0.1) | - |
+| [1.0.0](https://github.com/OXOYO/X-Desktop-Vue/tree/master) | - | - |
 
 ## Documentation
 
 [中文文档 (2.0.0)](./document/README.md)
+
+## Preview
+
+  **Url**：[http://oxoyo.co/X-WebDesktop-Vue/](http://oxoyo.co/X-WebDesktop-Vue/)
+
+  **Account**：`admin`
+
+  **Password**：`123456`
 
 ## Start
 
@@ -30,38 +37,10 @@ Version: 2.0.0 【开发中...】
   npm run build
 ```
 
-## Preview
-
-  **Url**：[http://47.93.49.248/X-WebDesktop-Vue/](http://47.93.49.248/X-WebDesktop-Vue/)
-
-  **Account**：`admin`
-
-  **Password**：`123456`
-
 ## Screenshot
 
-### PC
+![](./document/screenshot/preview_pc_admin_0913.png "preview_pc_admin")
 
-![](./document/screenshot/preview_pc_home.png "preview_home")
-
-![](./document/screenshot/preview_pc_admin_002.png "preview_pc_admin_002")
-
-![](./document/screenshot/preview_pc_admin_003.png "preview_pc_admin_003")
-
-![](./document/screenshot/preview_pc_admin_004.png "preview_pc_admin_004")
-
-![](./document/screenshot/preview_pc_admin.gif "preview_admin")
-
-### Mobile
-
-![](./document/screenshot/preview_mobile_home_portrait_001.jpg "preview_mobile_home_portrait_001")
-![](./document/screenshot/preview_mobile_home_portrait_002.jpg "preview_mobile_home_portrait_002")
-![](./document/screenshot/preview_mobile_admin_portrait_001.jpg "preview_mobile_admin_portrait_001")
-![](./document/screenshot/preview_mobile_admin_portrait_002.jpg "preview_mobile_admin_portrait_002")
-![](./document/screenshot/preview_mobile_admin_portrait_003.jpg "preview_mobile_admin_portrait_003")
-![](./document/screenshot/preview_mobile_admin_portrait_004.jpg "preview_mobile_admin_portrait_004")
-![](./document/screenshot/preview_mobile_admin_landscape_001.jpg "preview_mobile_admin_landscape_001")
-![](./document/screenshot/preview_mobile_admin_landscape_002.jpg "preview_mobile_admin_landscape_002")
 
 ## 目录结构
 ```bash
@@ -130,8 +109,28 @@ Version: 2.0.0 【开发中...】
 ```
 
 ## TODO
-  1.架构调整，需重构，应用设计更合理。
+  v3.x
+  - [ ] 1.架构优化，前后端功能划分优化，项目结构优化。
+  - [ ] 2.支持多种应用类型，如应用、文件、快捷方式。
+  - [ ] 3.引入虚拟文件系统。
+  - [ ] 4.右键菜单支持上下文，右键菜单图标美化。
+  - [ ] 5.数据表结构优化，优化应用配置信息。
+  - [ ] 6.用户系统完善，支持多用户，引入RBAC。
+  - [ ] 7.登陆方式完善，支持多种OAuth登陆。
+  - [ ] 8.个人中心完善。
+  - [ ] 9.系统配置完善，如支持个性化设置。
+  - [ ] 10.支持快捷键。
+  - [ ] 11.应用丰富，如文本编辑器、图片查看器、计算器等。
+  - [ ] 12.编写文档。
 
-  2.优化系统性能。
 
-  3.编写开发指南。
+  v2.x
+  - [x] 1.架构调整，需重构，应用设计更合理。
+
+  - [x] 2.优化系统性能。
+
+  - [x] 3.编写开发指南。
+
+## Contact
+
+点击链接加入群【Web全栈QQ群】：https://jq.qq.com/?_wv=1027&k=53iWbrr

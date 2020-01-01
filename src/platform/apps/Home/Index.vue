@@ -87,19 +87,6 @@
                 type: 'bus',
                 handler: 'platform/fullScreen/close'
               }
-            },
-            {
-              name: 'wallpaper',
-              icon: {
-                type: '',
-                style: ''
-              },
-              text: '切换壁纸',
-              enable: true,
-              action: {
-                type: 'bus',
-                handler: 'platform/wallpaper/switch'
-              }
             }
           ]
         }

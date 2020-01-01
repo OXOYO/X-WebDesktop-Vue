@@ -307,19 +307,8 @@
             // 回调
             callback: {
               start: null,
-              move: _t.handleDragResizeMove,
+              move: _t.handleDragMove,
               done: _t.handleDragResizeDone
-            },
-            // 范围
-            range: () => {
-              return {
-                minX: 0,
-                maxX: document.body.clientWidth,
-                minY: 0,
-                maxY: document.body.clientHeight - 60,
-                // 间距5px
-                margin: 5
-              }
             }
           },
           // 缩放配置
@@ -348,8 +337,19 @@
             // 回调
             callback: {
               start: null,
-              move: null,
+              move: _t.handleResizeMove,
               done: _t.handleDragResizeDone
+            }
+          },
+          // 范围
+          range: () => {
+            return {
+              minX: 0,
+              maxX: document.body.clientWidth,
+              minY: 0,
+              maxY: document.body.clientHeight - 60,
+              // 间距5px
+              margin: 5
             }
           }
         },
@@ -501,7 +501,7 @@
         })
       },
       // 拖拽中回调
-      handleDragResizeMove: function (style, mousePosition, range) {
+      handleDragMove: function (style, mousePosition, range) {
         let _t = this
         let splitScreen = {
           enable: true,
@@ -528,6 +528,41 @@
           splitScreen.type = 'right'
         } else if (mousePosition.y <= minY) {
           splitScreen.type = 'full-screen'
+        } else {
+          splitScreen.enable = false
+        }
+        _t.splitScreen = splitScreen
+        // 广播事件 触发splitScreen显示事件
+        _t.$utils.bus.$emit('platform/window/splitScreen/show', {
+          // 通过XDrag控制窗口拖拽、缩放
+          action: 'splitScreen',
+          data: {
+            ...splitScreen
+          }
+        })
+      },
+      // 缩放中回调
+      handleResizeMove: function (style, mousePosition, range) {
+        let _t = this
+        let appInfo = {..._t.info}
+        let splitScreen = {
+          enable: true,
+          // 分屏模式
+          type: '',
+          mousePosition,
+          range,
+          style: {
+            ...appInfo.config['window']['style']
+          }
+        }
+        // let minX = range.minX + range.margin
+        // let maxX = range.maxX - range.margin
+        let minY = range.minY + range.margin
+        let maxY = range.maxY - range.margin
+        if (mousePosition.y <= minY) {
+          splitScreen.type = 'top'
+        } else if (mousePosition.y >= maxY) {
+          splitScreen.type = 'bottom'
         } else {
           splitScreen.enable = false
         }
@@ -596,6 +631,13 @@
                 top: 0,
                 left: bodyWidth / 2 + 'px',
                 width: bodyWidth / 2 + 'px',
+                height: bodyHeight + 'px'
+              }
+              break
+            case 'top':
+            case 'bottom':
+              splitScreenStyle = {
+                top: 0,
                 height: bodyHeight + 'px'
               }
               break

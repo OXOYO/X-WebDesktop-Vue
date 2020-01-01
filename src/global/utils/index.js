@@ -8,6 +8,7 @@ import store from './store'
 import timeConsuming from './timeConsuming'
 import install from './install'
 import uninstall from './uninstall'
+import DisableDebugger from './DisableDebugger'
 
 export default {
   bus,
@@ -16,5 +17,6 @@ export default {
   // 耗时
   timeConsuming,
   install,
-  uninstall
+  uninstall,
+  DisableDebugger
 }
