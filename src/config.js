@@ -5,9 +5,9 @@
 
 // 服务配置
 export const Serv = {
-  development: '//localhost:3000/api/v2.0.0',
+  development: '//localhost:3000/api/v3.0.1',
   // production: '//x-webdesktop-api-koa.herokuapp.com/api/v2.0.0'
-  production: '//47.93.49.248/x-webdesktop-api/v2.0.0'
+  production: '//47.93.49.248/x-webdesktop-api/v3.0.1'
 }
 
 // cookie相关配置
@@ -35,7 +35,7 @@ export const System = {
     type: 'github',
     url: 'https://github.com/OXOYO/X-WebDesktop-Vue'
   },
-  version: '2.0.0',
+  version: '3.0.1',
   name: 'X-WebDesktop-Vue',
   title: 'X-WebDesktop-Vue',
   subtitle: 'X-WebDesktop-Vue',

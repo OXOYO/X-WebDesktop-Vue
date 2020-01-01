@@ -1,6 +1,7 @@
 /**
 * Created by OXOYO on 2018/4/23.
 *
+* 【暂弃】 由于X-Frame-Options' to 'deny'，暂弃该应用
 */
 
 <style scoped lang="less" rel="stylesheet/less">

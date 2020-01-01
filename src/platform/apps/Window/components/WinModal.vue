@@ -105,12 +105,12 @@
           require.ensure([], (require) => {
             let isSuccess = false
             try {
-              let appComponent = require('@/Apps/' + path + '/Index.vue')
+              let appComponent = require('@/apps/' + path + '/Index.vue')
               _t.appComponent = appComponent
               isSuccess = true
             } catch (err) {
               isSuccess = false
-              console.warn('WARNG:: LOAD', '@/Apps/' + path + '/Index.vue', 'FAIL!')
+              console.warn('WARNG:: LOAD', '@/apps/' + path + '/Index.vue', 'FAIL!')
             }
             if (!isSuccess && _t.info.hasOwnProperty('action')) {
               if (_t.info.action === 'install') {
