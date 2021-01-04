@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "animate.css": "^3.5.2",
-    "axios": "^0.16.2",
+    "axios": "^0.21.1",
     "browser-update": "^2.1.4",
     "dplayer": "^1.22.2",
     "highlight.js": "^9.12.0",
