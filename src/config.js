@@ -7,7 +7,7 @@
 export const Serv = {
   development: '//localhost:3000/api/v3.0.1',
   // production: '//x-webdesktop-api-koa.herokuapp.com/api/v2.0.0'
-  production: '//47.93.49.248/x-webdesktop-api/v3.0.1'
+  production: '//api.oxoyo.co/x-webdesktop-api/v3.0.1'
 }
 
 // cookie相关配置
