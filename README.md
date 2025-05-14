@@ -2,6 +2,8 @@
 
 基于 Vue 的 WebDesktop 系统
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/OXOYO/X-WebDesktop-Vue)
+
 # Version
 
 | FrontEnd | API | Electron |
