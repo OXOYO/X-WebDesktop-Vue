@@ -43602,7 +43602,7 @@ var _this = this;
     '0': {
       name: 'home',
       title: 'X-WebDesktop-Vue',
-      url: 'http://oxoyo.co/X-WebDesktop-Vue/',
+      url: 'https://wd.oxoyo.co/',
       index: 0
     }
   },
@@ -43610,7 +43610,7 @@ var _this = this;
   homePage: {
     name: 'home',
     title: 'X-WebDesktop-Vue',
-    url: 'http://oxoyo.co/X-WebDesktop-Vue/',
+    url: 'https://wd.oxoyo.co/',
     index: 0
   },
   newTab: {
