@@ -2,6 +2,8 @@
 
 基于 Vue 的 WebDesktop 系统
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/OXOYO/X-WebDesktop-Vue)
+
 # Version
 
 | FrontEnd | API | Electron |
@@ -133,4 +135,7 @@
 
 ## Contact
 
-点击链接加入群【Web全栈QQ群】：https://jq.qq.com/?_wv=1027&k=53iWbrr
+<div align="left">
+    <img src="https://raw.githubusercontent.com/OXOYO/OXOYO/refs/heads/master/contact_me_wx.png" width="200px"/>
+    <div>加我进群，备注【项目名称】</div>
+</div>
