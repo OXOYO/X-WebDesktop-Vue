@@ -17,7 +17,7 @@
 
 ## Preview
 
-  **Url**：[http://oxoyo.co/X-WebDesktop-Vue/](http://oxoyo.co/X-WebDesktop-Vue/)
+  **Url**：[https://wd.oxoyo.co/](https://wd.oxoyo.co/)
 
   **Account**：`admin`
 

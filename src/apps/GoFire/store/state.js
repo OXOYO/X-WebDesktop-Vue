@@ -8,7 +8,7 @@ export default {
     '0': {
       name: 'home',
       title: 'X-WebDesktop-Vue',
-      url: 'http://oxoyo.co/X-WebDesktop-Vue/',
+      url: 'https://wd.oxoyo.co/',
       index: 0
     }
   },
@@ -16,7 +16,7 @@ export default {
   homePage: {
     name: 'home',
     title: 'X-WebDesktop-Vue',
-    url: 'http://oxoyo.co/X-WebDesktop-Vue/',
+    url: 'https://wd.oxoyo.co/',
     index: 0
   },
   newTab: {
