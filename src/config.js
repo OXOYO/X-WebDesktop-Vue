@@ -5,7 +5,8 @@
 
 // 服务配置
 export const Serv = {
-  development: '//localhost:3000/api/v3.0.1',
+  // development: '//localhost:3000/api/v3.0.1',
+  development: '/x-webdesktop-api/v3.0.1',
   // production: '//x-webdesktop-api-koa.herokuapp.com/api/v2.0.0'
   production: '//api.oxoyo.co/x-webdesktop-api/v3.0.1'
 }
@@ -24,7 +25,7 @@ export const Cookie = {
   },
   path: {
     development: '/',
-    production: '/X-WebDesktop-Vue'
+    production: '/'
   }
 }
 
